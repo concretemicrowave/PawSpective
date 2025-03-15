@@ -1,4 +1,4 @@
-import { TextInput, StyleSheet, Text } from "react-native";
+import { TextInput, StyleSheet } from "react-native";
 import { useThemeColor } from "../hooks/useThemeColor";
 
 export function ThemedInput({

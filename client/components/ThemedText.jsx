@@ -16,7 +16,6 @@ export function ThemedText({
         color,
         ...(type === "default" && styles.default),
         ...(type === "title" && styles.title),
-        ...(type === "defaultSemiBold" && styles.defaultSemiBold),
         ...(type === "subtitle" && styles.subtitle),
         ...(type === "link" && styles.link),
         ...style,
@@ -32,12 +31,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontFamily: "MontserratMedium",
   },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: "600",
-    fontFamily: "MontserratSemiBold",
-  },
   title: {
     fontSize: 32,
     fontWeight: "bold",
@@ -45,8 +38,8 @@ const styles = StyleSheet.create({
     fontFamily: "MontserratBold",
   },
   subtitle: {
-    fontSize: 20,
-    fontFamily: "MontserratBold",
+    fontSize: 24,
+    fontFamily: "MontserratSemiBold",
   },
   link: {
     lineHeight: 30,

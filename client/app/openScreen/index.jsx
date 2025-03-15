@@ -1,15 +1,17 @@
 import { ThemedView } from "../../components/ThemedView";
 import { ThemedText } from "../../components/ThemedText";
 import { ThemedInput } from "../../components/ThemedInput";
+import { ThemedButton } from "../../components/ThemedButton";
 import { StyleSheet } from "react-native";
 
 export default function openScreen() {
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">Not Logged In?</ThemedText>
+      <ThemedText type="subtitle">Not Logged In?</ThemedText>
       <ThemedView style={styles.inputContainer}>
-        <ThemedInput style={styles.input} placeholder="Email" />
-        <ThemedInput style={styles.input} placeholder="Password" />
+        <ThemedInput required style={styles.input} placeholder="Email" />
+        <ThemedInput required style={styles.input} placeholder="Password" />
+        <ThemedButton color="primary" title="Login" />
       </ThemedView>
     </ThemedView>
   );
@@ -18,14 +20,14 @@ export default function openScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
+    textAlign: "left",
     paddingBottom: 20,
     padding: 30,
   },
   inputContainer: {
     width: "100%",
-    marginTop: 20,
+    marginTop: 12,
   },
   input: {
     width: "100%",
