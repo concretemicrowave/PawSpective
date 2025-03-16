@@ -3,7 +3,7 @@ import { ThemedText } from "../../components/ThemedText";
 import { ThemedInput } from "../../components/ThemedInput";
 import { ThemedButton } from "../../components/ThemedButton";
 import { Icon } from "../../components/Icon";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -13,7 +13,7 @@ export default function openScreen() {
     <>
       <ThemedView style={styles.container}>
         <ThemedView style={styles.headerContainer}>
-          <Icon size={20} icon={faUser} />
+          <Icon size={20} icon={faRightToBracket} />
           <ThemedText type="subtitle">Not Logged In?</ThemedText>
         </ThemedView>
         <ThemedView style={styles.inputContainer}>
