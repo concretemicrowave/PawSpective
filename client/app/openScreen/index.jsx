@@ -5,16 +5,16 @@ import { ThemedButton } from "../../components/ThemedButton";
 import { Icon } from "../../components/Icon";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function openScreen() {
+  const router = useRouter();
   return (
     <>
       <ThemedView style={styles.container}>
         <ThemedView style={styles.headerContainer}>
           <Icon size={20} icon={faUser} />
-          <ThemedText steel type="subtitle">
-            Not Logged In?
-          </ThemedText>
+          <ThemedText type="subtitle">Not Logged In?</ThemedText>
         </ThemedView>
         <ThemedView style={styles.inputContainer}>
           <ThemedInput required style={styles.input} placeholder="Email" />
@@ -29,6 +29,7 @@ export default function openScreen() {
           borderRadius={25}
           hollow
           title="Create Account"
+          onPress={() => router.push("openScreen/register")}
         />
       </ThemedView>
     </>

@@ -50,6 +50,10 @@ export default function RootLayout() {
           name="openScreen/index"
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="openScreen/register"
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
