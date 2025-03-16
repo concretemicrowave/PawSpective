@@ -6,6 +6,8 @@ export function ThemedButton({
   lightColor,
   darkColor,
   title,
+  borderRadius = 12,
+  hollow = false,
   color = "primary",
   disabled = false,
   ...rest
@@ -25,12 +27,24 @@ export function ThemedButton({
         styles.button,
         { backgroundColor },
         disabled ? { opacity: 0.5 } : style,
+        { borderRadius },
+        hollow
+          ? {
+              backgroundColor: "transparent",
+              borderWidth: 1,
+              borderColor: backgroundColor,
+            }
+          : null,
       ]}
       activeOpacity={0.6}
       disabled={disabled}
       {...rest}
     >
-      <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+      <Text
+        style={[styles.text, { color: hollow ? backgroundColor : textColor }]}
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 }
@@ -39,7 +53,6 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 14,
     paddingHorizontal: 10,
-    borderRadius: 12,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
