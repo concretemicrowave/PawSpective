@@ -3,6 +3,8 @@ import React from "react";
 import { Platform } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -10,7 +12,11 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
+        tabBarInactiveTintColor: "gray",
+        tabBarLabelStyle: {
+          fontSize: 12,
+        },
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
@@ -20,24 +26,15 @@ export default function TabLayout() {
         }),
       }}
     >
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Camera",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <FontAwesomeIcon icon={faCamera} size={24} color={color} />
           ),
         }}
-      /> */}
-      {/* <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
-        }}
-      /> */}
+      />
     </Tabs>
   );
 }

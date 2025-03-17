@@ -31,11 +31,11 @@ export default function RootLayout() {
     if (loaded) {
       SplashScreen.hideAsync();
 
-      if (isLoggedIn) {
-        router.replace("(tabs)");
-      } else {
-        router.replace("openScreen");
-      }
+      // if (isLoggedIn) {
+      //   router.replace("(tabs)");
+      // } else {
+      //   router.replace("openScreen");
+      // }
     }
   }, [loaded, isLoggedIn]);
 
