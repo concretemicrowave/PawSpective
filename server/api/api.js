@@ -1,5 +1,9 @@
 const express = require("express");
 const util = require("../util/util");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const SALT_ROUNDS = 10;
+const JWT_SECRET = "your_jwt_secret";
 
 let api = express.Router();
 

@@ -1,14 +1,15 @@
 function success(payload) {
   return {
     status: "OK",
+    success: true,
     data: payload,
   };
 }
 
-function error(message, code = 0x1) {
+function error(message) {
   return {
     status: "ERROR",
-    code,
+    success: false,
     message,
   };
 }

@@ -9,6 +9,7 @@ import { useRouter } from "expo-router";
 
 export default function openScreen() {
   const router = useRouter();
+
   return (
     <>
       <ThemedView style={styles.container}>
