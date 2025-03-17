@@ -3,7 +3,11 @@ const util = require("../util/util");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SALT_ROUNDS = 10;
-const JWT_SECRET = "your_jwt_secret";
+const JWT_SECRET = process.env.JWT_SECRET;
+
+const createToken = (userId) => {
+  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1h" });
+};
 
 let api = express.Router();
 
@@ -22,70 +26,55 @@ console.log("API loaded.");
 
 // Create account
 api.post("/api/accounts", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return res.json(
-      util.error({
-        message: "Username and password are required",
-      }),
-    );
+  if (!email || !password) {
+    return res.json(util.error({ message: "Email and password are required" }));
   }
 
   try {
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const result = await pool.query(
-      "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id",
-      [username, hashedPassword],
+      "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id",
+      [email, hashedPassword],
     );
 
-    res.json(
-      util.success({
-        message: "Account created",
-        userId: result.rows[0].id,
-      }),
-    );
+    const userId = result.rows[0].id;
+    const token = createToken(userId);
+
+    res.json(util.success({ message: "Account created", userId, token }));
   } catch (err) {
     console.error(err);
     if (err.code === "23505") {
-      // Unique constraint violation
-      res.json(
-        util.error({
-          message: "Username already exists",
-        }),
-      );
+      res.json(util.error({ message: "Email already exists" }));
     } else {
-      res.json(
-        util.error({
-          message: "Internal server error",
-        }),
-      );
+      res.json(util.error({ message: "Internal server error" }));
     }
   }
 });
 
 // Authenticate account
 api.post("/api/authenticate", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
+  if (!email || !password) {
     return res.json(
       util.error({
-        message: "Username and password are required",
+        message: "Email and password are required",
       }),
     );
   }
 
   try {
     const result = await pool.query(
-      "SELECT id, password FROM users WHERE username = $1",
-      [username],
+      "SELECT id, password FROM users WHERE email = $1",
+      [email],
     );
 
     if (result.rows.length === 0) {
       return res.json(
         util.error({
-          message: "Invalid username or password",
+          message: "Invalid email or password",
         }),
       );
     }
@@ -96,7 +85,7 @@ api.post("/api/authenticate", async (req, res) => {
     if (!isMatch) {
       return res.json(
         util.error({
-          message: "Invalid username or password",
+          message: "Invalid email or password",
         }),
       );
     }

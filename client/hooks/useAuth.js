@@ -22,12 +22,33 @@ export function useAuth() {
     checkAuthStatus();
   }, []);
 
-  const login = async (username, password) => {
+  const register = async (email, password) => {
+    try {
+      const response = await fetch(`${API_URL}/accounts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+        setIsLoggedIn(true);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  const login = async (email, password) => {
     try {
       const response = await fetch(`${API_URL}/authenticate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
@@ -48,5 +69,5 @@ export function useAuth() {
     setIsLoggedIn(false);
   };
 
-  return { isLoggedIn, login, logout };
+  return { isLoggedIn, login, register, logout };
 }

@@ -4,14 +4,6 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const { Pool } = require("pg");
 
-const api = require("./api/api");
-
-// Configuration
-const app = express();
-const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-const SALT_ROUNDS = 10;
-
 // PostgreSQL connection pool
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -21,20 +13,22 @@ const pool = new Pool({
   port: process.env.DB_PORT || 5432,
 });
 
+// Import API routes and pass `pool`
+const api = require("./api/api")(pool);
+
+// Configuration
+const app = express();
+const PORT = process.env.PORT || 3000;
+
 // Middleware
 app.use(bodyParser.json());
-
-// Helper functions
-const createToken = (userId) => {
-  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1h" });
-};
 
 const initializeDatabase = async () => {
   try {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
-        username VARCHAR(255) UNIQUE NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL
       );
     `);
