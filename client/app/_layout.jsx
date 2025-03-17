@@ -51,7 +51,7 @@ export default function RootLayout() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="openScreen/register"
+          name="openScreen/authForms/register"
           options={{ headerShown: false }}
         />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

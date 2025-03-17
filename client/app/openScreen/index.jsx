@@ -1,11 +1,11 @@
 import { ThemedView } from "../../components/ThemedView";
 import { ThemedText } from "../../components/ThemedText";
-import { ThemedInput } from "../../components/ThemedInput";
 import { ThemedButton } from "../../components/ThemedButton";
 import { Icon } from "../../components/Icon";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import Login from "./authForms/login";
 
 export default function openScreen() {
   const router = useRouter();
@@ -17,11 +17,7 @@ export default function openScreen() {
           <Icon size={20} icon={faRightToBracket} />
           <ThemedText type="subtitle">Not Logged In?</ThemedText>
         </ThemedView>
-        <ThemedView style={styles.inputContainer}>
-          <ThemedInput required style={styles.input} placeholder="Email" />
-          <ThemedInput required style={styles.input} placeholder="Password" />
-          <ThemedButton color="primary" title="Login" />
-        </ThemedView>
+        <Login />
       </ThemedView>
       <ThemedView>
         <ThemedButton
@@ -30,7 +26,7 @@ export default function openScreen() {
           borderRadius={25}
           hollow
           title="Create Account"
-          onPress={() => router.push("openScreen/register")}
+          onPress={() => router.push("openScreen/authForms/register")}
         />
       </ThemedView>
     </>
@@ -51,16 +47,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
-  inputContainer: {
-    width: "100%",
-    marginTop: 12,
-  },
   register: {
     marginTop: "auto",
     marginHorizontal: 30,
     marginVertical: 30,
-  },
-  input: {
-    width: "100%",
   },
 });
