@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
+const { pool } = require("../db");
 
 const createToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1h" });
@@ -25,7 +26,7 @@ api.get("/", (req, res) => {
 console.log("API loaded.");
 
 // Create account
-api.post("/api/accounts", async (req, res) => {
+api.post("/accounts", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -54,7 +55,7 @@ api.post("/api/accounts", async (req, res) => {
 });
 
 // Authenticate account
-api.post("/api/authenticate", async (req, res) => {
+api.post("/authenticate", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -108,7 +109,7 @@ api.post("/api/authenticate", async (req, res) => {
 });
 
 // Check authentication
-api.get("/api/auth-check", async (req, res) => {
+api.get("/auth-check", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {

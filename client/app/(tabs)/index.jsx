@@ -1,10 +1,23 @@
-import { StyleSheet, View } from "react-native";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { useEffect, useState } from "react";
+import {
+  Button,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  SafeAreaView,
+} from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 
-export default function Camera() {
+export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
+  const [camera, setCamera] = useState(null);
+
+  useEffect(() => {
+    if (!permission?.granted) {
+      requestPermission();
+    }
+  }, []);
 
   if (!permission) {
     return <View />;
@@ -16,17 +29,29 @@ export default function Camera() {
         <Text style={styles.message}>
           We need your permission to show the camera
         </Text>
-        <Button onPress={requestPermission} title="grant permission" />
+        <Button onPress={requestPermission} title="Grant Permission" />
       </View>
     );
   }
 
+  const handleCapture = async () => {
+    if (camera) {
+      const photo = await camera.takePictureAsync();
+      console.log(photo);
+    }
+  };
+
   return (
-    <ThemedView style={styles.container}>
-      <CameraView style={styles.camera} facing="back">
-        <ThemedText style={styles.title}>Focus Camera On Item</ThemedText>
-      </CameraView>
-    </ThemedView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.cameraWrapper}>
+        <CameraView
+          style={styles.camera}
+          type="back"
+          ref={(ref) => setCamera(ref)}
+        />
+      </View>
+      <TouchableOpacity style={styles.captureButton} onPress={handleCapture} />
+    </SafeAreaView>
   );
 }
 
@@ -35,14 +60,30 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#000",
   },
-  title: {
-    fontSize: 24,
-  },
-  camera: {
+  cameraWrapper: {
     width: "100%",
     height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    borderRadius: 20,
+    overflow: "hidden",
+  },
+  camera: {
+    flex: 1,
+  },
+  captureButton: {
+    position: "absolute",
+    bottom: 110,
+    borderColor: "white",
+    borderWidth: 5,
+    borderRadius: 50,
+    width: 60,
+    height: 60,
+  },
+  message: {
+    textAlign: "center",
+    fontSize: 18,
+    marginBottom: 20,
+    color: "white",
   },
 });
