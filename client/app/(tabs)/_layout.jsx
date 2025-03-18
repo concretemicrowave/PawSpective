@@ -12,15 +12,19 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        tabBarShowLabel: false,
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
         tabBarInactiveTintColor: "gray",
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 14,
         },
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
             position: "absolute",
+            height: 100,
+            paddingTop: 10,
+            backgroundColor: Colors[colorScheme ?? "light"].background,
           },
           default: {},
         }),
@@ -29,9 +33,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Camera",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faCamera} size={24} color={color} />
+            <FontAwesomeIcon icon={faCamera} size={30} color={color} />
           ),
         }}
       />

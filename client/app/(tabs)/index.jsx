@@ -73,12 +73,12 @@ const styles = StyleSheet.create({
   },
   captureButton: {
     position: "absolute",
-    bottom: 110,
+    bottom: 120,
     borderColor: "white",
-    borderWidth: 5,
+    borderWidth: 6,
     borderRadius: 50,
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
   },
   message: {
     textAlign: "center",
