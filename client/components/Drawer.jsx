@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, PanResponder, StyleSheet, View } from "react-native";
+import { Animated, PanResponder, StyleSheet, Easing, View } from "react-native";
 import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
 import { useColorScheme } from "react-native";
@@ -11,13 +11,12 @@ export function Drawer({ children, title, height, toggle }) {
   const borderColor =
     colorScheme === "dark" ? Colors.dark.border : Colors.light.border;
 
-  console.log(borderColor);
-
   useEffect(() => {
     Animated.timing(translateY, {
       toValue: toggle ? 0 : height,
-      duration: 300,
+      duration: 250,
       useNativeDriver: true,
+      easing: Easing.inOut(Easing.ease),
     }).start();
   }, [toggle]);
 
@@ -45,6 +44,8 @@ export function Drawer({ children, title, height, toggle }) {
       },
     }),
   ).current;
+
+  if (!toggle) return null; // Ensures the drawer is hidden when `toggle` is false
 
   return (
     <Animated.View
@@ -78,18 +79,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
     flexDirection: "column",
     width: "100%",
     justifyContent: "center",
+    alignItems: "center",
   },
   drag: {
     width: 32,
     height: 4,
     borderRadius: 2,
-    marginHorizontal: "auto",
+    backgroundColor: "gray",
     marginBottom: 4,
+    alignSelf: "center",
   },
   title: {
     fontSize: 20,
