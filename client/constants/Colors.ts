@@ -18,6 +18,7 @@ export const Colors = {
     secondary: "#1B75BC",
     accent: "#FF6B35",
     grey: "#D1D5DB",
+    border: "rgba(0, 0, 0, 0.2)",
   },
   dark: {
     text: "#ECEDEE",
@@ -30,5 +31,6 @@ export const Colors = {
     secondary: "#0A5F85",
     accent: "#FF784F",
     grey: "#4B5563",
+    border: "rgba(255, 255, 255, 0.2)",
   },
 };

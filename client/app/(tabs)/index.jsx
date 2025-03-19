@@ -2,6 +2,7 @@ import { useState } from "react";
 import { StyleSheet, View, Text, Button, SafeAreaView } from "react-native";
 import CameraComponent from "../../components/CameraComponent";
 import { useCameraPermissions } from "expo-camera";
+import { Drawer } from "../../components/Drawer";
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -23,9 +24,12 @@ export default function CameraScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <CameraComponent onCapture={(photo) => setPhoto(photo)} />
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={styles.container}>
+        <CameraComponent onCapture={(photo) => setPhoto(photo)} />
+      </SafeAreaView>
+      <Drawer toggle={photo} height={850} title={"New Post"} />
+    </>
   );
 }
 
