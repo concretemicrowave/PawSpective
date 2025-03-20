@@ -28,7 +28,7 @@ export function Drawer({ children, title, height, toggle }) {
         translateY.setValue(Math.min(height, Math.max(gestureState.dy, 0)));
       },
       onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy > height / 3) {
+        if (gestureState.dy > height / 8) {
           Animated.timing(translateY, {
             toValue: height,
             duration: 200,
@@ -45,7 +45,7 @@ export function Drawer({ children, title, height, toggle }) {
     }),
   ).current;
 
-  if (!toggle) return null; // Ensures the drawer is hidden when `toggle` is false
+  if (!toggle) return null;
 
   return (
     <Animated.View
@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    alignItems: "center",
     paddingVertical: 16,
     borderRadius: 20,
   },
