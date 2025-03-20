@@ -1,15 +1,21 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Button, SafeAreaView } from "react-native";
-import * as FileSystem from "expo-file-system";
 import CameraComponent from "../../components/CameraComponent";
 import { useCameraPermissions } from "expo-camera";
 import { Drawer } from "../../components/Drawer";
-
+import { deleteImage } from "../../utils/deletePhoto";
 import DrawerContent from "../../components/CameraDrawer/DrawerContent";
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState(null);
+  const [closed, setClosed] = useState(null);
+
+  useEffect(() => {
+    if (closed) {
+      deleteImage(photo.uri);
+    }
+  }, [closed]);
 
   if (!permission) {
     return <View />;
@@ -31,7 +37,13 @@ export default function CameraScreen() {
       <SafeAreaView style={styles.container}>
         <CameraComponent onCapture={(photo) => setPhoto(photo)} />
       </SafeAreaView>
-      <Drawer toggle={photo} height={850} title={"New Post"}>
+      <Drawer
+        image={photo}
+        setClosed={setClosed}
+        toggle={photo}
+        height={850}
+        title={"New Post"}
+      >
         <DrawerContent image={photo} />
       </Drawer>
     </>

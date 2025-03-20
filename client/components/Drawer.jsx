@@ -5,7 +5,7 @@ import { ThemedText } from "./ThemedText";
 import { useColorScheme } from "react-native";
 import { Colors } from "../constants/Colors";
 
-export function Drawer({ children, title, height, toggle }) {
+export function Drawer({ children, title, height, toggle, setClosed }) {
   const translateY = useRef(new Animated.Value(height)).current;
   const colorScheme = useColorScheme();
   const borderColor =
@@ -14,10 +14,11 @@ export function Drawer({ children, title, height, toggle }) {
   useEffect(() => {
     Animated.timing(translateY, {
       toValue: toggle ? 0 : height,
-      duration: 250,
+      duration: 300,
       useNativeDriver: true,
-      easing: Easing.inOut(Easing.ease),
+      easing: Easing.out(Easing.ease),
     }).start();
+    setClosed(false);
   }, [toggle]);
 
   const panResponder = useRef(
@@ -30,15 +31,18 @@ export function Drawer({ children, title, height, toggle }) {
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dy > height / 8) {
           Animated.timing(translateY, {
-            toValue: height,
-            duration: 200,
             useNativeDriver: true,
+            duration: 150,
+            toValue: height,
+            easing: Easing.out(Easing.ease),
           }).start();
+          setClosed(true);
         } else {
           Animated.timing(translateY, {
             toValue: 0,
             duration: 200,
             useNativeDriver: true,
+            easing: Easing.out(Easing.ease),
           }).start();
         }
       },
