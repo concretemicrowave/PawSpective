@@ -1,45 +1,44 @@
 import { StyleSheet, SafeAreaView, View } from "react-native";
-import { Icon } from "@/components/Icon";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Colors } from "../../../constants/Colors";
 import { useColorScheme } from "react-native";
 import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
 
 export default function Dashboard() {
   const theme = useColorScheme();
-  const borderColor = Colors[theme].border;
+  const backgroundColor = Colors[theme].background;
 
   return (
     <ThemedView scrollable secondary style={styles.dashboard}>
-      <SafeAreaView style={styles.container}>
-        <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <Icon icon={faUser} size={20} />
+      <View style={[styles.header, { backgroundColor }]}>
+        <SafeAreaView style={styles.container}>
           <ThemedText type="subtitle" style={styles.title}>
             Account
           </ThemedText>
-        </View>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: "100%",
   },
   dashboard: {
-    paddingHorizontal: 24,
     borderRadius: 20,
     height: "100%",
   },
   header: {
-    flexDirection: "row",
+    width: "100%",
+    padding: 20,
     alignItems: "center",
-    gap: 10,
-    paddingVertical: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    justifyContent: "center",
+    flexDirection: "column",
+    borderRadius: 16,
   },
   title: {
     fontSize: 28,
+    marginTop: 20,
+    marginBottom: 10,
   },
 });
