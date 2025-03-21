@@ -9,7 +9,6 @@ import {
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function Register() {
-  s;
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.headerContainer}>
