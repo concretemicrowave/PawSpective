@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCamera, faRectangleList } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faClipboardList } from "@fortawesome/free-solid-svg-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -42,7 +42,7 @@ export default function TabLayout() {
         name="Dashboard/index"
         options={{
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faRectangleList} size={30} color={color} />
+            <FontAwesomeIcon icon={faClipboardList} size={30} color={color} />
           ),
         }}
       />

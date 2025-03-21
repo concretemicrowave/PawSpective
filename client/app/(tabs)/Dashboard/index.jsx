@@ -1,6 +1,6 @@
 import { StyleSheet, SafeAreaView, View } from "react-native";
 import { Icon } from "@/components/Icon";
-import { faListUl } from "@fortawesome/free-solid-svg-icons";
+import { faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { Colors } from "../../../constants/Colors";
 import { useColorScheme } from "react-native";
 import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
@@ -13,7 +13,7 @@ export default function Dashboard() {
     <ThemedView secondary style={styles.dashboard}>
       <SafeAreaView style={styles.container}>
         <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <Icon icon={faListUl} size={20} />
+          <Icon icon={faClipboardList} size={20} />
           <ThemedText type="subtitle" style={styles.title}>
             Dashboard
           </ThemedText>
