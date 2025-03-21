@@ -71,7 +71,7 @@ export function useAuth() {
 
   const savePost = async (post) => {
     try {
-      const token = await AsyncStorage.getItem(TOKEN_KEY);
+      const token = await SecureStore.getItemAsync(TOKEN_KEY);
 
       if (!token) {
         throw new Error("Authentication token not found.");

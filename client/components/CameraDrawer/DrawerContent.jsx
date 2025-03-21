@@ -1,7 +1,25 @@
 import { StyleSheet, View, Image } from "react-native";
 import { ThemedText, ThemedButton } from "../ThemedComponents";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function DrawerContent({ image }) {
+  const { savePost } = useAuth();
+
+  const post = {
+    uri: image.uri,
+    title: "Something",
+    nutrients: { calories: 200, protein: "10g", carbs: "30g" },
+  };
+
+  const handleSavePost = async () => {
+    try {
+      const data = await savePost(post);
+      console.log("Post ID:", data.postId);
+    } catch (err) {
+      console.error("Save post failed:", err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -15,7 +33,7 @@ export default function DrawerContent({ image }) {
         hollow
         borderRadius={50}
         title="Save"
-        onPress={() => console.log("Saved")}
+        onPress={handleSavePost}
         style={{ marginTop: "auto", marginBottom: 80 }}
       />
     </View>

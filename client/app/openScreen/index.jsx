@@ -1,6 +1,8 @@
-import { ThemedView } from "../../components/ThemedComponents/ThemedView";
-import { ThemedText } from "../../components/ThemedComponents/ThemedText";
-import { ThemedButton } from "../../components/ThemedComponents/ThemedButton";
+import {
+  ThemedView,
+  ThemedText,
+  ThemedButton,
+} from "../../components/ThemedComponents";
 import { Icon } from "../../components/Icon";
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { StyleSheet } from "react-native";
