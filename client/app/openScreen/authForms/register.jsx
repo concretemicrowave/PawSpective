@@ -1,7 +1,8 @@
 import { StyleSheet } from "react-native";
 import { Icon } from "../../../components/Icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigation } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   ThemedText,
   ThemedInput,
@@ -19,24 +20,21 @@ export default function Register() {
   const { register } = useAuth();
 
   useEffect(() => {
-    if (email.trim("") && password.trim("")) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
+    setDisabled(!(email.trim() && password.trim()));
   }, [email, password]);
 
-  const handleRegister = () => {
-    register(email, password);
-    navigation.navigate("(tabs)");
-  };
+  useFocusEffect(
+    useCallback(() => {
+      navigation.setOptions({ gestureEnabled: false });
+    }, [navigation]),
+  );
 
-  const handleEmailChange = (text) => {
-    setEmail(text);
-  };
-
-  const handlePasswordChange = (text) => {
-    setPassword(text);
+  const handleRegister = async () => {
+    await register(email, password);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "(tabs)" }],
+    });
   };
 
   return (
@@ -51,14 +49,14 @@ export default function Register() {
           style={styles.input}
           placeholder="Email"
           value={email}
-          onChangeText={handleEmailChange}
+          onChangeText={setEmail}
         />
         <ThemedInput
           required
           style={styles.input}
           placeholder="Password"
           value={password}
-          onChangeText={handlePasswordChange}
+          onChangeText={setPassword}
           secureTextEntry
         />
         <ThemedButton
