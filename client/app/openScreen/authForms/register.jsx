@@ -1,12 +1,15 @@
 import { StyleSheet } from "react-native";
-import { ThemedView } from "../../../components/ThemedView";
 import { Icon } from "../../../components/Icon";
-import { ThemedText } from "../../../components/ThemedText";
-import { ThemedInput } from "../../../components/ThemedInput";
-import { ThemedButton } from "../../../components/ThemedButton";
+import {
+  ThemedText,
+  ThemedInput,
+  ThemedButton,
+  ThemedView,
+} from "@/components/ThemedComponents";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function Register() {
+  s;
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.headerContainer}>

@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Button, SafeAreaView } from "react-native";
 import CameraComponent from "../../components/CameraComponent";
 import { useCameraPermissions } from "expo-camera";
 import { Drawer } from "../../components/Drawer";
-import { deleteImage } from "../../utils/deletePhoto";
+import { deleteImage } from "../../utils/CameraUtils";
 import DrawerContent from "../../components/CameraDrawer/DrawerContent";
 
 export default function CameraScreen() {

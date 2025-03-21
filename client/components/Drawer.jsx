@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, PanResponder, StyleSheet, Easing, View } from "react-native";
-import { ThemedView } from "./ThemedView";
-import { ThemedText } from "./ThemedText";
+import { Animated, StyleSheet, Easing, View } from "react-native";
+import { ThemedView } from "./ThemedComponents/ThemedView";
+import { ThemedText } from "./ThemedComponents/ThemedText";
 import { useColorScheme } from "react-native";
 import { Colors } from "../constants/Colors";
+import { createPanResponder } from "../utils/panResponder";
 
 export function Drawer({ children, title, height, toggle, setClosed }) {
   const translateY = useRef(new Animated.Value(height)).current;
@@ -16,37 +17,13 @@ export function Drawer({ children, title, height, toggle, setClosed }) {
       toValue: toggle ? 0 : height,
       duration: 300,
       useNativeDriver: true,
-      easing: Easing.out(Easing.ease),
+      easing: Easing.out(Easing.cubic),
     }).start();
     setClosed(false);
   }, [toggle]);
 
   const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gestureState) =>
-        Math.abs(gestureState.dy) > 5,
-      onPanResponderMove: (_, gestureState) => {
-        translateY.setValue(Math.min(height, Math.max(gestureState.dy, 0)));
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy > height / 8) {
-          Animated.timing(translateY, {
-            useNativeDriver: true,
-            duration: 150,
-            toValue: height,
-            easing: Easing.out(Easing.ease),
-          }).start();
-          setClosed(true);
-        } else {
-          Animated.timing(translateY, {
-            toValue: 0,
-            duration: 200,
-            useNativeDriver: true,
-            easing: Easing.out(Easing.ease),
-          }).start();
-        }
-      },
-    }),
+    createPanResponder(translateY, height, setClosed),
   ).current;
 
   if (!toggle) return null;
@@ -55,8 +32,12 @@ export function Drawer({ children, title, height, toggle, setClosed }) {
     <Animated.View
       style={[styles.container, { height, transform: [{ translateY }] }]}
     >
-      <ThemedView style={styles.content} {...panResponder.panHandlers}>
-        <ThemedView style={styles.header}>
+      <ThemedView
+        secondary
+        style={styles.content}
+        {...panResponder.panHandlers}
+      >
+        <ThemedView secondary style={styles.header}>
           <View style={[styles.drag, { backgroundColor: borderColor }]} />
           <ThemedText type="subtitle" style={styles.title}>
             {title}

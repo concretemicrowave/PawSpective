@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { View } from "react-native";
-import { ThemedText } from "../ThemedText";
+import { ThemedText } from "../ThemedComponents";
 
 export default function Nutriments() {
   return <View style={styles.container}>// Add page when ready</View>;

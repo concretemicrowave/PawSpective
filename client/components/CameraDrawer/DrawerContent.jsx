@@ -1,9 +1,7 @@
 import { StyleSheet, View, Image } from "react-native";
-import { ThemedText } from "../ThemedText";
-import { ThemedButton } from "../ThemedButton";
+import { ThemedText, ThemedButton } from "../ThemedComponents";
 
 export default function DrawerContent({ image }) {
-  console.log(image);
   return (
     <View style={styles.container}>
       <View style={styles.header}>

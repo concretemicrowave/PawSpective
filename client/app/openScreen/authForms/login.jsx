@@ -1,6 +1,8 @@
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedInput } from "@/components/ThemedInput";
-import { ThemedButton } from "@/components/ThemedButton";
+import {
+  ThemedView,
+  ThemedInput,
+  ThemedButton,
+} from "@/components/ThemedComponents";
 import { StyleSheet } from "react-native";
 
 export default function Login() {
