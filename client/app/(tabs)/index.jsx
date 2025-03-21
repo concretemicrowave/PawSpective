@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Button, SafeAreaView } from "react-native";
-import CameraComponent from "../../components/CameraComponent";
+import CameraComponent from "../../components/Camera";
 import { useCameraPermissions } from "expo-camera";
 import { Drawer } from "../../components/Drawer";
 import { deleteImage } from "../../utils/CameraUtils";
