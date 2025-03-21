@@ -3,43 +3,52 @@ import { Icon } from "@/components/Icon";
 import { faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { Colors } from "../../../constants/Colors";
 import { useColorScheme } from "react-native";
-import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
+import {
+  ThemedView,
+  ThemedText,
+  ThemedButton,
+} from "../../../components/ThemedComponents";
 
 export default function Dashboard() {
   const theme = useColorScheme();
-  const borderColor = Colors[theme].border;
+  const backgroundColor = Colors[theme].background;
 
   return (
-    <ThemedView secondary style={styles.dashboard}>
-      <SafeAreaView style={styles.container}>
-        <View style={[styles.header, { borderBottomColor: borderColor }]}>
-          <Icon icon={faClipboardList} size={20} />
+    <ThemedView scrollable secondary style={styles.dashboard}>
+      <View style={[styles.header, { backgroundColor }]}>
+        <SafeAreaView style={styles.container}>
           <ThemedText type="subtitle" style={styles.title}>
             Dashboard
           </ThemedText>
-        </View>
-      </SafeAreaView>
+          <ThemedButton style={styles.button} title="Create New" />
+        </SafeAreaView>
+      </View>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: "100%",
   },
   dashboard: {
-    paddingHorizontal: 24,
     borderRadius: 20,
     height: "100%",
   },
   header: {
-    flexDirection: "row",
+    width: "100%",
+    padding: 20,
     alignItems: "center",
-    gap: 10,
-    paddingBottom: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    justifyContent: "center",
+    flexDirection: "column",
+    borderRadius: 16,
   },
   title: {
     fontSize: 28,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  button: {
+    width: "100%",
   },
 });

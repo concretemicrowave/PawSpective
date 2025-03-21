@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export function ThemedView({
@@ -6,6 +6,7 @@ export function ThemedView({
   secondary,
   lightColor,
   darkColor,
+  scrollable,
   ...otherProps
 }) {
   const backgroundColor = useThemeColor(
@@ -13,5 +14,9 @@ export function ThemedView({
     secondary ? "backgroundSecondary" : "background",
   );
 
-  return <View style={{ backgroundColor, ...style }} {...otherProps} />;
+  return scrollable ? (
+    <ScrollView style={{ backgroundColor, ...style }} {...otherProps} />
+  ) : (
+    <View style={{ backgroundColor, ...style }} {...otherProps} />
+  );
 }

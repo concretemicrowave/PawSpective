@@ -4,7 +4,11 @@ import { Platform } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCamera, faClipboardList } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCamera,
+  faClipboardList,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -12,13 +16,13 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarShowLabel: false,
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
-        tabBarInactiveTintColor: "gray",
-        tabBarLabelStyle: {
-          fontSize: 14,
-        },
+        tabBarInactiveTintColor: "#b3b3b3",
         headerShown: false,
+        tabBarLabelStyle: {
+          fontSize: 12,
+          marginTop: 5,
+        },
         tabBarStyle: Platform.select({
           ios: {
             position: "absolute",
@@ -33,16 +37,27 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          title: "Camera",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faCamera} size={30} color={color} />
+            <FontAwesomeIcon icon={faCamera} size={28} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="Dashboard/index"
         options={{
+          title: "Dashboard",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faClipboardList} size={30} color={color} />
+            <FontAwesomeIcon icon={faClipboardList} size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Account/index"
+        options={{
+          title: "Account",
+          tabBarIcon: ({ color }) => (
+            <FontAwesomeIcon icon={faUser} size={28} color={color} />
           ),
         }}
       />

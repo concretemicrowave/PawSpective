@@ -1,5 +1,5 @@
 import { StyleSheet, View, Image } from "react-native";
-import { ThemedText, ThemedButton } from "../ThemedComponents";
+import { ThemedText, ThemedButton, ThemedView } from "../ThemedComponents";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function DrawerContent({ image }) {
@@ -21,7 +21,7 @@ export default function DrawerContent({ image }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemedView secondary style={styles.container}>
       <View style={styles.header}>
         <Image source={{ uri: image.uri }} style={styles.logo} />
         <View>
@@ -36,7 +36,7 @@ export default function DrawerContent({ image }) {
         onPress={handleSavePost}
         style={{ marginTop: "auto", marginBottom: 80 }}
       />
-    </View>
+    </ThemedView>
   );
 }
 
