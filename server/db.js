@@ -12,14 +12,20 @@ const pool = new Pool({
 
 const initializeDatabase = async () => {
   try {
+    // await pool.query(`
+    //   DROP TABLE IF EXISTS posts CASCADE;
+    //   DROP TABLE IF EXISTS users CASCADE;
+    // `);
+    // console.log("All tables dropped.");
+
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE users (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL
       );
 
-      CREATE TABLE IF NOT EXISTS posts (
+      CREATE TABLE posts (
         id SERIAL PRIMARY KEY,
         uri TEXT NOT NULL,
         title VARCHAR(255) NOT NULL,
@@ -27,7 +33,7 @@ const initializeDatabase = async () => {
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
       );
     `);
-    console.log("Database initialized");
+    console.log("Database initialized.");
   } catch (err) {
     console.error("Error initializing database:", err);
   }

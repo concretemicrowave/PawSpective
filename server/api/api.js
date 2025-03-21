@@ -28,7 +28,6 @@ console.log("API loaded.");
 // Create account
 api.post("/accounts", async (req, res) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     return res.json(util.error({ message: "Email and password are required" }));
   }
@@ -42,7 +41,6 @@ api.post("/accounts", async (req, res) => {
 
     const userId = result.rows[0].id;
     const token = createToken(userId);
-
     res.json(util.success({ message: "Account created", userId, token }));
   } catch (err) {
     console.error(err);

@@ -6,6 +6,8 @@ export function ThemedInput({
   placeholder,
   lightColor,
   darkColor,
+  value,
+  onChangeText,
   type = "default",
   editable = true,
   required = false,
@@ -26,6 +28,8 @@ export function ThemedInput({
         isReadOnly && styles.readOnly,
         style,
       ]}
+      value={value}
+      onChangeText={onChangeText}
       placeholder={modifiedPlaceholder}
       editable={!isDisabled && !isReadOnly}
       selectTextOnFocus={!isDisabled}

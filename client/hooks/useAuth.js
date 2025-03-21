@@ -31,11 +31,14 @@ export function useAuth() {
       });
 
       const data = await response.json();
-      if (data.success) {
-        await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+      if (data.success && data.data.token) {
+        await SecureStore.setItemAsync(
+          TOKEN_KEY,
+          JSON.stringify(data.data.token),
+        );
         setIsLoggedIn(true);
       } else {
-        alert(data.message);
+        alert(data.message.message);
       }
     } catch (err) {
       console.error("Registration error:", err);
@@ -52,8 +55,11 @@ export function useAuth() {
       });
 
       const data = await response.json();
-      if (data.success) {
-        await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+      if (data.success && data.data.token) {
+        await SecureStore.setItemAsync(
+          TOKEN_KEY,
+          JSON.stringify(data.data.token),
+        );
         setIsLoggedIn(true);
       } else {
         alert(data.message);
