@@ -1,6 +1,5 @@
 import { StyleSheet, SafeAreaView, View } from "react-native";
-import { Icon } from "@/components/Icon";
-import { faClipboardList } from "@fortawesome/free-solid-svg-icons";
+import { useNavigation } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 import { useColorScheme } from "react-native";
 import {
@@ -10,6 +9,8 @@ import {
 } from "../../../components/ThemedComponents";
 
 export default function Dashboard() {
+  const navigation = useNavigation();
+
   const theme = useColorScheme();
   const backgroundColor = Colors[theme].background;
 
@@ -20,7 +21,11 @@ export default function Dashboard() {
           <ThemedText type="subtitle" style={styles.title}>
             Dashboard
           </ThemedText>
-          <ThemedButton style={styles.button} title="Create New" />
+          <ThemedButton
+            onPress={() => navigation.navigate("index")}
+            style={styles.button}
+            title="Create New"
+          />
         </SafeAreaView>
       </View>
     </ThemedView>
