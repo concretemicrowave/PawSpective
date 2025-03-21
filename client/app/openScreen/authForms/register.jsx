@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import { Icon } from "../../../components/Icon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigation } from "expo-router";
 import {
   ThemedText,
   ThemedInput,
@@ -11,9 +12,24 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Register() {
+  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [disabled, setDisabled] = useState(null);
   const { register } = useAuth();
+
+  useEffect(() => {
+    if (email.trim("") && password.trim("")) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [email, password]);
+
+  const handleRegister = () => {
+    register(email, password);
+    navigation.navigate("(tabs)");
+  };
 
   const handleEmailChange = (text) => {
     setEmail(text);
@@ -48,7 +64,8 @@ export default function Register() {
         <ThemedButton
           color="primary"
           title="Create Account"
-          onPress={() => register(email, password)}
+          disabled={disabled}
+          onPress={handleRegister}
         />
       </ThemedView>
     </ThemedView>

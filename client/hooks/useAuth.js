@@ -62,7 +62,7 @@ export function useAuth() {
         );
         setIsLoggedIn(true);
       } else {
-        alert(data.message);
+        alert(data.message.message);
       }
     } catch (err) {
       console.error("Login error:", err);
