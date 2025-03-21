@@ -16,11 +16,12 @@ export function useAuth() {
         });
         const data = await response.json();
         setIsLoggedIn(data.success);
+        console.log(data);
       }
     };
 
     checkAuthStatus();
-  }, []);
+  }, [isLoggedIn]);
 
   const register = async (email, password) => {
     try {
@@ -32,11 +33,10 @@ export function useAuth() {
 
       const data = await response.json();
       if (data.success && data.data.token) {
-        await SecureStore.setItemAsync(
-          TOKEN_KEY,
-          JSON.stringify(data.data.token),
-        );
+        await SecureStore.setItemAsync(TOKEN_KEY, data.data.token);
+        console.log(await SecureStore.getItemAsync(TOKEN_KEY));
         setIsLoggedIn(true);
+        console.log(isLoggedIn);
       } else {
         alert(data.message.message);
       }

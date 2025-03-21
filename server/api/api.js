@@ -119,7 +119,8 @@ api.get("/auth-check", async (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ["HS256"] });
+
     res.json(
       util.success({
         message: "Authentication successful",
