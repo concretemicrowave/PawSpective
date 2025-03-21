@@ -69,5 +69,36 @@ export function useAuth() {
     setIsLoggedIn(false);
   };
 
-  return { isLoggedIn, login, register, logout };
+  const savePost = async (post) => {
+    try {
+      const token = await AsyncStorage.getItem(TOKEN_KEY);
+
+      if (!token) {
+        throw new Error("Authentication token not found.");
+      }
+
+      const response = await fetch(`${API_URL}/save`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(post),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to save post");
+      }
+
+      console.log("Post saved successfully:", data);
+      return data;
+    } catch (error) {
+      console.error("Error saving the post:", error.message);
+      throw error;
+    }
+  };
+
+  return { isLoggedIn, login, register, logout, savePost };
 }

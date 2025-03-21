@@ -138,4 +138,36 @@ api.get("/auth-check", async (req, res) => {
   }
 });
 
+// Save post
+api.post("/save", async (req, res) => {
+  const { uri, title, nutrients } = req.body;
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.json(util.error({ message: "Authorization token required" }));
+  }
+
+  if (!uri || !title || !nutrients) {
+    return res.json(
+      util.error({ message: "URI, title, and nutrients are required" }),
+    );
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    const result = await pool.query(
+      "INSERT INTO posts (uri, title, nutrients, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
+      [uri, title, nutrients, userId],
+    );
+
+    const postId = result.rows[0].id;
+    res.json(util.success({ message: "Post saved successfully", postId }));
+  } catch (err) {
+    console.error(err);
+    res.json(util.error({ message: "Internal server error" }));
+  }
+});
+
 module.exports = api;
