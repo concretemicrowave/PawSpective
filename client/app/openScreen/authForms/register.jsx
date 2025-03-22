@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function Register() {
   const navigation = useNavigation();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(null);
@@ -30,7 +31,7 @@ export default function Register() {
   );
 
   const handleRegister = async () => {
-    const data = await register(email, password);
+    const data = await register(name, email, password);
 
     if (data.success) {
       navigation.reset({
@@ -47,6 +48,13 @@ export default function Register() {
         <ThemedText type="subtitle">Register</ThemedText>
       </ThemedView>
       <ThemedView style={styles.inputContainer}>
+        <ThemedInput
+          required
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+        />
         <ThemedInput
           required
           style={styles.input}

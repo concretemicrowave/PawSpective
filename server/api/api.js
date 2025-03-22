@@ -27,21 +27,25 @@ console.log("API loaded.");
 
 // Create account
 api.post("/accounts", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.json(util.error({ message: "Email and password are required" }));
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.json(
+      util.error({ message: "Name, email and password are required" }),
+    );
   }
 
   try {
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const result = await pool.query(
-      "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id",
-      [email, hashedPassword],
+      "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id",
+      [name, email, hashedPassword],
     );
 
     const userId = result.rows[0].id;
     const token = createToken(userId);
-    res.json(util.success({ message: "Account created", userId, token }));
+    res.json(
+      util.success({ message: "Account created", userId, token, name, email }),
+    );
   } catch (err) {
     console.error(err);
     if (err.code === "23505") {

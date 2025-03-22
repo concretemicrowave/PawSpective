@@ -38,7 +38,7 @@ export function Drawer({ children, title, height, toggle, setClosed }) {
       >
         <ThemedView secondary style={styles.header}>
           <View style={[styles.drag, { backgroundColor: borderColor }]} />
-          <ThemedText type="subtitle" style={styles.title}>
+          <ThemedText type="title" style={styles.title}>
             {title}
           </ThemedText>
         </ThemedView>
@@ -77,6 +77,5 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
   },
 });

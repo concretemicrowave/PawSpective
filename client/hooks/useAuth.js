@@ -22,12 +22,12 @@ export function useAuth() {
     checkAuthStatus();
   }, [isLoggedIn]);
 
-  const register = async (email, password) => {
+  const register = async (name, email, password) => {
     try {
       const response = await fetch(`${API_URL}/accounts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       const data = await response.json();
