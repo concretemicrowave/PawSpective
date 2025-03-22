@@ -26,6 +26,7 @@ export default function Dashboard() {
       <View style={styles.content}>
         <ThemedButton
           hollow
+          borderRadius={50}
           color="attention"
           title="Logout"
           onPress={logout}

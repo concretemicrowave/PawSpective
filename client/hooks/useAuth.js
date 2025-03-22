@@ -55,11 +55,9 @@ export function useAuth() {
 
       const data = await response.json();
       if (data.success && data.data.token) {
-        await SecureStore.setItemAsync(
-          TOKEN_KEY,
-          JSON.stringify(data.data.token),
-        );
+        await SecureStore.setItemAsync(TOKEN_KEY, data.data.token);
         setIsLoggedIn(true);
+        return data;
       } else {
         alert(data.message.message);
       }
