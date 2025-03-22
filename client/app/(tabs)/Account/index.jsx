@@ -7,11 +7,18 @@ import {
   ThemedButton,
 } from "../../../components/ThemedComponents";
 import { useAuth } from "../../../hooks/useAuth";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Dashboard() {
+  const navigation = useNavigation();
   const { logout } = useAuth();
   const theme = useColorScheme();
   const backgroundColor = Colors[theme].background;
+
+  const handleLogout = () => {
+    logout();
+    navigation.navigate("openScreen/index");
+  };
 
   return (
     <ThemedView scrollable secondary style={styles.dashboard}>
@@ -29,7 +36,7 @@ export default function Dashboard() {
           borderRadius={50}
           color="attention"
           title="Logout"
-          onPress={logout}
+          onPress={handleLogout}
         />
       </View>
     </ThemedView>
