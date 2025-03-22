@@ -19,6 +19,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
         tabBarInactiveTintColor: "#b3b3b3",
         headerShown: false,
+        tabBarShowLabel: false,
         tabBarLabelStyle: {
           fontSize: 12,
           marginTop: 5,
@@ -39,7 +40,7 @@ export default function TabLayout() {
         options={{
           title: "Camera",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faCamera} size={28} color={color} />
+            <FontAwesomeIcon icon={faCamera} size={30} color={color} />
           ),
         }}
       />
@@ -48,7 +49,7 @@ export default function TabLayout() {
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faClipboardList} size={28} color={color} />
+            <FontAwesomeIcon icon={faClipboardList} size={30} color={color} />
           ),
         }}
       />
@@ -57,7 +58,7 @@ export default function TabLayout() {
         options={{
           title: "Account",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faUser} size={28} color={color} />
+            <FontAwesomeIcon icon={faUser} size={30} color={color} />
           ),
         }}
       />
