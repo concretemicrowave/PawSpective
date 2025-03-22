@@ -20,6 +20,7 @@ export const Colors = {
     accent: "#FF6B35",
     grey: "#D1D5DB",
     border: "rgba(0, 0, 0, 0.2)",
+    attention: "#d03533",
   },
   dark: {
     text: "#ECEDEE",
@@ -34,5 +35,6 @@ export const Colors = {
     accent: "#FF784F",
     grey: "#4B5563",
     border: "rgba(255, 255, 255, 0.2)",
+    attention: "#d03533",
   },
 };

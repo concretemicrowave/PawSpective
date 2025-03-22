@@ -1,9 +1,15 @@
 import { StyleSheet, SafeAreaView, View } from "react-native";
 import { Colors } from "../../../constants/Colors";
 import { useColorScheme } from "react-native";
-import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
+import {
+  ThemedView,
+  ThemedText,
+  ThemedButton,
+} from "../../../components/ThemedComponents";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function Dashboard() {
+  const { logout } = useAuth();
   const theme = useColorScheme();
   const backgroundColor = Colors[theme].background;
 
@@ -14,7 +20,16 @@ export default function Dashboard() {
           <ThemedText type="subtitle" style={styles.title}>
             Account
           </ThemedText>
+          <ThemedButton title="Edit" />
         </SafeAreaView>
+      </View>
+      <View style={styles.content}>
+        <ThemedButton
+          hollow
+          color="attention"
+          title="Logout"
+          onPress={logout}
+        />
       </View>
     </ThemedView>
   );
@@ -40,5 +55,9 @@ const styles = StyleSheet.create({
     fontSize: 28,
     marginTop: 20,
     marginBottom: 10,
+  },
+  content: {
+    padding: 20,
+    flexDirection: "column",
   },
 });

@@ -30,11 +30,14 @@ export default function Register() {
   );
 
   const handleRegister = async () => {
-    await register(email, password);
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: "(tabs)" }],
-    // });
+    const data = await register(email, password);
+
+    if (data.success) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "(tabs)" }],
+      });
+    }
   };
 
   return (

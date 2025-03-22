@@ -16,7 +16,6 @@ export function useAuth() {
         });
         const data = await response.json();
         setIsLoggedIn(data.success);
-        console.log(data);
       }
     };
 
@@ -36,7 +35,7 @@ export function useAuth() {
         await SecureStore.setItemAsync(TOKEN_KEY, data.data.token);
         console.log(await SecureStore.getItemAsync(TOKEN_KEY));
         setIsLoggedIn(true);
-        console.log(isLoggedIn);
+        return data;
       } else {
         alert(data.message.message);
       }
