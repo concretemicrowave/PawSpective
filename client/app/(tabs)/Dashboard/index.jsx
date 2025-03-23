@@ -7,10 +7,12 @@ import {
   ThemedText,
   ThemedButton,
 } from "../../../components/ThemedComponents";
+import DashboardContent from "../../../components/DashboardContent/content";
+import { useUser } from "../../../context/UserContext";
 
 export default function Dashboard() {
+  const { userData } = useUser();
   const navigation = useNavigation();
-
   const theme = useColorScheme();
   const backgroundColor = Colors[theme].background;
 
@@ -19,7 +21,7 @@ export default function Dashboard() {
       <View style={[styles.header, { backgroundColor }]}>
         <SafeAreaView style={styles.container}>
           <ThemedText type="subtitle" style={styles.title}>
-            Dashboard
+            Hello, {userData.name}!
           </ThemedText>
           <ThemedButton
             onPress={() => navigation.navigate("index")}
@@ -28,6 +30,7 @@ export default function Dashboard() {
           />
         </SafeAreaView>
       </View>
+      <DashboardContent />
     </ThemedView>
   );
 }

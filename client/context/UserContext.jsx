@@ -14,14 +14,27 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await getUser();
-      setUserData({ ...userData, userId: user.user.userId });
-      setUserData({ ...userData, name: user.user.name });
-      setUserData({ ...userData, email: user.user.email });
-      setUserData({ ...userData, posts: user.user.posts });
+      try {
+        const response = await getUser();
+        console.log(response);
+
+        if (response?.data) {
+          setUserData({
+            userId: response.data.user.id,
+            name: response.data.user.name,
+            email: response.data.user.email,
+            posts: response.data.user.posts || [],
+          });
+        } else {
+          console.warn("No user data received.");
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
     };
+
     fetchUser();
-  }, [getUser]);
+  }, []);
 
   const updateUser = (newData) => {
     setUserData((prevData) => ({ ...prevData, ...newData }));
