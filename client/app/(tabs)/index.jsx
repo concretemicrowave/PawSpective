@@ -39,12 +39,13 @@ export default function CameraScreen() {
       </SafeAreaView>
       <Drawer
         image={photo}
+        closed={closed}
         setClosed={setClosed}
         toggle={photo}
         height={850}
         title={"New Post"}
       >
-        <DrawerContent image={photo} />
+        <DrawerContent setClosed={setClosed} image={photo} />
       </Drawer>
     </>
   );

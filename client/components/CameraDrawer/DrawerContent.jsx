@@ -3,7 +3,7 @@ import { ThemedText, ThemedButton, ThemedView } from "../ThemedComponents";
 import { useUser } from "../../context/UserContext";
 import { useAuth } from "@/hooks/useAuth";
 
-export default function DrawerContent({ image }) {
+export default function DrawerContent({ image, setClosed }) {
   const { savePost } = useAuth();
   const { userData, updateUser } = useUser();
 
@@ -17,6 +17,7 @@ export default function DrawerContent({ image }) {
     const data = await savePost(post);
     if (!data.success) return Alert.alert("Error", data.message.message);
     updateUser({ posts: [...userData.posts, data] });
+    setClosed(true);
   };
 
   return (
