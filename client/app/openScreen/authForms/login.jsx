@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigation } from "expo-router";
+import * as Updates from "expo-updates";
 
 export default function Login() {
   const { login } = useAuth();

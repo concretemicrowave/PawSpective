@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const response = await getUser();
-        console.log(response);
+        console.log("response", response);
 
         if (response?.data) {
           setUserData({
@@ -36,12 +36,8 @@ export const UserProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const updateUser = (newData) => {
-    setUserData((prevData) => ({ ...prevData, ...newData }));
-  };
-
   return (
-    <UserContext.Provider value={{ userData, updateUser }}>
+    <UserContext.Provider value={{ userData, setUserData }}>
       {children}
     </UserContext.Provider>
   );

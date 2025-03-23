@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     fontFamily: "MontserratSemiBold",
   },
   link: {
-    lineHeight: 30,
     fontSize: 16,
     color: "#0a7ea4",
     fontFamily: "MontserratMedium",

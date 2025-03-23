@@ -12,6 +12,7 @@ import {
 } from "@/components/ThemedComponents";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "@/hooks/useAuth";
+import { BackLink } from "../../../components/BackLink";
 
 export default function Register() {
   const navigation = useNavigation();
@@ -49,42 +50,45 @@ export default function Register() {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.headerContainer}>
-        <Icon size={20} icon={faUserPlus} />
-        <ThemedText type="subtitle">Register</ThemedText>
+    <>
+      <BackLink />
+      <ThemedView style={styles.container}>
+        <ThemedView style={styles.headerContainer}>
+          <Icon size={20} icon={faUserPlus} />
+          <ThemedText type="subtitle">Register</ThemedText>
+        </ThemedView>
+        <ThemedView style={styles.inputContainer}>
+          <ThemedInput
+            required
+            style={styles.input}
+            placeholder="Name"
+            value={name}
+            onChangeText={setName}
+          />
+          <ThemedInput
+            required
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <ThemedInput
+            required
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          <ThemedButton
+            color="primary"
+            title="Create Account"
+            disabled={disabled}
+            onPress={handleRegister}
+          />
+        </ThemedView>
       </ThemedView>
-      <ThemedView style={styles.inputContainer}>
-        <ThemedInput
-          required
-          style={styles.input}
-          placeholder="Name"
-          value={name}
-          onChangeText={setName}
-        />
-        <ThemedInput
-          required
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <ThemedInput
-          required
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <ThemedButton
-          color="primary"
-          title="Create Account"
-          disabled={disabled}
-          onPress={handleRegister}
-        />
-      </ThemedView>
-    </ThemedView>
+    </>
   );
 }
 

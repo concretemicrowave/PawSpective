@@ -196,7 +196,6 @@ api.post("/save", async (req, res) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.id;
 
-    // Check if the post with the same URI already exists for the user
     const existingPost = await pool.query(
       "SELECT id FROM posts WHERE uri = $1 AND user_id = $2",
       [uri, userId],
@@ -208,14 +207,19 @@ api.post("/save", async (req, res) => {
       );
     }
 
-    // Insert new post
     const result = await pool.query(
       "INSERT INTO posts (uri, title, nutrients, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
       [uri, title, nutrients, userId],
     );
 
     const postId = result.rows[0].id;
-    res.json(util.success({ message: "Post saved successfully", postId }));
+    const post = { uri, title, nutrients, postId };
+    res.json(
+      util.success({
+        message: "Post saved successfully",
+        post,
+      }),
+    );
   } catch (err) {
     console.error(err);
     res.json(util.error({ message: "Internal server error" }));

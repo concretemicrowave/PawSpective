@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function DrawerContent({ image, setClosed }) {
   const { savePost } = useAuth();
-  const { userData, updateUser } = useUser();
+  const { userData, setUserData } = useUser();
 
   const post = {
     uri: image.uri,
@@ -16,7 +16,10 @@ export default function DrawerContent({ image, setClosed }) {
   const handleSavePost = async () => {
     const data = await savePost(post);
     if (!data.success) return Alert.alert("Error", data.message.message);
-    updateUser({ posts: [...userData.posts, data] });
+    setUserData({
+      ...userData,
+      posts: [...userData.posts, data.data.post],
+    });
     setClosed(true);
   };
 
