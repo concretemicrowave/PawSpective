@@ -22,6 +22,18 @@ export function useAuth() {
     checkAuthStatus();
   }, [isLoggedIn]);
 
+  const getUser = async () => {
+    const token = await SecureStore.getItemAsync(TOKEN_KEY);
+    if (token) {
+      const response = await fetch(`${API_URL}/user`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
+      return data;
+    }
+    return null;
+  };
+
   const register = async (name, email, password) => {
     try {
       const response = await fetch(`${API_URL}/accounts`, {
@@ -103,5 +115,5 @@ export function useAuth() {
     }
   };
 
-  return { isLoggedIn, login, register, logout, savePost };
+  return { isLoggedIn, login, register, logout, savePost, getUser };
 }

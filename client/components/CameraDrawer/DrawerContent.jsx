@@ -1,9 +1,11 @@
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, Alert } from "react-native";
 import { ThemedText, ThemedButton, ThemedView } from "../ThemedComponents";
+import { useUser } from "../../context/UserContext";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function DrawerContent({ image }) {
   const { savePost } = useAuth();
+  const { userData, updateUser } = useUser();
 
   const post = {
     uri: image.uri,
@@ -12,12 +14,9 @@ export default function DrawerContent({ image }) {
   };
 
   const handleSavePost = async () => {
-    try {
-      const data = await savePost(post);
-      console.log("Post ID:", data.postId);
-    } catch (err) {
-      console.error("Save post failed:", err);
-    }
+    const data = await savePost(post);
+    if (!data.success) return Alert.alert("Error", data.message.message);
+    updateUser({ posts: [...userData.posts, data] });
   };
 
   return (

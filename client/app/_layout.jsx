@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { UserProvider } from "@/context/UserContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,7 +24,6 @@ export default function RootLayout() {
     MontserratSemiBold: require("../assets/fonts/Montserrat-SemiBold.ttf"),
     MontserratExtraBold: require("../assets/fonts/Montserrat-ExtraBold.ttf"),
   });
-
   const { isLoggedIn } = useAuth();
   const router = useRouter();
 
@@ -44,19 +44,21 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name="openScreen/index"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="openScreen/authForms/register"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen
+            name="openScreen/index"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="openScreen/authForms/register"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </UserProvider>
   );
 }

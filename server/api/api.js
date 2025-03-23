@@ -141,6 +141,42 @@ api.get("/auth-check", async (req, res) => {
   }
 });
 
+api.get("/user", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.json(util.error({ message: "Authorization token required" }));
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    const userResult = await pool.query(
+      `SELECT id, name, email FROM users WHERE id = $1`,
+      [userId],
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.json(util.error({ message: "User not found" }));
+    }
+
+    const user = userResult.rows[0];
+
+    const postsResult = await pool.query(
+      `SELECT id, uri, title, nutrients FROM posts WHERE user_id = $1`,
+      [userId],
+    );
+
+    user.posts = postsResult.rows;
+
+    res.json(util.success({ message: "User retrieved successfully", user }));
+  } catch (err) {
+    console.error(err);
+    res.json(util.error({ message: "Internal server error" }));
+  }
+});
+
 // Save post
 api.post("/save", async (req, res) => {
   const { uri, title, nutrients } = req.body;
@@ -160,6 +196,19 @@ api.post("/save", async (req, res) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.id;
 
+    // Check if the post with the same URI already exists for the user
+    const existingPost = await pool.query(
+      "SELECT id FROM posts WHERE uri = $1 AND user_id = $2",
+      [uri, userId],
+    );
+
+    if (existingPost.rows.length > 0) {
+      return res.json(
+        util.error({ message: "Post with this URI already exists" }),
+      );
+    }
+
+    // Insert new post
     const result = await pool.query(
       "INSERT INTO posts (uri, title, nutrients, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
       [uri, title, nutrients, userId],

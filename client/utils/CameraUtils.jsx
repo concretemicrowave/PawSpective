@@ -11,7 +11,6 @@ const deleteImage = async (uri) => {
   try {
     if (uri.startsWith("file://")) {
       await FileSystem.deleteAsync(uri);
-      console.log("Image deleted successfully.");
     } else {
       console.log("URI is not a local file.");
     }
