@@ -4,7 +4,8 @@ import {
   ThemedButton,
 } from "@/components/ThemedComponents";
 import { StyleSheet } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigation } from "expo-router";
 
@@ -23,12 +24,19 @@ export default function Login() {
     const data = await login(email, password);
 
     if (data.success) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "(tabs)" }],
-      });
+      try {
+        await Updates.reloadAsync();
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.setOptions({ gestureEnabled: false });
+    }, [navigation]),
+  );
 
   return (
     <ThemedView style={styles.inputContainer}>

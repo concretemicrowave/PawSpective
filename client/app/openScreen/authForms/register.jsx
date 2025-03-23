@@ -1,8 +1,9 @@
-import { Alert, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Icon } from "../../../components/Icon";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigation } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
+import * as Updates from "expo-updates";
 import {
   ThemedText,
   ThemedInput,
@@ -21,7 +22,12 @@ export default function Register() {
   const { register } = useAuth();
 
   useEffect(() => {
-    setDisabled(!(email.trim() && password.trim()));
+    const isValidEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
+    setDisabled(!(email.trim() && password.trim() && isValidEmail(email)));
   }, [email, password]);
 
   useFocusEffect(
@@ -34,10 +40,11 @@ export default function Register() {
     const data = await register(name, email, password);
 
     if (data.success) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "(tabs)" }],
-      });
+      try {
+        await Updates.reloadAsync();
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   };
 
