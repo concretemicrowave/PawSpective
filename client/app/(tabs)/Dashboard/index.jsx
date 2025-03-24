@@ -7,7 +7,7 @@ import {
   ThemedText,
   ThemedButton,
 } from "../../../components/ThemedComponents";
-import DashboardContent from "../../../components/DashboardContent/content";
+import DashboardContent from "../../../components/DashboardContent/DashboardContent";
 import { useUser } from "../../../context/UserContext";
 
 export default function Dashboard() {

@@ -7,6 +7,8 @@ export function ThemedInput({
   lightColor,
   darkColor,
   value,
+  height = "50",
+  borderRadius = 12,
   onChangeText,
   type = "default",
   editable = true,
@@ -24,8 +26,10 @@ export function ThemedInput({
       style={[
         styles.input,
         { color },
+        { borderRadius },
         isDisabled && styles.disabled,
         isReadOnly && styles.readOnly,
+        (height = { height }),
         style,
       ]}
       value={value}
@@ -41,13 +45,10 @@ export function ThemedInput({
 
 const styles = StyleSheet.create({
   input: {
-    padding: 14,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.1)",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 12,
     marginBottom: 10,
     minWidth: 200,
     fontSize: 16,

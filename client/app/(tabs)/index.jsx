@@ -1,21 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { StyleSheet, View, Text, Button, SafeAreaView } from "react-native";
 import CameraComponent from "../../components/Camera";
 import { useCameraPermissions } from "expo-camera";
 import { Drawer } from "../../components/Drawer";
-import { deleteImage } from "../../utils/CameraUtils";
 import DrawerContent from "../../components/CameraDrawer/DrawerContent";
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState(null);
   const [closed, setClosed] = useState(null);
-
-  useEffect(() => {
-    if (closed) {
-      deleteImage(photo.uri);
-    }
-  }, [closed]);
 
   if (!permission) {
     return <View />;

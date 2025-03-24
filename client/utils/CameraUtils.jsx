@@ -1,11 +1,11 @@
+import * as FileSystem from "expo-file-system";
+
 const takePhoto = async (camera, onCapture) => {
   if (camera) {
     const photo = await camera.takePictureAsync();
     onCapture(photo);
   }
 };
-
-import * as FileSystem from "expo-file-system";
 
 const deleteImage = async (uri) => {
   try {
@@ -19,4 +19,10 @@ const deleteImage = async (uri) => {
   }
 };
 
-export { takePhoto, deleteImage };
+const uriToBase64 = async (uri) => {
+  return await FileSystem.readAsStringAsync(uri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+};
+
+export { takePhoto, deleteImage, uriToBase64 };
