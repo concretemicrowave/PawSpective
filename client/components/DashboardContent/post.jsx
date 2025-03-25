@@ -4,7 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faEllipsisV, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 
 export default function Post({ post }) {
   const theme = useColorScheme();
@@ -18,20 +18,25 @@ export default function Post({ post }) {
         <ThemedText type="title" style={styles.title}>
           {post.title}
         </ThemedText>
-        <Dropdown
-          title={<FontAwesomeIcon color={textColor} icon={faEllipsisV} />}
-        >
+        <View style={{ flexDirection: "row", gap: 4 }}>
           <ThemedButton
+            style={{ height: 36, aspectRatio: 1 }}
+            padding={false}
             title={<FontAwesomeIcon color={textColor} icon={faPen} />}
             onPress={() => console.log("Edit post")}
+            color="grey"
+            borderRadius={10}
           />
           <ThemedButton
             hollow
+            style={{ height: 36, aspectRatio: 1 }}
+            padding={false}
             color="attention"
             title={<FontAwesomeIcon color="#d03533" icon={faTrash} />}
             onPress={() => console.log("Delete post")}
+            borderRadius={10}
           />
-        </Dropdown>
+        </View>
       </View>
       <View
         style={[
@@ -55,12 +60,12 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     paddingVertical: 8,
     borderWidth: 1,
-    borderBottomWidth: 0,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
   },
   title: {
     fontSize: 18,

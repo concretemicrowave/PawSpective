@@ -3,7 +3,6 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 
 export function ThemedView({
   style,
-  secondary,
   lightColor,
   darkColor,
   scrollable,
@@ -11,7 +10,7 @@ export function ThemedView({
 }) {
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    secondary ? "backgroundSecondary" : "background",
+    "background",
   );
 
   return scrollable ? (

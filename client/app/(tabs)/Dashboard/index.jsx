@@ -1,35 +1,30 @@
 import { StyleSheet, SafeAreaView, View } from "react-native";
-import { useNavigation } from "expo-router";
 import { Colors } from "../../../constants/Colors";
 import { useColorScheme } from "react-native";
-import {
-  ThemedView,
-  ThemedText,
-  ThemedButton,
-} from "../../../components/ThemedComponents";
+import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
 import DashboardContent from "../../../components/DashboardContent/DashboardContent";
 import { useUser } from "../../../context/UserContext";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Dashboard() {
   const { userData } = useUser();
-  const navigation = useNavigation();
   const theme = useColorScheme();
   const backgroundColor = Colors[theme].background;
+  const backgroundGrey = Colors[theme].backgroundGrey;
 
   return (
-    <ThemedView scrollable secondary style={styles.dashboard}>
-      <View style={[styles.header, { backgroundColor }]}>
+    <ThemedView scrollable style={styles.dashboard}>
+      <LinearGradient
+        colors={[backgroundColor, backgroundGrey]}
+        locations={[0, 0.8]}
+        style={[styles.header, { borderColor: Colors[theme].border }]}
+      >
         <SafeAreaView style={styles.container}>
           <ThemedText type="subtitle" style={styles.title}>
-            Hello, {userData.name}!
+            {userData.posts.length} posts.
           </ThemedText>
-          <ThemedButton
-            onPress={() => navigation.navigate("index")}
-            style={styles.button}
-            title="Create New"
-          />
         </SafeAreaView>
-      </View>
+      </LinearGradient>
       <DashboardContent />
     </ThemedView>
   );
@@ -50,13 +45,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "column",
     borderRadius: 16,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderWidth: 1,
+    borderTopWidth: 0,
   },
   title: {
     fontSize: 28,
     marginTop: 20,
     marginBottom: 10,
-  },
-  button: {
-    width: "100%",
   },
 });

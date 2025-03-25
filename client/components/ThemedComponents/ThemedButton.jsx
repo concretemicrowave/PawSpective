@@ -10,6 +10,7 @@ export function ThemedButton({
   hollow = false,
   color = "primary",
   disabled = false,
+  padding = true,
   ...rest
 }) {
   const backgroundColor = useThemeColor(
@@ -24,9 +25,10 @@ export function ThemedButton({
   return (
     <TouchableOpacity
       style={[
+        padding ? { paddingVertical: 14, paddingHorizontal: 10 } : null,
         styles.button,
         { backgroundColor },
-        disabled ? { opacity: 0.5 } : style,
+        disabled ? { opacity: 0.5 } : null,
         { borderRadius },
         hollow
           ? {
@@ -35,6 +37,7 @@ export function ThemedButton({
               borderColor: backgroundColor,
             }
           : null,
+        style,
       ]}
       activeOpacity={0.6}
       disabled={disabled}
@@ -51,8 +54,6 @@ export function ThemedButton({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 14,
-    paddingHorizontal: 10,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

@@ -14,11 +14,7 @@ export function Dropdown({ title, children }) {
       >
         <ThemedText style={styles.title}>{title}</ThemedText>
       </TouchableOpacity>
-      {isOpen && (
-        <ThemedView secondary style={styles.content}>
-          {children}
-        </ThemedView>
-      )}
+      {isOpen && <ThemedView style={styles.content}>{children}</ThemedView>}
     </>
   );
 }
