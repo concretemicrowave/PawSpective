@@ -14,6 +14,8 @@ export const Colors = {
     grey: "#D3D3D3",
     border: "rgba(0, 0, 0, 0.2)",
     attention: "#d03533",
+    warning: "#ffff00",
+    safe: "#17C964",
   },
   dark: {
     text: "#FFFFFF",
@@ -28,5 +30,7 @@ export const Colors = {
     grey: "#4B4B4B",
     border: "rgba(255, 255, 255, 0.2)",
     attention: "#d03533",
+    warning: "#ffff00",
+    safe: "#17C964",
   },
 };

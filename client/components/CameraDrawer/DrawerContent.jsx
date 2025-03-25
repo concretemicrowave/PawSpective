@@ -8,12 +8,11 @@ export default function DrawerContent({ image, setOpen, setClosed }) {
   const { savePost } = useAuth();
   const { userData, setUserData } = useUser();
   const [disabled, setDisabled] = useState(false);
-  const currentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
   const post = {
     uri: image.uri,
     title: "Something",
-    expires: currentDate,
+    expires: new Date(2026, 11, 31).toISOString().split("T")[0],
     nutrients: { calories: 200, protein: "10g", carbs: "30g" },
   };
 

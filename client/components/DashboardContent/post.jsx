@@ -5,6 +5,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import Chip from "../Chip";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
+import { getTimeUntilExpiration } from "@/utils/getTimeUntilExpiration";
 
 export default function Post({ post }) {
   const theme = useColorScheme();
@@ -12,32 +13,15 @@ export default function Post({ post }) {
   const borderColor = Colors[theme].border;
   const textColor = Colors[theme].text;
 
-  // ✅ Function to calculate time until expiration
-  const getTimeUntilExpiration = (expirationDate) => {
-    const now = new Date();
-    const expiry = new Date(expirationDate);
-    const diffInMs = expiry - now;
-
-    if (diffInMs <= 0) return "Expired"; // Already expired
-
-    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-    if (diffInDays < 7) return `${diffInDays} day(s)`;
-    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} week(s)`;
-    if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} month(s)`;
-    return `${Math.floor(diffInDays / 365)} year(s)`;
-  };
-
-  const timeUntilExpiration = getTimeUntilExpiration(post.expires);
+  const { text: timeUntilExpiration, color: expiryColor } =
+    getTimeUntilExpiration(post.expires);
 
   return (
     <View style={styles.container}>
       <View style={[styles.header, { borderColor }]}>
-        <View style={{ flex: 1 }}>
-          <ThemedText type="title" style={styles.title}>
-            {post.title}
-          </ThemedText>
-          <Chip hollow label={`Expires in ${timeUntilExpiration}`} />
-        </View>
+        <ThemedText type="title" style={styles.title}>
+          {post.title}
+        </ThemedText>
         <View style={{ flexDirection: "row", gap: 4 }}>
           <ThemedButton
             style={{ height: 36, aspectRatio: 1 }}
@@ -65,6 +49,7 @@ export default function Post({ post }) {
         ]}
       >
         <Image style={styles.image} source={{ uri: post.uri }} />
+        <Chip hollow label={`${timeUntilExpiration}`} color={expiryColor} />
       </View>
     </View>
   );
@@ -80,8 +65,7 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     paddingVertical: 8,
     borderWidth: 1,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    borderRadius: 16,
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
@@ -93,10 +77,8 @@ const styles = StyleSheet.create({
   },
   body: {
     padding: 12,
-    borderWidth: 1,
-    borderTopWidth: 0,
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
+    flexDirection: "row",
+    gap: 12,
   },
   image: {
     width: "50%",

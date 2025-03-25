@@ -164,7 +164,7 @@ api.get("/user", async (req, res) => {
     const user = userResult.rows[0];
 
     const postsResult = await pool.query(
-      `SELECT id, uri, title, nutrients FROM posts WHERE user_id = $1`,
+      `SELECT id, uri, expires, title, nutrients FROM posts WHERE user_id = $1`,
       [userId],
     );
 

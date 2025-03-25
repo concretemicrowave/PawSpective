@@ -21,7 +21,7 @@ export default function Dashboard() {
       >
         <SafeAreaView style={styles.container}>
           <ThemedText type="subtitle" style={styles.title}>
-            {userData.posts.length} posts.
+            {userData.posts.length} post(s)
           </ThemedText>
         </SafeAreaView>
       </LinearGradient>
