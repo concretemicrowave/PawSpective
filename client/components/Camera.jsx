@@ -29,7 +29,9 @@ export default function CameraComponent({ onCapture, setClosed, setPhoto }) {
         onPress={() => {
           takePhoto(camera, onCapture);
           setPhoto(camera);
-          setClosed(false);
+          setTimeout(() => {
+            setClosed(false);
+          }, 750);
         }}
       />
     </View>

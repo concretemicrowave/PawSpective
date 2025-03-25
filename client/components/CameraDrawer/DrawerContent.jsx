@@ -16,9 +16,10 @@ export default function DrawerContent({ image, setClosed }) {
   const handleSavePost = async () => {
     const data = await savePost(post);
     if (!data.success) return Alert.alert("Error", data.message.message);
+
     setUserData({
       ...userData,
-      posts: [...userData.posts, data.data.post],
+      posts: [data.data.post, ...userData.posts],
     });
     setClosed(true);
   };
