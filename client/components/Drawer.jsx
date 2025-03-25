@@ -5,26 +5,25 @@ import { useColorScheme } from "react-native";
 import { Colors } from "../constants/Colors";
 import { createPanResponder } from "../utils/panResponder";
 
-export function Drawer({ children, title, height, toggle, closed, setClosed }) {
+export function Drawer({ children, title, height, closed, setClosed }) {
   const translateY = useRef(new Animated.Value(height)).current;
   const colorScheme = useColorScheme();
-  const borderColor =
-    colorScheme === "dark" ? Colors.dark.border : Colors.light.border;
+  const borderColor = Colors[colorScheme].border;
 
   useEffect(() => {
     Animated.timing(translateY, {
-      toValue: toggle && !closed ? 0 : height,
+      toValue: !closed ? 0 : height,
       duration: 300,
       useNativeDriver: true,
       easing: Easing.out(Easing.cubic),
     }).start();
-  }, [toggle, closed]);
+  }, [closed]);
 
   const panResponder = useRef(
     createPanResponder(translateY, height, setClosed),
   ).current;
 
-  if (!toggle) return null;
+  if (closed) return null;
 
   return (
     <Animated.View

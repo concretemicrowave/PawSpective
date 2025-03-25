@@ -1,40 +1,25 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, Button, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import CameraComponent from "../../components/Camera";
-import { useCameraPermissions } from "expo-camera";
 import { Drawer } from "../../components/Drawer";
 import DrawerContent from "../../components/CameraDrawer/DrawerContent";
 
 export default function CameraScreen() {
-  const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState(null);
-  const [closed, setClosed] = useState(null);
-
-  if (!permission) {
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.message}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="Grant Permission" />
-      </View>
-    );
-  }
+  const [closed, setClosed] = useState(true);
 
   return (
     <>
       <SafeAreaView style={styles.container}>
-        <CameraComponent onCapture={(photo) => setPhoto(photo)} />
+        <CameraComponent
+          setClosed={setClosed}
+          onCapture={(photo) => setPhoto(photo)}
+          setPhoto={setPhoto}
+        />
       </SafeAreaView>
       <Drawer
-        image={photo}
         closed={closed}
         setClosed={setClosed}
-        toggle={photo}
         height={850}
         title={"New Post"}
       >

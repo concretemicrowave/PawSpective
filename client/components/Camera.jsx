@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { takePhoto } from "../utils/CameraUtils";
 
-export default function CameraComponent({ onCapture }) {
+export default function CameraComponent({ onCapture, setClosed, setPhoto }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
 
@@ -26,7 +26,11 @@ export default function CameraComponent({ onCapture }) {
       />
       <TouchableOpacity
         style={styles.captureButton}
-        onPress={() => takePhoto(camera, onCapture)}
+        onPress={() => {
+          takePhoto(camera, onCapture);
+          setPhoto(camera);
+          setClosed(false);
+        }}
       />
     </View>
   );

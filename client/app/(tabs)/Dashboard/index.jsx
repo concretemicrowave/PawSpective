@@ -16,7 +16,7 @@ export default function Dashboard() {
     <ThemedView scrollable style={styles.dashboard}>
       <LinearGradient
         colors={[backgroundColor, backgroundGrey]}
-        locations={[0, 0.8]}
+        locations={[0, 0.55]}
         style={[styles.header, { borderColor: Colors[theme].border }]}
       >
         <SafeAreaView style={styles.container}>
