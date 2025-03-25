@@ -29,7 +29,11 @@ export function Drawer({ children, title, height, closed, setClosed }) {
     <Animated.View
       style={[styles.container, { height, transform: [{ translateY }] }]}
     >
-      <ThemedView style={styles.content} {...panResponder.panHandlers}>
+      <ThemedView
+        secondary
+        style={styles.content}
+        {...panResponder.panHandlers}
+      >
         <ThemedView secondary style={styles.header}>
           <View style={[styles.drag, { backgroundColor: borderColor }]} />
           <ThemedText type="title" style={styles.title}>

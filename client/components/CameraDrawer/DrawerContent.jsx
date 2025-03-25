@@ -2,10 +2,12 @@ import { StyleSheet, View, Image, Alert } from "react-native";
 import { ThemedText, ThemedButton, ThemedView } from "../ThemedComponents";
 import { useUser } from "../../context/UserContext";
 import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 
-export default function DrawerContent({ image, setClosed }) {
+export default function DrawerContent({ image, setOpen, setClosed }) {
   const { savePost } = useAuth();
   const { userData, setUserData } = useUser();
+  const [disabled, setDisabled] = useState(false);
 
   const post = {
     uri: image.uri,
@@ -14,6 +16,7 @@ export default function DrawerContent({ image, setClosed }) {
   };
 
   const handleSavePost = async () => {
+    setDisabled(true);
     const data = await savePost(post);
     if (!data.success) return Alert.alert("Error", data.message.message);
 
@@ -22,25 +25,29 @@ export default function DrawerContent({ image, setClosed }) {
       posts: [data.data.post, ...userData.posts],
     });
     setClosed(true);
+    setOpen(true);
   };
 
   return (
-    <ThemedView secondary style={styles.container}>
-      <View style={styles.header}>
-        <Image source={{ uri: image.uri }} style={styles.logo} />
-        <View>
-          <ThemedText type="subtitle">*Insert food</ThemedText>
-          <ThemedText style={{ opacity: 0.8 }}>Expires something</ThemedText>
+    <>
+      <ThemedView secondary style={styles.container}>
+        <View style={styles.header}>
+          <Image source={{ uri: image.uri }} style={styles.logo} />
+          <View>
+            <ThemedText type="subtitle">*Insert food</ThemedText>
+            <ThemedText style={{ opacity: 0.8 }}>Expires something</ThemedText>
+          </View>
         </View>
-      </View>
-      <ThemedButton
-        hollow
-        borderRadius={50}
-        title="Save"
-        onPress={handleSavePost}
-        style={{ marginTop: "auto", marginBottom: 80 }}
-      />
-    </ThemedView>
+        <ThemedButton
+          hollow
+          disabled={disabled}
+          borderRadius={50}
+          title="Save"
+          onPress={handleSavePost}
+          style={{ marginTop: "auto", marginBottom: 80 }}
+        />
+      </ThemedView>
+    </>
   );
 }
 

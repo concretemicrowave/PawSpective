@@ -3,10 +3,12 @@ import { StyleSheet, SafeAreaView } from "react-native";
 import CameraComponent from "../../components/Camera";
 import { Drawer } from "../../components/Drawer";
 import DrawerContent from "../../components/CameraDrawer/DrawerContent";
+import { Note } from "../../components/Note";
 
 export default function CameraScreen() {
   const [photo, setPhoto] = useState(null);
   const [closed, setClosed] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -16,6 +18,7 @@ export default function CameraScreen() {
           onCapture={(photo) => setPhoto(photo)}
           setPhoto={setPhoto}
         />
+        <Note title="Saved" setOpen={setOpen} open={open} duration={500} />
       </SafeAreaView>
       <Drawer
         closed={closed}
@@ -23,7 +26,7 @@ export default function CameraScreen() {
         height={850}
         title={"New Post"}
       >
-        <DrawerContent setClosed={setClosed} image={photo} />
+        <DrawerContent setOpen={setOpen} setClosed={setClosed} image={photo} />
       </Drawer>
     </>
   );

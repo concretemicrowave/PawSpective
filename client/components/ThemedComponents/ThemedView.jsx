@@ -6,11 +6,12 @@ export function ThemedView({
   lightColor,
   darkColor,
   scrollable,
+  secondary,
   ...otherProps
 }) {
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "background",
+    secondary ? "backgroundGrey" : "background",
   );
 
   return scrollable ? (
