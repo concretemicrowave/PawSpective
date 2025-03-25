@@ -6,14 +6,18 @@ export function ThemedText({
   lightColor,
   darkColor,
   type = "default",
+  color = "text",
   ...rest
 }) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+  const textColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    `${color}`,
+  );
 
   return (
     <Text
       style={{
-        color,
+        color: textColor,
         ...(type === "default" && styles.default),
         ...(type === "title" && styles.title),
         ...(type === "subtitle" && styles.subtitle),

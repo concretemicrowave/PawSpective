@@ -179,16 +179,18 @@ api.get("/user", async (req, res) => {
 
 // Save post
 api.post("/save", async (req, res) => {
-  const { uri, title, nutrients } = req.body;
+  const { uri, title, expires, nutrients } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
     return res.json(util.error({ message: "Authorization token required" }));
   }
 
-  if (!uri || !title || !nutrients) {
+  if (!uri || !title || !expires || !nutrients) {
     return res.json(
-      util.error({ message: "URI, title, and nutrients are required" }),
+      util.error({
+        message: "URI, title, expiration date, and nutrients are required",
+      }),
     );
   }
 
@@ -208,12 +210,12 @@ api.post("/save", async (req, res) => {
     }
 
     const result = await pool.query(
-      "INSERT INTO posts (uri, title, nutrients, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
-      [uri, title, nutrients, userId],
+      "INSERT INTO posts (uri, title, expires, nutrients, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+      [uri, title, expires, nutrients, userId],
     );
 
     const postId = result.rows[0].id;
-    const post = { uri, title, nutrients, postId };
+    const post = { uri, title, expires, nutrients, postId };
     res.json(
       util.success({
         message: "Post saved successfully",

@@ -30,6 +30,7 @@ const initializeDatabase = async () => {
         id SERIAL PRIMARY KEY,
         uri TEXT NOT NULL,
         title VARCHAR(255) NOT NULL,
+        expires TIMESTAMP NOT NULL,
         nutrients JSONB NOT NULL,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
       );

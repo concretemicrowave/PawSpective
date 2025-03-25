@@ -30,11 +30,11 @@ export function Drawer({ children, title, height, closed, setClosed }) {
       style={[styles.container, { height, transform: [{ translateY }] }]}
     >
       <ThemedView
-        secondary
+        color="backgroundGrey"
         style={styles.content}
         {...panResponder.panHandlers}
       >
-        <ThemedView secondary style={styles.header}>
+        <ThemedView color="backgroundGrey" style={styles.header}>
           <View style={[styles.drag, { backgroundColor: borderColor }]} />
           <ThemedText type="title" style={styles.title}>
             {title}

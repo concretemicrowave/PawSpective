@@ -2,7 +2,7 @@ import { StyleSheet, View, Image } from "react-native";
 import { ThemedText, ThemedButton } from "../ThemedComponents";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Dropdown } from "../Dropdown/Dropdown";
+import Chip from "../Chip";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 
@@ -12,12 +12,32 @@ export default function Post({ post }) {
   const borderColor = Colors[theme].border;
   const textColor = Colors[theme].text;
 
+  // ✅ Function to calculate time until expiration
+  const getTimeUntilExpiration = (expirationDate) => {
+    const now = new Date();
+    const expiry = new Date(expirationDate);
+    const diffInMs = expiry - now;
+
+    if (diffInMs <= 0) return "Expired"; // Already expired
+
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    if (diffInDays < 7) return `${diffInDays} day(s)`;
+    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} week(s)`;
+    if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} month(s)`;
+    return `${Math.floor(diffInDays / 365)} year(s)`;
+  };
+
+  const timeUntilExpiration = getTimeUntilExpiration(post.expires);
+
   return (
     <View style={styles.container}>
       <View style={[styles.header, { borderColor }]}>
-        <ThemedText type="title" style={styles.title}>
-          {post.title}
-        </ThemedText>
+        <View style={{ flex: 1 }}>
+          <ThemedText type="title" style={styles.title}>
+            {post.title}
+          </ThemedText>
+          <Chip hollow label={`Expires in ${timeUntilExpiration}`} />
+        </View>
         <View style={{ flexDirection: "row", gap: 4 }}>
           <ThemedButton
             style={{ height: 36, aspectRatio: 1 }}

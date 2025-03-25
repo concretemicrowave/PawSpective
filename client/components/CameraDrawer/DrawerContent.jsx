@@ -8,10 +8,12 @@ export default function DrawerContent({ image, setOpen, setClosed }) {
   const { savePost } = useAuth();
   const { userData, setUserData } = useUser();
   const [disabled, setDisabled] = useState(false);
+  const currentDate = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
   const post = {
     uri: image.uri,
     title: "Something",
+    expires: currentDate,
     nutrients: { calories: 200, protein: "10g", carbs: "30g" },
   };
 
@@ -30,7 +32,7 @@ export default function DrawerContent({ image, setOpen, setClosed }) {
 
   return (
     <>
-      <ThemedView secondary style={styles.container}>
+      <ThemedView color="backgroundGrey" style={styles.container}>
         <View style={styles.header}>
           <Image source={{ uri: image.uri }} style={styles.logo} />
           <View>
