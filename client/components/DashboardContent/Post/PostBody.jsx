@@ -1,8 +1,10 @@
 import { StyleSheet, View, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Chip } from "../../Chip";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faClock, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { Nutriments } from "../../Nutriments";
+import { ThemedText } from "../../ThemedComponents";
 
 export default function PostBody({
   post,
@@ -28,12 +30,15 @@ export default function PostBody({
           style={styles.gradient}
         />
         <View style={styles.chipContainer}>
+          <View style={styles.taken}>
+            <FontAwesomeIcon color="white" icon={faCamera} />
+            <ThemedText style={styles.taken}>{formattedTaken}</ThemedText>
+          </View>
           <Chip
             icon={faClock}
             label={`${timeUntilExpiration}`}
             color={expiryColor}
           />
-          <Chip icon={faCamera} color="lightGrey" label={formattedTaken} />
         </View>
       </View>
       <Nutriments nutriments={post.nutrients} />
@@ -73,5 +78,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 4,
+  },
+  taken: {
+    flexDirection: "row",
+    gap: 4,
+    alignItems: "center",
   },
 });

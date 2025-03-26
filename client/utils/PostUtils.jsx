@@ -1,4 +1,4 @@
-export const getTimeUntilExpiration = (expirationDate) => {
+const getTimeUntilExpiration = (expirationDate) => {
   const now = new Date();
   const expiry = new Date(expirationDate);
   const diffInMs = expiry - now;
@@ -26,3 +26,5 @@ export const getTimeUntilExpiration = (expirationDate) => {
     color: "safe",
   };
 };
+
+export { getTimeUntilExpiration };

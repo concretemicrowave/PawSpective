@@ -141,6 +141,42 @@ api.get("/auth-check", async (req, res) => {
   }
 });
 
+api.delete("/posts/:id", async (req, res) => {
+  const { id } = req.params;
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.json(util.error({ message: "Authorization token required" }));
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    const result = await pool.query(
+      "DELETE FROM posts WHERE id = $1 AND user_id = $2 RETURNING *",
+      [id, userId],
+    );
+
+    if (result.rowCount === 0) {
+      return res.json(
+        util.error({
+          message: "Post not found",
+        }),
+      );
+    }
+
+    res.json(
+      util.success({
+        message: "Post deleted successfully",
+      }),
+    );
+  } catch (err) {
+    console.error("Error deleting post:", err);
+    res.json(util.error({ message: "Internal server error" }));
+  }
+});
+
 api.get("/user", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
 

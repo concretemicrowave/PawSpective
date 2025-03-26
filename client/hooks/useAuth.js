@@ -113,5 +113,33 @@ export function useAuth() {
     }
   };
 
-  return { isLoggedIn, login, register, logout, savePost, getUser };
+  const deletePost = async (postId) => {
+    try {
+      const token = await SecureStore.getItemAsync(TOKEN_KEY);
+
+      if (!token) {
+        throw new Error("Authentication token not found.");
+      }
+
+      const response = await fetch(`${API_URL}/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete post");
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error deleting the post:", error.message);
+      throw error;
+    }
+  };
+
+  return { isLoggedIn, login, register, logout, savePost, getUser, deletePost };
 }

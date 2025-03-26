@@ -2,8 +2,25 @@ import { StyleSheet, View } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
 import { ThemedText, ThemedButton } from "../../ThemedComponents";
+import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@/context/UserContext";
 
 export default function PostHeader({ post, textColor, borderColor }) {
+  const { deletePost } = useAuth();
+  const { userData, setUserData } = useUser();
+
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(post.id);
+      setUserData({
+        ...userData,
+        posts: userData.posts.filter((p) => p.id !== post.id),
+      });
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    }
+  };
+
   return (
     <View style={[styles.header, { borderColor }]}>
       <ThemedText type="title" style={styles.title}>
@@ -24,7 +41,7 @@ export default function PostHeader({ post, textColor, borderColor }) {
           padding={false}
           color="attention"
           title={<FontAwesomeIcon color="#d03533" icon={faTrash} />}
-          onPress={() => console.log("Delete post")}
+          onPress={() => handleDeletePost(post.id)}
           borderRadius={10}
         />
       </View>

@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { getTimeUntilExpiration } from "@/utils/getTimeUntilExpiration";
+import { getTimeUntilExpiration } from "@/utils/PostUtils";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
 
