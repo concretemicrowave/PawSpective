@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { ThemedView, ThemedText } from "../ThemedComponents";
+import { ThemedView, ThemedText } from "./ThemedComponents";
 import { useState } from "react";
 
 export function Dropdown({ title, children }) {

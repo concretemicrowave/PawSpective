@@ -1,13 +1,15 @@
 import { ThemedView, ThemedText } from "./ThemedComponents";
 import { StyleSheet } from "react-native";
 import { useThemeColor } from "../hooks/useThemeColor";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
-export default function Chip({
+export function Chip({
   label,
   color = "primary",
   lightColor,
   darkColor,
   style,
+  icon,
   hollow = false,
 }) {
   const borderColor = useThemeColor(
@@ -27,6 +29,13 @@ export default function Chip({
         style,
       ]}
     >
+      {icon && (
+        <FontAwesomeIcon
+          icon={icon}
+          size={16}
+          color={hollow ? borderColor : ""}
+        />
+      )}
       <ThemedText color={hollow ? color : ""} style={styles.text}>
         {label}
       </ThemedText>
@@ -39,6 +48,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 50,
     alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   text: {
     fontSize: 16,

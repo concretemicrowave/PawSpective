@@ -16,7 +16,6 @@ export const UserProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const response = await getUser();
-        console.log("response", response.data.user.posts);
 
         if (response?.data) {
           setUserData({

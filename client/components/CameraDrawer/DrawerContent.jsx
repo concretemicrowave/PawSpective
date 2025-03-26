@@ -3,6 +3,7 @@ import { ThemedText, ThemedButton, ThemedView } from "../ThemedComponents";
 import { useUser } from "../../context/UserContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
+import { Nutriments } from "../Nutriments";
 
 export default function DrawerContent({ image, setOpen, setClosed }) {
   const { savePost } = useAuth();
@@ -35,9 +36,12 @@ export default function DrawerContent({ image, setOpen, setClosed }) {
       <ThemedView color="backgroundGrey" style={styles.container}>
         <View style={styles.header}>
           <Image source={{ uri: image.uri }} style={styles.logo} />
-          <View>
+          <View style={{ flex: 1 }}>
             <ThemedText type="subtitle">*Insert food</ThemedText>
-            <ThemedText style={{ opacity: 0.8 }}>Expires something</ThemedText>
+            <ThemedText style={{ opacity: 0.8, marginBottom: 10 }}>
+              Expires something
+            </ThemedText>
+            <Nutriments nutriments={post.nutrients} />
           </View>
         </View>
         <ThemedButton
@@ -65,7 +69,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: "50%",
-    aspectRatio: 1,
+    aspectRatio: 4 / 5,
     marginBottom: 10,
     borderRadius: 12,
   },
