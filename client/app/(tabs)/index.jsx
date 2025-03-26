@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, SafeAreaView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import CameraComponent from "../../components/Camera";
 import { Drawer } from "../../components/Drawer";
 import DrawerContent from "../../components/CameraDrawer/DrawerContent";
@@ -12,14 +12,14 @@ export default function CameraScreen() {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <CameraComponent
           setClosed={setClosed}
           onCapture={(photo) => setPhoto(photo)}
           setPhoto={setPhoto}
         />
-        <Note title="Saved" setOpen={setOpen} open={open} duration={500} />
-      </SafeAreaView>
+      </View>
+      <Note title="Saved" setOpen={setOpen} open={open} duration={500} />
       <Drawer
         closed={closed}
         setClosed={setClosed}
@@ -38,11 +38,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
-  },
-  message: {
-    textAlign: "center",
-    fontSize: 18,
-    marginBottom: 20,
-    color: "white",
   },
 });

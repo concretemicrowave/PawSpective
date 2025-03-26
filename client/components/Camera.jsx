@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
   },
   captureButton: {
     position: "absolute",
-    bottom: 120,
+    bottom: 150,
     borderColor: "white",
     borderWidth: 6,
     borderRadius: 50,
-    width: 80,
-    height: 80,
+    width: 90,
+    height: 90,
     alignSelf: "center",
   },
 });
