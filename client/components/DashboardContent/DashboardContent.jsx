@@ -2,7 +2,7 @@ import { useUser } from "../../context/UserContext";
 import { View } from "react-native";
 import { ThemedText, ThemedInput } from "../ThemedComponents";
 import { StyleSheet } from "react-native";
-import Post from "./post";
+import Post from "./Post/Post";
 
 export default function DashboardContent() {
   const { userData } = useUser();

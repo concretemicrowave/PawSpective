@@ -164,7 +164,7 @@ api.get("/user", async (req, res) => {
     const user = userResult.rows[0];
 
     const postsResult = await pool.query(
-      `SELECT id, uri, expires, title, nutrients FROM posts WHERE user_id = $1`,
+      `SELECT id, uri, expires, taken, title, nutrients FROM posts WHERE user_id = $1`,
       [userId],
     );
 
@@ -179,17 +179,18 @@ api.get("/user", async (req, res) => {
 
 // Save post
 api.post("/save", async (req, res) => {
-  const { uri, title, expires, nutrients } = req.body;
+  const { uri, title, expires, taken, nutrients } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
     return res.json(util.error({ message: "Authorization token required" }));
   }
 
-  if (!uri || !title || !expires || !nutrients) {
+  if (!uri || !title || !expires || !taken || !nutrients) {
     return res.json(
       util.error({
-        message: "URI, title, expiration date, and nutrients are required",
+        message:
+          "URI, title, expiration date, taken date, and nutrients are required",
       }),
     );
   }
@@ -210,12 +211,12 @@ api.post("/save", async (req, res) => {
     }
 
     const result = await pool.query(
-      "INSERT INTO posts (uri, title, expires, nutrients, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-      [uri, title, expires, nutrients, userId],
+      "INSERT INTO posts (uri, title, expires, taken, nutrients, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+      [uri, title, expires, taken, nutrients, userId],
     );
 
     const postId = result.rows[0].id;
-    const post = { uri, title, expires, nutrients, postId };
+    const post = { uri, title, expires, taken, nutrients, postId };
     res.json(
       util.success({
         message: "Post saved successfully",

@@ -45,7 +45,6 @@ export function useAuth() {
       const data = await response.json();
       if (data.success && data.data.token) {
         await SecureStore.setItemAsync(TOKEN_KEY, data.data.token);
-        console.log(await SecureStore.getItemAsync(TOKEN_KEY));
         setIsLoggedIn(true);
         return data;
       } else {
@@ -107,7 +106,6 @@ export function useAuth() {
         throw new Error(data.message || "Failed to save post");
       }
 
-      console.log("Post saved successfully:", data);
       return data;
     } catch (error) {
       console.error("Error saving the post:", error.message);

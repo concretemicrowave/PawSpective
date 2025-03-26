@@ -18,8 +18,8 @@ export default function CameraScreen() {
           onCapture={(photo) => setPhoto(photo)}
           setPhoto={setPhoto}
         />
+        <Note title="Saved" setOpen={setOpen} open={open} duration={500} />
       </View>
-      <Note title="Saved" setOpen={setOpen} open={open} duration={500} />
       <Drawer
         closed={closed}
         setClosed={setClosed}
