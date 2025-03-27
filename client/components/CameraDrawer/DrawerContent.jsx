@@ -12,14 +12,24 @@ export default function DrawerContent({ image, setOpen, setClosed }) {
 
   const post = {
     uri: image?.product?.image_url,
-    title: "Something",
+    title: image?.product?.product_name_en || "Unknown Product",
     expires: image?.product?.expiration_date
       ? image.product.expiration_date
       : "1435-01-01",
     taken: new Date().toISOString().split("T")[0],
-    nutrients: { calories: 200, protein: "10g", carbs: "30g" },
+    nutrients: {
+      calories: image?.product?.nutriments["energy-kcal"] || 0,
+      protein: image?.product?.nutriments?.proteins || 0,
+      carbs: image?.product?.nutriments?.carbohydrates || 0,
+      fat: image?.product?.nutriments?.fat || 0,
+      fats_unit: image?.product?.nutriments?.fat_unit || "g",
+      sugar: image?.product?.nutriments?.sugars || 0,
+      sugars_unit: image?.product?.nutriments?.sugars_unit || "g",
+      fiber: image?.product?.nutriments?.fiber || 0,
+      fiber_unit: image?.product?.nutriments?.fiber_unit || "g",
+    },
   };
-  console.log(post);
+
   const handleSavePost = async () => {
     setDisabled(true);
     const data = await savePost(post);
@@ -37,14 +47,11 @@ export default function DrawerContent({ image, setOpen, setClosed }) {
     <>
       <ThemedView color="backgroundGrey" style={styles.container}>
         <View style={styles.header}>
-          <Image
-            source={{ uri: image.product.image_url }}
-            style={styles.logo}
-          />
+          <Image source={{ uri: post.uri }} style={styles.logo} />
           <View style={{ flex: 1 }}>
-            <ThemedText type="subtitle">*Insert food</ThemedText>
+            <ThemedText type="subtitle">{post.title}</ThemedText>
             <ThemedText style={{ opacity: 0.8, marginBottom: 10 }}>
-              Expires something
+              Expires {post.expires == "1435-01-01" ? "Never" : post.expires}
             </ThemedText>
             <Nutriments nutriments={post.nutrients} />
           </View>

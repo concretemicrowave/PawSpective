@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { ThemedText } from "./ThemedComponents";
 import { useThemeColor } from "../hooks/useThemeColor";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -7,6 +7,9 @@ import {
   faFire,
   faDrumstickBite,
   faBreadSlice,
+  faWeight,
+  faCubesStacked,
+  faLeaf,
 } from "@fortawesome/free-solid-svg-icons";
 
 export function Nutriments({ lightColor, darkColor, nutriments }) {
@@ -16,11 +19,12 @@ export function Nutriments({ lightColor, darkColor, nutriments }) {
   );
 
   return (
-    <View
+    <ScrollView
       style={[
         styles.container,
         { borderColor, backgroundColor: "rgba(255, 255, 255, 0.1)" },
       ]}
+      bounces={false}
     >
       <View style={styles.nutriment}>
         <FontAwesomeIcon icon={faFire} size={24} color="#FF3C00" />
@@ -49,7 +53,34 @@ export function Nutriments({ lightColor, darkColor, nutriments }) {
           carbs
         </ThemedText>
       </View>
-    </View>
+      <View style={styles.nutriment}>
+        <FontAwesomeIcon icon={faWeight} size={24} color="#B0B7C6" />
+        <ThemedText>
+          <ThemedText type="subtitle" style={styles.boldText}>
+            {nutriments.fat}
+          </ThemedText>{" "}
+          fats({nutriments.fats_unit})
+        </ThemedText>
+      </View>
+      <View style={styles.nutriment}>
+        <FontAwesomeIcon icon={faCubesStacked} size={24} color="#fefefe" />
+        <ThemedText>
+          <ThemedText type="subtitle" style={styles.boldText}>
+            {nutriments.sugar}
+          </ThemedText>{" "}
+          sugar({nutriments.sugars_unit})
+        </ThemedText>
+      </View>
+      <View style={styles.nutriment}>
+        <FontAwesomeIcon icon={faLeaf} size={24} color="#4CAF50" />
+        <ThemedText>
+          <ThemedText type="subtitle" style={styles.boldText}>
+            {nutriments.fiber}
+          </ThemedText>{" "}
+          fiber({nutriments.fiber_unit})
+        </ThemedText>
+      </View>
+    </ScrollView>
   );
 }
 

@@ -22,12 +22,9 @@ export default function CameraComponent({ onCapture, setClosed, setPhoto }) {
   const handleBarcodeScanned = ({ data }) => {
     setScanned(true);
     setTimeout(async () => {
-      console.log("Barcode scanned:", data);
       await takePhoto(data, setPhoto, onCapture);
       setScanned(false);
-      setTimeout(() => {
-        setClosed(false);
-      }, 750);
+      setClosed(false);
     }, 1000);
   };
 
@@ -76,6 +73,6 @@ const styles = StyleSheet.create({
     transform: [{ translateX: "-50%" }],
     backgroundColor: "rgba(0,0,0,0.6)",
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 12,
   },
 });
