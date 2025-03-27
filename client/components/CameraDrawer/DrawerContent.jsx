@@ -3,7 +3,7 @@ import { ThemedText, ThemedButton, ThemedView } from "../ThemedComponents";
 import { useUser } from "../../context/UserContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
-import { Nutriments } from "../Nutriments";
+import { Nutriments } from "../Nutriments/Nutriments";
 
 export default function DrawerContent({ image, setOpen, setClosed }) {
   const { savePost } = useAuth();

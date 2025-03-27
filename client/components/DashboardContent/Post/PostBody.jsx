@@ -3,7 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Chip } from "../../Chip";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faClock, faCamera } from "@fortawesome/free-solid-svg-icons";
-import { Nutriments } from "../../Nutriments";
+import { Nutriments } from "../../Nutriments/Nutriments";
 import { ThemedText } from "../../ThemedComponents";
 
 export default function PostBody({
