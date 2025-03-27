@@ -11,13 +11,15 @@ export default function DrawerContent({ image, setOpen, setClosed }) {
   const [disabled, setDisabled] = useState(false);
 
   const post = {
-    uri: image.uri,
+    uri: image?.product?.image_url,
     title: "Something",
-    expires: new Date(2026, 11, 31).toISOString().split("T")[0],
+    expires: image?.product?.expiration_date
+      ? image.product.expiration_date
+      : "1435-01-01",
     taken: new Date().toISOString().split("T")[0],
     nutrients: { calories: 200, protein: "10g", carbs: "30g" },
   };
-
+  console.log(post);
   const handleSavePost = async () => {
     setDisabled(true);
     const data = await savePost(post);
@@ -35,7 +37,10 @@ export default function DrawerContent({ image, setOpen, setClosed }) {
     <>
       <ThemedView color="backgroundGrey" style={styles.container}>
         <View style={styles.header}>
-          <Image source={{ uri: image.uri }} style={styles.logo} />
+          <Image
+            source={{ uri: image.product.image_url }}
+            style={styles.logo}
+          />
           <View style={{ flex: 1 }}>
             <ThemedText type="subtitle">*Insert food</ThemedText>
             <ThemedText style={{ opacity: 0.8, marginBottom: 10 }}>

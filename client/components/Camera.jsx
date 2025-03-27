@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { useState, useEffect, useRef } from "react";
+import { View, StyleSheet } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { takePhoto } from "../utils/CameraUtils";
+import { ThemedText } from "./ThemedComponents";
 
 export default function CameraComponent({ onCapture, setClosed, setPhoto }) {
   const [permission, requestPermission] = useCameraPermissions();
-  const [camera, setCamera] = useState(null);
+  const [scanned, setScanned] = useState(false);
+  const cameraRef = useRef(null);
 
   useEffect(() => {
     if (!permission?.granted) {
@@ -17,23 +19,31 @@ export default function CameraComponent({ onCapture, setClosed, setPhoto }) {
     return null;
   }
 
+  const handleBarcodeScanned = ({ data }) => {
+    setScanned(true);
+    setTimeout(async () => {
+      console.log("Barcode scanned:", data);
+      await takePhoto(data, setPhoto, onCapture);
+      setScanned(false);
+      setTimeout(() => {
+        setClosed(false);
+      }, 750);
+    }, 1000);
+  };
+
   return (
     <View style={styles.cameraWrapper}>
       <CameraView
         style={styles.camera}
         type="back"
-        ref={(ref) => setCamera(ref)}
+        ref={cameraRef}
+        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
       />
-      <TouchableOpacity
-        style={styles.captureButton}
-        onPress={() => {
-          takePhoto(camera, onCapture);
-          setPhoto(camera);
-          setTimeout(() => {
-            setClosed(false);
-          }, 750);
-        }}
-      />
+      <View style={styles.scanOverlay}>
+        <ThemedText style={styles.scanText}>
+          Scan a food product's barcode
+        </ThemedText>
+      </View>
     </View>
   );
 }
@@ -58,5 +68,14 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     alignSelf: "center",
+  },
+  scanOverlay: {
+    position: "absolute",
+    top: "40%",
+    left: "50%",
+    transform: [{ translateX: "-50%" }],
+    backgroundColor: "rgba(0,0,0,0.6)",
+    padding: 10,
+    borderRadius: 10,
   },
 });

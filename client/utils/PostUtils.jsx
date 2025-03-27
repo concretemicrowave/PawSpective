@@ -1,4 +1,7 @@
 const getTimeUntilExpiration = (expirationDate) => {
+  if (expirationDate === "1435-01-01")
+    return { text: "No Expiry Date", color: "safe" };
+
   const now = new Date();
   const expiry = new Date(expirationDate);
   const diffInMs = expiry - now;
