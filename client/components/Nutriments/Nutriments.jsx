@@ -4,6 +4,7 @@ import { ThemedText } from "../ThemedComponents";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import { useIcons } from "../../utils/NutrimentICONS";
 import { Nutriment } from "./Nutriment";
+import { Popup } from "../Popup";
 
 export function Nutriments({ lightColor, darkColor, nutriments }) {
   const [expanded, setExpanded] = useState(false);
@@ -13,8 +14,6 @@ export function Nutriments({ lightColor, darkColor, nutriments }) {
   );
   const ICONS = useIcons();
 
-  const visibleItems = expanded ? ICONS : ICONS.slice(0, 3);
-
   return (
     <View
       style={[
@@ -22,7 +21,7 @@ export function Nutriments({ lightColor, darkColor, nutriments }) {
         { borderColor, backgroundColor: "rgba(255, 255, 255, 0.1)" },
       ]}
     >
-      {visibleItems.map(({ icon, color, key, label, unitKey }) => (
+      {ICONS.slice(0, 3).map(({ icon, color, key, label, unitKey }) => (
         <Nutriment
           key={key}
           icon={icon}
@@ -33,13 +32,23 @@ export function Nutriments({ lightColor, darkColor, nutriments }) {
           nutrimentKey={key}
         />
       ))}
-      {!expanded && (
-        <TouchableOpacity
-          onPress={() => setExpanded(true)}
-          style={styles.button}
-        >
-          <ThemedText style={styles.buttonText}>View All</ThemedText>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={() => setExpanded(true)} style={styles.button}>
+        <ThemedText style={styles.buttonText}>View All</ThemedText>
+      </TouchableOpacity>
+      {expanded && (
+        <Popup title={"Nutriments"} onClose={() => setExpanded(false)}>
+          {ICONS.map(({ icon, color, key, label, unitKey }) => (
+            <Nutriment
+              key={key}
+              icon={icon}
+              color={color}
+              label={label}
+              unitKey={unitKey}
+              nutriments={nutriments}
+              nutrimentKey={key}
+            />
+          ))}
+        </Popup>
       )}
     </View>
   );
@@ -48,8 +57,7 @@ export function Nutriments({ lightColor, darkColor, nutriments }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    padding: 12,
     borderRadius: 12,
     borderWidth: 1,
   },

@@ -4,14 +4,13 @@ import { ThemedText } from "../ThemedComponents";
 
 export function Nutriment({
   icon,
-  color,
   key,
+  color,
   label,
   unitKey,
   nutriments,
   nutrimentKey,
 }) {
-  console.log(nutriments, key);
   return (
     <View key={key} style={styles.nutriment}>
       <FontAwesomeIcon icon={icon} size={24} color={color} />
