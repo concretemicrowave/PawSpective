@@ -2,12 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faCamera,
-  faClipboardList,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import Feather from "@expo/vector-icons/Feather";
 
 export default function TabLayout() {
   return (
@@ -16,23 +11,17 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors["light"].text,
         tabBarInactiveTintColor: "rgba(0, 0, 0, 0.5)",
         headerShown: false,
-        tabBarShowLabel: false,
         tabBarLabelStyle: {
           fontSize: 12,
           marginTop: 5,
         },
         tabBarStyle: Platform.select({
           ios: {
-            position: "absolute",
-            bottom: 25,
-            flexDirection: "row",
-            alignItems: "center",
-            marginHorizontal: 20,
-            paddingVertical: 15,
-            borderRadius: 25,
+            paddingTop: 8,
+            height: 90,
             borderWidth: 1,
             borderColor: Colors["light"].border,
-            backgroundColor: Colors["light"].backgroundGrey,
+            backgroundColor: Colors["light"].background,
           },
           default: {},
         }),
@@ -43,16 +32,16 @@ export default function TabLayout() {
         options={{
           title: "Camera",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faCamera} size={34} color={color} />
+            <Feather name="camera" size={26} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="Dashboard/index"
         options={{
-          title: "Dashboard",
+          title: "Analytics",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faClipboardList} size={34} color={color} />
+            <Feather name="bar-chart-2" size={26} color={color} />
           ),
         }}
       />
@@ -61,7 +50,7 @@ export default function TabLayout() {
         options={{
           title: "Account",
           tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faUser} size={34} color={color} />
+            <Feather name="user" size={26} color={color} />
           ),
         }}
       />

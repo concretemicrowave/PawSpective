@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   dashboard: {
-    borderRadius: 20,
     height: "100%",
   },
   header: {
