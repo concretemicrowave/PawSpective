@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from "react";
-import { View, StyleSheet } from "react-native";
+import { useState, useEffect } from "react";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { takePhoto } from "../utils/CameraUtils";
-import { ThemedText } from "./ThemedComponents";
+import useCameraActions from "../utils/CameraUtils";
+import { usePhoto } from "@/context/PhotoContext";
 
-export default function CameraComponent({ onCapture, setClosed, setPhoto }) {
+export default function CameraComponent({ onCapture, setClosed }) {
   const [permission, requestPermission] = useCameraPermissions();
-  const [scanned, setScanned] = useState(false);
-  const cameraRef = useRef(null);
+  const [camera, setCamera] = useState(null);
+  const { takePhoto } = useCameraActions();
+  const { photoUri } = usePhoto();
 
   useEffect(() => {
     if (!permission?.granted) {
@@ -19,28 +20,25 @@ export default function CameraComponent({ onCapture, setClosed, setPhoto }) {
     return null;
   }
 
-  const handleBarcodeScanned = ({ data }) => {
-    setScanned(true);
-    setTimeout(async () => {
-      await takePhoto(data, setPhoto, onCapture);
-      setScanned(false);
-      setClosed(false);
-    }, 1000);
-  };
-
   return (
     <View style={styles.cameraWrapper}>
       <CameraView
         style={styles.camera}
         type="back"
-        ref={cameraRef}
-        onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+        ref={(ref) => setCamera(ref)}
       />
-      <View style={styles.scanOverlay}>
-        <ThemedText style={styles.scanText}>
-          Scan a food product's barcode
-        </ThemedText>
-      </View>
+      <TouchableOpacity
+        style={styles.captureButton}
+        onPress={() => {
+          takePhoto(camera);
+          onCapture(photoUri);
+          setTimeout(() => {
+            setClosed(false);
+          }, 750);
+        }}
+      >
+        <View style={styles.inner} />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -57,21 +55,20 @@ const styles = StyleSheet.create({
   },
   captureButton: {
     position: "absolute",
-    bottom: 150,
+    bottom: 80,
     borderColor: "white",
-    borderWidth: 6,
+    borderWidth: 3,
     borderRadius: 50,
     width: 90,
     height: 90,
     alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  scanOverlay: {
-    position: "absolute",
-    top: "40%",
-    left: "50%",
-    transform: [{ translateX: "-50%" }],
-    backgroundColor: "rgba(255,255,255,0.6)",
-    padding: 10,
-    borderRadius: 12,
+  inner: {
+    width: 74,
+    height: 74,
+    borderRadius: 50,
+    backgroundColor: "white",
   },
 });

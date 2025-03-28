@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import CameraComponent from "../../components/Camera";
-import { Drawer } from "../../components/Drawer";
-import DrawerContent from "../../components/CameraDrawer/DrawerContent";
 import { Note } from "../../components/Note";
 
 export default function CameraScreen() {
@@ -20,14 +18,6 @@ export default function CameraScreen() {
         />
         <Note title="Saved" setOpen={setOpen} open={open} duration={500} />
       </View>
-      <Drawer
-        closed={closed}
-        setClosed={setClosed}
-        height={850}
-        title={"New Post"}
-      >
-        <DrawerContent setOpen={setOpen} setClosed={setClosed} image={photo} />
-      </Drawer>
     </>
   );
 }

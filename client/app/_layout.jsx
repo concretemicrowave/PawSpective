@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { UserProvider } from "@/context/UserContext";
+import { PhotoProvider } from "@/context/PhotoContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,21 +45,29 @@ export default function RootLayout() {
   }
 
   return (
-    <UserProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen
-            name="openScreen/index"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="openScreen/authForms/register"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    </UserProvider>
+    <PhotoProvider>
+      <UserProvider>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <Stack>
+            <Stack.Screen
+              name="openScreen/index"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="openScreen/authForms/register"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="details/index"
+              options={{ headerShown: false }}
+            />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </UserProvider>
+    </PhotoProvider>
   );
 }
