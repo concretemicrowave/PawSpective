@@ -1,15 +1,25 @@
 import { usePhoto } from "../../context/PhotoContext";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, SafeAreaView, View } from "react-native";
 import { ThemedView, ThemedText } from "../../components/ThemedComponents";
+import Details from "./details";
+import { BackLink } from "../../components/BackLink";
 
-export default function Details() {
+export default function DetailsScreen() {
   const { photoUri } = usePhoto();
 
   return (
-    <ThemedView style={styles.container}>
-      <Image source={{ uri: photoUri }} style={styles.image} />
-      <ThemedText style={styles.text}>{photoUri}</ThemedText>
-    </ThemedView>
+    <>
+      <BackLink white={false} />
+      <ThemedView style={styles.container}>
+        <View style={{ height: "100%", width: "100%" }}>
+          <SafeAreaView style={styles.title}>
+            <ThemedText style={styles.text}>Overview</ThemedText>
+          </SafeAreaView>
+          <Image source={{ uri: photoUri }} style={styles.image} />
+        </View>
+        <Details />
+      </ThemedView>
+    </>
   );
 }
 
@@ -17,15 +27,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
   },
   image: {
-    width: 300,
-    height: 300,
+    width: "100%",
+    height: "40%",
+  },
+  title: {
+    position: "absolute",
+    zIndex: 10000,
+    width: "100%",
+    alignItems: "center",
   },
   text: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
-    marginTop: 20,
+    color: "white",
+    marginTop: 10,
   },
 });

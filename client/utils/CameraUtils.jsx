@@ -9,7 +9,7 @@ const useCameraActions = () => {
 
   const takePhoto = async (camera) => {
     if (camera) {
-      const photo = await camera.takePictureAsync();
+      const photo = await camera.takePictureAsync({ quality: 1 });
       setPhotoUri(photo.uri);
       router.push("details");
     }

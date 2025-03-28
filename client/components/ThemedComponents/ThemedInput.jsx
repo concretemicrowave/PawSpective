@@ -11,10 +11,11 @@ export function ThemedInput({
   type = "default",
   editable = true,
   required = false,
+  disabled = false,
   ...rest
 }) {
   const color = Colors["light"].text;
-  const isDisabled = type === "disabled" || !editable;
+  const isDisabled = type === "disabled" || !editable || disabled;
   const isReadOnly = type === "read-only";
 
   const modifiedPlaceholder = required ? `${placeholder} *` : placeholder;
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.1)",
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
     marginBottom: 10,
     minWidth: 200,
     fontSize: 16,
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.5,
-    backgroundColor: "rgba(200, 200, 200, 0.1)",
+    backgroundColor: "rgba(200, 200, 200, 0.2)",
   },
   readOnly: {
     backgroundColor: "transparent",

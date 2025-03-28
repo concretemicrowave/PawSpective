@@ -19,7 +19,6 @@ export function Icon({
     { light: lightColor, dark: darkColor },
     color,
   );
-  console.log(background);
 
   const shadowColor = "#000";
 

@@ -2,13 +2,11 @@ import { useState, useEffect } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import useCameraActions from "../utils/CameraUtils";
-import { usePhoto } from "@/context/PhotoContext";
 
-export default function CameraComponent({ onCapture, setClosed }) {
+export default function CameraComponent() {
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const { takePhoto } = useCameraActions();
-  const { photoUri } = usePhoto();
 
   useEffect(() => {
     if (!permission?.granted) {
@@ -31,10 +29,6 @@ export default function CameraComponent({ onCapture, setClosed }) {
         style={styles.captureButton}
         onPress={() => {
           takePhoto(camera);
-          onCapture(photoUri);
-          setTimeout(() => {
-            setClosed(false);
-          }, 750);
         }}
       >
         <View style={styles.inner} />
@@ -66,8 +60,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inner: {
-    width: 74,
-    height: 74,
+    width: 76,
+    height: 76,
     borderRadius: 50,
     backgroundColor: "white",
   },
