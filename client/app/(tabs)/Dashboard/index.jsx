@@ -1,6 +1,5 @@
-import { StyleSheet, SafeAreaView, View } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import { Colors } from "../../../constants/Colors";
-import { useColorScheme } from "react-native";
 import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
 import DashboardContent from "../../../components/DashboardContent/DashboardContent";
 import { useUser } from "../../../context/UserContext";
@@ -8,16 +7,15 @@ import { LinearGradient } from "expo-linear-gradient";
 
 export default function Dashboard() {
   const { userData } = useUser();
-  const theme = useColorScheme();
-  const backgroundColor = Colors[theme].background;
-  const backgroundGrey = Colors[theme].backgroundGrey;
+  const backgroundColor = Colors["light"].background;
+  const backgroundGrey = Colors["light"].backgroundGrey;
 
   return (
     <ThemedView scrollable style={styles.dashboard}>
       <LinearGradient
         colors={[backgroundColor, backgroundGrey]}
         locations={[0, 0.7]}
-        style={[styles.header, { borderColor: Colors[theme].border }]}
+        style={[styles.header, { borderColor: Colors["light"].border }]}
       >
         <SafeAreaView style={styles.container}>
           <ThemedText type="subtitle" style={styles.title}>

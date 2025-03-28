@@ -2,7 +2,6 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faCamera,
@@ -11,13 +10,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].primary,
-        tabBarInactiveTintColor: "rgba(255, 255, 255, 0.4)",
+        tabBarActiveTintColor: Colors["light"].text,
+        tabBarInactiveTintColor: "rgba(0, 0, 0, 0.5)",
         headerShown: false,
         tabBarShowLabel: false,
         tabBarLabelStyle: {
@@ -34,8 +31,8 @@ export default function TabLayout() {
             paddingVertical: 15,
             borderRadius: 25,
             borderWidth: 1,
-            borderColor: Colors[colorScheme ?? "light"].border,
-            backgroundColor: Colors[colorScheme ?? "light"].backgroundGrey,
+            borderColor: Colors["light"].border,
+            backgroundColor: Colors["light"].backgroundGrey,
           },
           default: {},
         }),

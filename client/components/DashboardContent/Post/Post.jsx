@@ -1,15 +1,13 @@
 import { StyleSheet, View } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { getTimeUntilExpiration } from "@/utils/PostUtils";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
 
 export default function Post({ post }) {
-  const theme = useColorScheme();
-  const headerBackgroundColor = Colors[theme].background;
-  const borderColor = Colors[theme].border;
-  const textColor = Colors[theme].text;
+  const headerBackgroundColor = Colors["light"].background;
+  const borderColor = Colors["light"].border;
+  const textColor = Colors["light"].text;
 
   const { text: timeUntilExpiration, color: expiryColor } =
     getTimeUntilExpiration(post.expires);

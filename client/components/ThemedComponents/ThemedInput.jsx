@@ -1,11 +1,9 @@
 import { TextInput, StyleSheet } from "react-native";
-import { useThemeColor } from "../../hooks/useThemeColor";
+import { Colors } from "../../constants/Colors";
 
 export function ThemedInput({
   style,
   placeholder,
-  lightColor,
-  darkColor,
   value,
   height = "50",
   borderRadius = 12,
@@ -15,7 +13,7 @@ export function ThemedInput({
   required = false,
   ...rest
 }) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+  const color = Colors["light"].text;
   const isDisabled = type === "disabled" || !editable;
   const isReadOnly = type === "read-only";
 
@@ -25,7 +23,6 @@ export function ThemedInput({
     <TextInput
       style={[
         styles.input,
-        { color },
         { borderRadius },
         isDisabled && styles.disabled,
         isReadOnly && styles.readOnly,
@@ -33,6 +30,7 @@ export function ThemedInput({
         style,
       ]}
       value={value}
+      placeholderTextColor={color}
       onChangeText={onChangeText}
       placeholder={modifiedPlaceholder}
       editable={!isDisabled && !isReadOnly}
@@ -47,12 +45,13 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    backgroundColor: "rgba(0, 0, 0, 0.15)",
     marginBottom: 10,
     minWidth: 200,
     fontSize: 16,
     fontFamily: "Montserrat",
+    color: "#000000",
   },
   disabled: {
     opacity: 0.5,
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
   },
   readOnly: {
     backgroundColor: "transparent",
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderColor: "rgba(0, 0, 0, 0.1)",
     borderWidth: 2,
   },
 });

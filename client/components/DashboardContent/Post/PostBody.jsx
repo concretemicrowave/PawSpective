@@ -31,7 +31,7 @@ export default function PostBody({
         />
         <View style={styles.chipContainer}>
           <View style={styles.taken}>
-            <FontAwesomeIcon color="white" icon={faCamera} />
+            <FontAwesomeIcon color="rgba(255,255,255,0.8)" icon={faCamera} />
             <ThemedText style={styles.taken}>{formattedTaken}</ThemedText>
           </View>
           <Chip
@@ -83,5 +83,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 4,
     alignItems: "center",
+    color: "rgba(255,255,255,0.8)",
   },
 });

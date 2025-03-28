@@ -4,7 +4,6 @@ import { ThemedText } from "../ThemedComponents";
 
 export function Nutriment({
   icon,
-  key,
   color,
   label,
   unitKey,
@@ -12,7 +11,7 @@ export function Nutriment({
   nutrimentKey,
 }) {
   return (
-    <View key={key} style={styles.nutriment}>
+    <View key={nutrimentKey} style={styles.nutriment}>
       <FontAwesomeIcon icon={icon} size={24} color={color} />
       <ThemedText>
         <ThemedText type="subtitle" style={styles.boldText}>

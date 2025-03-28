@@ -1,6 +1,5 @@
 import { StyleSheet, SafeAreaView, View } from "react-native";
 import { Colors } from "../../../constants/Colors";
-import { useColorScheme } from "react-native";
 import {
   ThemedView,
   ThemedText,
@@ -12,8 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function Dashboard() {
   const navigation = useNavigation();
   const { logout } = useAuth();
-  const theme = useColorScheme();
-  const backgroundColor = Colors[theme].background;
+  const backgroundColor = Colors["light"].background;
 
   const handleLogout = () => {
     logout();

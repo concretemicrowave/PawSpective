@@ -2,13 +2,11 @@ import { useEffect, useRef } from "react";
 import { StyleSheet, Animated } from "react-native";
 import { ThemedText } from "./ThemedComponents";
 import { Colors } from "../constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { hexToRgba } from "@/utils/hexToRgba";
 
 export function Note({ title, open, setOpen, duration = 1500 }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const theme = useColorScheme();
-  const backgroundColor = hexToRgba(Colors[theme].backgroundGrey, 0.8);
+  const backgroundColor = hexToRgba(Colors["light"].background, 0.8);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {

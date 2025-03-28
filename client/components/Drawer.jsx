@@ -1,14 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Easing, View } from "react-native";
 import { ThemedView, ThemedText } from "@/components/ThemedComponents";
-import { useColorScheme } from "react-native";
 import { Colors } from "../constants/Colors";
 import { createPanResponder } from "../utils/panResponder";
 
 export function Drawer({ children, title, height, closed, setClosed }) {
   const translateY = useRef(new Animated.Value(height)).current;
-  const colorScheme = useColorScheme();
-  const borderColor = Colors[colorScheme].border;
+  const borderColor = Colors["light"].border;
 
   useEffect(() => {
     Animated.timing(translateY, {
