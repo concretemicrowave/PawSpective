@@ -17,10 +17,9 @@ export function ThemedButton({
     { light: lightColor, dark: darkColor },
     `${color}`,
   );
-  const textColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "text",
-  );
+  const textColor = hollow
+    ? useThemeColor({ light: lightColor, dark: darkColor }, `${color}`)
+    : useThemeColor({ light: lightColor, dark: darkColor }, "white");
 
   return (
     <TouchableOpacity

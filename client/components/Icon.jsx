@@ -5,7 +5,7 @@ import { useThemeColor } from "../hooks/useThemeColor";
 export function Icon({
   icon,
   size,
-  color = "secondary",
+  color = "primary",
   style,
   lightColor,
   darkColor,
@@ -13,14 +13,15 @@ export function Icon({
 }) {
   const textColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "text",
+    "white",
   );
   const background = useThemeColor(
     { light: lightColor, dark: darkColor },
     color,
   );
+  console.log(background);
 
-  const shadowColor = lightColor ? "#000" : "#fff";
+  const shadowColor = "#000";
 
   return (
     <View

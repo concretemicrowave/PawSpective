@@ -17,7 +17,7 @@ export default function openScreen() {
       <ThemedView style={styles.container}>
         <ThemedView style={styles.headerContainer}>
           <Icon size={20} icon={faRightToBracket} />
-          <ThemedText type="subtitle">Not Logged In?</ThemedText>
+          <ThemedText type="subtitle">Log In</ThemedText>
         </ThemedView>
         <Login />
       </ThemedView>

@@ -61,6 +61,7 @@ export default function Login() {
         title="Login"
         disabled={disabled}
         onPress={handleLogin}
+        borderRadius={50}
       />
     </ThemedView>
   );

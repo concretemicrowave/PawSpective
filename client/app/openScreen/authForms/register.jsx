@@ -85,6 +85,7 @@ export default function Register() {
             title="Create Account"
             disabled={disabled}
             onPress={handleRegister}
+            borderRadius={50}
           />
         </ThemedView>
       </ThemedView>
