@@ -4,6 +4,7 @@ import {
   ThemedText,
   ThemedInput,
   ThemedNumberInput,
+  ThemedButton,
 } from "../../components/ThemedComponents";
 import { DetailCards } from "../../components/DetailCards/DetailCards";
 import { useState } from "react";
@@ -15,7 +16,7 @@ export default function Details() {
 
   return (
     <>
-      <ThemedView style={styles.container}>
+      <ThemedView scrollable style={styles.container}>
         <ThemedText style={styles.title}>* Insert Breed</ThemedText>
         <View style={styles.inputContainer}>
           <ThemedNumberInput
@@ -43,6 +44,12 @@ export default function Details() {
           symptoms={symptoms === "" ? "None" : symptoms}
         />
       </ThemedView>
+      <ThemedButton
+        style={styles.saveButton}
+        title="Save"
+        borderRadius={50}
+        onPress={() => {}}
+      />
     </>
   );
 }
@@ -73,5 +80,11 @@ const styles = StyleSheet.create({
   numberInput: {
     flex: 1,
     transform: [{ translateY: -4 }],
+  },
+  saveButton: {
+    position: "absolute",
+    bottom: 40,
+    left: 20,
+    right: 20,
   },
 });

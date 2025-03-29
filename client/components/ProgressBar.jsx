@@ -2,9 +2,9 @@ import { View, Text, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 export function ProgressBar({ progress, average }) {
-  const averagePosition = "50%";
-  const progressWidth =
-    progress > 2 * average ? `${progress * 1.2}%` : `${progress}%`;
+  const maxValue = average * 2; // Max value is always double the average
+  const averagePosition = "50%"; // Always center the marker
+  const progressWidth = `${(progress / maxValue) * 100}%`; // Normalize progress
 
   return (
     <View style={styles.container}>
