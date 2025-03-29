@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import {
   ThemedView,
   ThemedText,
@@ -8,11 +8,38 @@ import {
 } from "../../components/ThemedComponents";
 import { DetailCards } from "../../components/DetailCards/DetailCards";
 import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { useUser } from "../../context/UserContext";
+import { useRouter } from "expo-router";
 
-export default function Details() {
+export default function Details({ uri }) {
+  const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
   const [age, setAge] = useState(0);
   const [symptoms, setSymptoms] = useState("");
+  const [breed, setBreed] = useState("*Golden Retriever");
+  const { savePost } = useAuth();
+  const { userData, setUserData } = useUser();
+  const router = useRouter();
+  const post = {
+    name,
+    weight,
+    age,
+    symptoms,
+    breed,
+    uri,
+  };
+
+  const handleSave = async () => {
+    const data = await savePost(post);
+    console.log(data);
+    if (!data.success) return Alert.alert("Error", data.message.message);
+    setUserData({
+      ...userData,
+      posts: [...userData.posts, data.data.post],
+    });
+    router.push("(tabs)/Dashboard");
+  };
 
   return (
     <>
@@ -32,7 +59,11 @@ export default function Details() {
             label="age(half yrs)"
           />
         </View>
-        <ThemedInput value={""} placeholder="Pet Name" />
+        <ThemedInput
+          value={name}
+          onChangeText={setName}
+          placeholder="Pet Name"
+        />
         <ThemedInput
           value={symptoms}
           placeholder="Symptoms"
@@ -48,7 +79,7 @@ export default function Details() {
         style={styles.saveButton}
         title="Save"
         borderRadius={50}
-        onPress={() => {}}
+        onPress={handleSave}
       />
     </>
   );
