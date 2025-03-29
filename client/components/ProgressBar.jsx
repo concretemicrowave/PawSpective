@@ -1,0 +1,63 @@
+import { View, Text, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+
+export function ProgressBar({ progress, average }) {
+  const averagePosition = "50%";
+  const progressWidth =
+    progress > 2 * average ? `${progress * 1.2}%` : `${progress}%`;
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.progressBackground}>
+        <LinearGradient
+          colors={["#FF8C00", "#4CAF50"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={[styles.progressFill, { width: progressWidth }]}
+        />
+      </View>
+      <View style={[styles.averageMarker, { left: averagePosition }]}>
+        <View style={styles.markerLine} />
+        <Text style={styles.markerText}>Avg.({average})</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  progressBackground: {
+    height: 12,
+    width: "100%",
+    backgroundColor: "#ddd",
+    borderRadius: 6,
+    position: "relative",
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: "100%",
+    borderRadius: 6,
+    position: "absolute",
+    left: 0,
+  },
+  averageMarker: {
+    position: "absolute",
+    top: -20,
+    alignItems: "center",
+    transform: [{ translateX: -24 }, { translateY: 10 }],
+  },
+  markerLine: {
+    height: 20,
+    width: 2,
+    backgroundColor: "gray",
+  },
+  markerText: {
+    fontSize: 12,
+    color: "gray",
+    marginTop: 12,
+  },
+});

@@ -6,8 +6,20 @@ export function DetailCards({ weight, age, symptoms }) {
     <View style={styles.cards}>
       <DetailCard title="Symptoms" bold={symptoms} />
       <View style={{ flexDirection: "row", gap: 8 }}>
-        <DetailCard title="Weight(kg)" bold={weight} style={{ flex: 1 }} />
-        <DetailCard title="Age(months)" bold={age} style={{ flex: 1 }} />
+        <DetailCard
+          title="Weight(kg)"
+          bold={weight}
+          progress={weight}
+          average={50}
+          style={{ flex: 1 }}
+        />
+        <DetailCard
+          title="Age(half years)"
+          bold={age}
+          progress={age}
+          average={20}
+          style={{ flex: 1 }}
+        />
       </View>
     </View>
   );

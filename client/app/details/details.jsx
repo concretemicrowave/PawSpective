@@ -28,7 +28,7 @@ export default function Details() {
             value={age}
             setValue={setAge}
             style={styles.numberInput}
-            label="age(mos.)"
+            label="age(half yrs)"
           />
         </View>
         <ThemedInput value={""} placeholder="Pet Name" />

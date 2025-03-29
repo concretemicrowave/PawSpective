@@ -1,13 +1,17 @@
 import { StyleSheet, View } from "react-native";
 import { ThemedView, ThemedText } from "../ThemedComponents";
+import { ProgressBar } from "../ProgressBar";
 
-export function DetailCard({ title, bold, style }) {
+export function DetailCard({ title, bold, progress, average, style }) {
   return (
     <ThemedView style={[styles.card, style]}>
       <ThemedText style={styles.cardTitle}>{title}</ThemedText>
       <ThemedText type="title" style={styles.bold}>
         {bold}
       </ThemedText>
+      {title !== "Symptoms" && (
+        <ProgressBar progress={progress} average={average} />
+      )}
     </ThemedView>
   );
 }
@@ -28,5 +32,6 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: "bold",
+    marginBottom: 12,
   },
 });
