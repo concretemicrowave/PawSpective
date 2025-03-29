@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
 
-export function ThemedNumberInput({ label, initialValue = 0, style, ...rest }) {
-  const [value, setValue] = useState(initialValue);
-
+export function ThemedNumberInput({ label, value, setValue, style, ...rest }) {
   const increaseValue = () => setValue((prev) => prev + 1);
   const decreaseValue = () => setValue((prev) => Math.max(0, prev - 1));
 
