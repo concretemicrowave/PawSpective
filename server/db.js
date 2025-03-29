@@ -12,11 +12,11 @@ const pool = new Pool({
 
 const initializeDatabase = async () => {
   try {
-    // await pool.query(`
-    //   DROP TABLE IF EXISTS posts CASCADE;
-    //   DROP TABLE IF EXISTS users CASCADE;
-    // `);
-    // console.log("All tables dropped.");
+    await pool.query(`
+      DROP TABLE IF EXISTS posts CASCADE;
+      DROP TABLE IF EXISTS users CASCADE;
+    `);
+    console.log("All tables dropped.");
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -29,10 +29,11 @@ const initializeDatabase = async () => {
       CREATE TABLE IF NOT EXISTS posts (
         id SERIAL PRIMARY KEY,
         uri TEXT NOT NULL,
-        title VARCHAR(255) NOT NULL,
-        expires DATE DEFAULT NULL,
-        taken DATE NOT NULL,
-        nutrients JSONB NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        breed VARCHAR(255) NOT NULL,
+        age INTEGER NOT NULL,
+        weight INTEGER NOT NULL,
+        symptoms TEXT NOT NULL,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
       );
     `);

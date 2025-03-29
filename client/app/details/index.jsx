@@ -17,7 +17,7 @@ export default function DetailsScreen() {
           </SafeAreaView>
           <Image source={{ uri: photoUri }} style={styles.image} />
         </View>
-        <Details />
+        <Details uri={photoUri} />
       </ThemedView>
     </>
   );
