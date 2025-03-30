@@ -8,7 +8,7 @@ import DashboardHeader from "@/components/DashboardContent/DashboardHeader";
 
 export default function Dashboard() {
   const { userData } = useUser();
-  const [selectedTab, setSelectedTab] = useState(userData.posts[0]?.id);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   return (
     <ThemedView scrollable style={styles.dashboard}>
@@ -22,8 +22,8 @@ export default function Dashboard() {
         {userData.posts.length < 1 && (
           <ThemedText style={{ fontSize: 16 }}>Scan your first pet!</ThemedText>
         )}
+        <DashboardContent selected={selectedTab} />
       </View>
-      <DashboardContent />
     </ThemedView>
   );
 }
@@ -39,6 +39,5 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -185 }],
     width: "90%",
     marginLeft: "5%",
-    padding: 12,
   },
 });

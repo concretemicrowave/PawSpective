@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_KEY = "userToken";
-const API_URL = "http://192.168.1.78:3000/api";
+const API_URL = "http://192.168.86.43:3000/api";
 
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -141,5 +142,72 @@ export function useAuth() {
     }
   };
 
-  return { isLoggedIn, login, register, logout, savePost, getUser, deletePost };
+  const fetchHealthStatus = async (petData, setLoading, setHealthStatus) => {
+    setLoading(true);
+
+    try {
+      // Check if health status is already stored in AsyncStorage
+      const cachedStatus = await AsyncStorage.getItem(
+        `healthStatus_${petData.id}`,
+      );
+
+      if (cachedStatus) {
+        // If status exists in AsyncStorage, use the cached value
+        console.log("Using cached health status:", cachedStatus);
+        setHealthStatus(cachedStatus);
+      } else {
+        // If no cached status, fetch it from the API
+        const response = await fetch(`${API_URL}/getHealthStatus`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            weight: petData.weight,
+            age: petData.age,
+            symptoms: petData.symptoms,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.data?.message) {
+          const message = data.data.message;
+          let status = "Unknown";
+
+          if (message.includes("Good")) {
+            status = "Good";
+          } else if (message.includes("Cautious")) {
+            status = "Cautious";
+          } else if (message.includes("Dangerous")) {
+            status = "Dangerous";
+          }
+
+          // Save the health status in AsyncStorage
+          await AsyncStorage.setItem(`healthStatus_${petData.id}`, status);
+
+          // Set the health status
+          setHealthStatus(status);
+        } else {
+          setHealthStatus("Cautious");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching health status:", error);
+      setHealthStatus("Cautious");
+    }
+
+    setLoading(false);
+  };
+
+  return {
+    isLoggedIn,
+    login,
+    register,
+    logout,
+    savePost,
+    getUser,
+    deletePost,
+    fetchHealthStatus,
+  };
 }

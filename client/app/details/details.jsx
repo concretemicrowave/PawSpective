@@ -37,7 +37,7 @@ export default function Details({ uri }) {
       ...userData,
       posts: [...userData.posts, data.data.post],
     });
-    router.replace("(tabs)/Dashboard");
+    router.replace("(tabs)");
   };
 
   return (

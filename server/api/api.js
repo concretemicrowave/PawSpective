@@ -5,10 +5,13 @@ const jwt = require("jsonwebtoken");
 const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
 const { pool } = require("../db");
+const { OpenAI } = require("openai");
 
 const createToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1h" });
 };
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 let api = express.Router();
 
@@ -222,10 +225,10 @@ api.post("/save", async (req, res) => {
     return res.json(util.error({ message: "Authorization token required" }));
   }
 
-  if (!uri || !name || !breed || !weight || !age || !symptoms) {
+  if (!uri || !name || !breed || !weight || !age) {
     return res.json(
       util.error({
-        message: "URI, name, breed, weight, age, and symptoms are required",
+        message: "URI, name, breed, weight, and age are required",
       }),
     );
   }
@@ -261,6 +264,40 @@ api.post("/save", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.json(util.error({ message: "Internal server error" }));
+  }
+});
+
+api.post("/getHealthStatus", async (req, res) => {
+  const { weight, age, symptoms } = req.body;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a veterinary assistant that classifies pet health into Good, Cautious, or Dangerous based on weight, age, and symptoms.",
+        },
+        {
+          role: "user",
+          content: `A pet has the following characteristics:
+          - Weight: ${weight} kg
+          - Age: ${age} years
+          - Symptoms: ${symptoms}
+
+          Classify the pet's health status strictly as "Good", "Cautious", or "Dangerous".`,
+        },
+      ],
+      temperature: 0.3,
+    });
+    console.log(response);
+    res.json(
+      util.success({ message: response.choices[0].message.content.trim() }),
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(util.error({ message: "Internal server error" }));
   }
 });
 

@@ -4,14 +4,14 @@ import { ThemedText } from "../ThemedComponents";
 export default function PetsTab({ pets, selectedTab, setSelectedTab }) {
   return (
     <ScrollView horizontal style={styles.petsTab}>
-      {pets.map((post) => (
+      {pets.map((post, index) => (
         <TouchableOpacity
-          key={post.id}
+          key={index}
           style={[
             styles.petCard,
-            selectedTab === post.id && styles.selectedPetCard,
+            selectedTab === index && styles.selectedPetCard,
           ]}
-          onPress={() => setSelectedTab(post.id)}
+          onPress={() => setSelectedTab(index)}
         >
           <ThemedText style={styles.petName}>{post.name}</ThemedText>
         </TouchableOpacity>
