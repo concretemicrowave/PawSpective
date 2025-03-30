@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 
 const TOKEN_KEY = "userToken";
-const API_URL = "http://192.168.86.43:3000/api";
+const API_URL = "http://192.168.1.78:3000/api";
 
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

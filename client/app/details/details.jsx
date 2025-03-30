@@ -32,13 +32,12 @@ export default function Details({ uri }) {
 
   const handleSave = async () => {
     const data = await savePost(post);
-    console.log(data);
     if (!data.success) return Alert.alert("Error", data.message.message);
     setUserData({
       ...userData,
       posts: [...userData.posts, data.data.post],
     });
-    router.push("(tabs)/Dashboard");
+    router.replace("(tabs)/Dashboard");
   };
 
   return (
