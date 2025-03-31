@@ -6,6 +6,13 @@ const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
 const { pool } = require("../db");
 const { OpenAI } = require("openai");
+const multer = require("multer");
+const fs = require("fs");
+const sharp = require("sharp");
+const fileType = require("file-type");
+const strict = require("assert/strict");
+
+const upload = multer({ dest: "uploads/" });
 
 const createToken = (userId) => {
   return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1h" });
@@ -291,13 +298,100 @@ api.post("/getHealthStatus", async (req, res) => {
       ],
       temperature: 0.3,
     });
-    console.log(response);
     res.json(
       util.success({ message: response.choices[0].message.content.trim() }),
     );
   } catch (error) {
     console.error(error);
     res.status(util.error({ message: "Internal server error" }));
+  }
+});
+
+api.post("/predict-breed", upload.single("image"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    const filePath = req.file.path;
+    const fileBuffer = fs.readFileSync(filePath);
+    const type = await fileType.fromBuffer(fileBuffer);
+
+    if (!type || !["image/jpeg"].includes(type.mime)) {
+      return res.json(util.error({ message: "File is not a JPG or JPEG" }));
+    }
+
+    const resizedBuffer = await sharp(fileBuffer)
+      .resize({ width: 800 })
+      .toBuffer();
+
+    const base64Image = resizedBuffer.toString("base64");
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: [
+            {
+              type: "text",
+              text: "You are a veterinary expert trained to identify pet(mainly dogs and cats) breeds, weight, age (in half years), and symptoms based on an image. You are given an image of a pet. Please provide a strict description of the pet's breed, weight, age, and symptoms.",
+            },
+          ],
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/jpeg;base64,${base64Image}`,
+              },
+            },
+          ],
+        },
+      ],
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "pet-description",
+          schema: {
+            strict: true,
+            type: "object",
+            properties: {
+              breed: {
+                type: "string",
+                description:
+                  "The breed of the pet. Example: Golden Retriever. If the pet is not in the photo, enter null",
+              },
+              weight: {
+                type: "number",
+                description:
+                  "The whole number weight of the pet in kilograms. Do not add the unit at the end. Example: 10. If the pet is not in the photo, enter null",
+              },
+              age: {
+                type: "number",
+                description:
+                  "The whole number age of the pet in half years. Example: 6. If the pet is not in the photo, enter null",
+              },
+              symptoms: {
+                type: "string",
+                description:
+                  "The symptoms of the pet. Example: Ear Infection, Diarrhea. If no symptoms, enter None. If the pet is not in the photo, enter null",
+              },
+            },
+            required: ["breed", "weight", "age", "symptoms"],
+            additionalProperties: false,
+          },
+        },
+      },
+    });
+
+    console.log(response.choices[0].message.content);
+
+    res.json(response.choices[0].message.content);
+    fs.unlinkSync(req.file.path);
+  } catch (error) {
+    console.error("Error processing image:", error);
+    res.status(500).json({ error: "Failed to process the image" });
   }
 });
 

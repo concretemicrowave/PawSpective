@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   petsTab: {
     backgroundColor: "#F5F5F5",
     borderRadius: 12,
-    transform: [{ translateY: -195 }],
+    transform: [{ translateY: -295 }],
     width: "90%",
     marginLeft: "5%",
     flexDirection: "row",

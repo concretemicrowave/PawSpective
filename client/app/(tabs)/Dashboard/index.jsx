@@ -33,10 +33,9 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   heading: {
-    height: 300,
     backgroundColor: "#F5F5F5",
     borderRadius: 12,
-    transform: [{ translateY: -185 }],
+    transform: [{ translateY: -285 }],
     width: "90%",
     marginLeft: "5%",
   },

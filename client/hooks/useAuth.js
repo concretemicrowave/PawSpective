@@ -146,17 +146,14 @@ export function useAuth() {
     setLoading(true);
 
     try {
-      // Check if health status is already stored in AsyncStorage
       const cachedStatus = await AsyncStorage.getItem(
         `healthStatus_${petData.id}`,
       );
 
       if (cachedStatus) {
-        // If status exists in AsyncStorage, use the cached value
         console.log("Using cached health status:", cachedStatus);
         setHealthStatus(cachedStatus);
       } else {
-        // If no cached status, fetch it from the API
         const response = await fetch(`${API_URL}/getHealthStatus`, {
           method: "POST",
           headers: {
@@ -183,10 +180,8 @@ export function useAuth() {
             status = "Dangerous";
           }
 
-          // Save the health status in AsyncStorage
           await AsyncStorage.setItem(`healthStatus_${petData.id}`, status);
 
-          // Set the health status
           setHealthStatus(status);
         } else {
           setHealthStatus("Cautious");
@@ -200,12 +195,38 @@ export function useAuth() {
     setLoading(false);
   };
 
+  const predictData = async (imageUri) => {
+    try {
+      const formData = new FormData();
+      formData.append("image", {
+        uri: imageUri,
+        name: "image.jpg",
+        type: "image/jpeg",
+      });
+
+      const response = await fetch(`${API_URL}/predict-breed`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Prediction error:", error);
+      return null;
+    }
+  };
+
   return {
     isLoggedIn,
     login,
     register,
     logout,
     savePost,
+    predictData,
     getUser,
     deletePost,
     fetchHealthStatus,

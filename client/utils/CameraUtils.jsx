@@ -7,11 +7,15 @@ const useCameraActions = () => {
   const { setPhotoUri } = usePhoto();
   const router = useRouter();
 
-  const takePhoto = async (camera) => {
+  const takePhoto = async (camera, setLoading) => {
     if (camera) {
       const photo = await camera.takePictureAsync({ quality: 1 });
       setPhotoUri(photo.uri);
-      router.push("details");
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        router.push("details");
+      }, 6250);
     }
   };
 

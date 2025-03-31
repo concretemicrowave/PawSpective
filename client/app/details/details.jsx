@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { StyleSheet, View, Alert } from "react-native";
 import {
   ThemedView,
@@ -7,7 +8,6 @@ import {
   ThemedButton,
 } from "../../components/ThemedComponents";
 import { DetailCards } from "../../components/DetailCards/DetailCards";
-import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "expo-router";
@@ -17,22 +17,33 @@ export default function Details({ uri }) {
   const [weight, setWeight] = useState(0);
   const [age, setAge] = useState(0);
   const [symptoms, setSymptoms] = useState("");
-  const [breed, setBreed] = useState("*Golden Retriever");
-  const { savePost } = useAuth();
+  const [breed, setBreed] = useState("");
+
+  const { savePost, predictData } = useAuth();
   const { userData, setUserData } = useUser();
   const router = useRouter();
-  const post = {
-    name,
-    weight,
-    age,
-    symptoms,
-    breed,
-    uri,
-  };
+
+  useEffect(() => {
+    const fetchPrediction = async () => {
+      if (!uri) return;
+      const result = await predictData(uri);
+      if (result) {
+        const data = JSON.parse(result);
+        setBreed(data.breed || null);
+        setWeight(data.weight || 0);
+        setAge(data.age || 0);
+        setSymptoms(data.symptoms || "No Symptoms");
+      }
+    };
+
+    fetchPrediction();
+  }, [uri]);
 
   const handleSave = async () => {
+    const post = { name, weight, age, symptoms, breed, uri };
     const data = await savePost(post);
     if (!data.success) return Alert.alert("Error", data.message.message);
+
     setUserData({
       ...userData,
       posts: [...userData.posts, data.data.post],
@@ -43,43 +54,59 @@ export default function Details({ uri }) {
   return (
     <>
       <ThemedView scrollable style={styles.container}>
-        <ThemedText style={styles.title}>* Insert Breed</ThemedText>
-        <View style={styles.inputContainer}>
-          <ThemedNumberInput
-            value={weight}
-            setValue={setWeight}
-            style={styles.numberInput}
-            label="kg"
-          />
-          <ThemedNumberInput
-            value={age}
-            setValue={setAge}
-            style={styles.numberInput}
-            label="age(half yrs)"
-          />
-        </View>
-        <ThemedInput
-          value={name}
-          onChangeText={setName}
-          placeholder="Pet Name"
-        />
-        <ThemedInput
-          value={symptoms}
-          placeholder="Symptoms"
-          onChangeText={setSymptoms}
-        />
-        <DetailCards
-          weight={weight}
-          age={age}
-          symptoms={symptoms === "" ? "None" : symptoms}
-        />
+        <ThemedText type="subtitle" style={styles.title}>
+          {breed
+            ? `Your ${breed}!`
+            : "Can't seem to find your pet, retake your photo with it in it."}
+        </ThemedText>
+        {breed && (
+          <>
+            <View style={styles.note}>
+              <ThemedText style={{ fontSize: 14 }}>
+                Results are AI, not always accurate.
+              </ThemedText>
+            </View>
+            <ThemedInput
+              value={name}
+              onChangeText={setName}
+              placeholder="Pet Name?"
+              style={{ marginBottom: 12 }}
+            />
+            <View style={styles.inputContainer}>
+              <ThemedNumberInput
+                value={weight}
+                setValue={setWeight}
+                style={styles.numberInput}
+                label="kg"
+              />
+              <ThemedNumberInput
+                value={age}
+                setValue={setAge}
+                style={styles.numberInput}
+                label="age (half yrs)"
+              />
+            </View>
+            <ThemedInput
+              value={symptoms}
+              onChangeText={setSymptoms}
+              placeholder="Symptoms"
+            />
+            <DetailCards
+              weight={weight}
+              age={age}
+              symptoms={symptoms || "None"}
+            />
+          </>
+        )}
       </ThemedView>
-      <ThemedButton
-        style={styles.saveButton}
-        title="Save"
-        borderRadius={50}
-        onPress={handleSave}
-      />
+      {breed && (
+        <ThemedButton
+          style={styles.saveButton}
+          title="Save"
+          borderRadius={50}
+          onPress={handleSave}
+        />
+      )}
     </>
   );
 }
@@ -109,12 +136,20 @@ const styles = StyleSheet.create({
   },
   numberInput: {
     flex: 1,
-    transform: [{ translateY: -4 }],
   },
   saveButton: {
     position: "absolute",
     bottom: 40,
     left: 20,
     right: 20,
+  },
+  note: {
+    backgroundColor: "#e6e6e6",
+    padding: 4,
+    borderRadius: 12,
+    marginBottom: 12,
+    width: "auto",
+    alignItems: "center",
+    opacity: 0.7,
   },
 });

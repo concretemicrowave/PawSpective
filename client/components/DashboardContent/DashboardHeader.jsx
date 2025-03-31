@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height: 300,
+    height: 400,
     padding: 20,
     alignItems: "center",
     flexDirection: "column",

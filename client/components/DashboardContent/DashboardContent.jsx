@@ -3,23 +3,22 @@ import { View, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
 import { DetailCards } from "../DetailCards/DetailCards";
 import { useAuth } from "../../hooks/useAuth";
-import HealthStatus from "../HealthStatus"; // HealthStatus component
+import HealthStatus from "../HealthStatus";
 
 export default function DashboardContent({ selected }) {
   const { userData } = useUser();
-  const [statusCache, setStatusCache] = useState({}); // Cache for status
-  const [loading, setLoading] = useState(false); // Loading state
-  const petData = userData.posts[selected]; // Pet data for the selected post
-  const { fetchHealthStatus } = useAuth(); // Function to fetch health status
+  const [statusCache, setStatusCache] = useState({});
+  const [loading, setLoading] = useState(false);
+  const petData = userData.posts[selected];
+  const { fetchHealthStatus } = useAuth();
 
-  // Fetch health status if it's not cached
   useEffect(() => {
     if (petData && !statusCache[selected]) {
       setLoading(true);
       fetchHealthStatus(petData, setLoading, (newStatus) => {
         setStatusCache((prevCache) => ({
           ...prevCache,
-          [selected]: newStatus, // Save the new status to cache
+          [selected]: newStatus,
         }));
       });
     }

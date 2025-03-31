@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import useCameraActions from "../utils/CameraUtils";
 
 export default function CameraComponent() {
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { takePhoto } = useCameraActions();
 
   useEffect(() => {
@@ -25,11 +31,17 @@ export default function CameraComponent() {
         type="back"
         ref={(ref) => setCamera(ref)}
       />
+
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )}
+
       <TouchableOpacity
         style={styles.captureButton}
-        onPress={() => {
-          takePhoto(camera);
-        }}
+        onPress={() => takePhoto(camera, setLoading)}
+        disabled={loading}
       >
         <View style={styles.inner} />
       </TouchableOpacity>
@@ -58,11 +70,18 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
   },
   inner: {
     width: 76,
     height: 76,
     borderRadius: 50,
     backgroundColor: "white",
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
