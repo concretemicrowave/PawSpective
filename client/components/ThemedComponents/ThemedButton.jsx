@@ -1,5 +1,6 @@
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { useThemeColor } from "../../hooks/useThemeColor";
+import { ThemedText } from "./ThemedText";
 
 export function ThemedButton({
   style,
@@ -17,9 +18,7 @@ export function ThemedButton({
     { light: lightColor, dark: darkColor },
     `${color}`,
   );
-  const textColor = hollow
-    ? useThemeColor({ light: lightColor, dark: darkColor }, `${color}`)
-    : useThemeColor({ light: lightColor, dark: darkColor }, "white");
+  console.log(JSON.stringify(color));
 
   return (
     <TouchableOpacity
@@ -42,11 +41,9 @@ export function ThemedButton({
       disabled={disabled}
       {...rest}
     >
-      <Text
-        style={[styles.text, { color: hollow ? backgroundColor : textColor }]}
-      >
+      <ThemedText style={styles.text} color={hollow ? color : ""}>
         {title}
-      </Text>
+      </ThemedText>
     </TouchableOpacity>
   );
 }
@@ -59,7 +56,5 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: "bold",
-    fontFamily: "Montserrat",
   },
 });

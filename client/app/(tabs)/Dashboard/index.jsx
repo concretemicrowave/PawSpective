@@ -5,6 +5,7 @@ import DashboardContent from "../../../components/DashboardContent/DashboardCont
 import { useUser } from "@/context/UserContext";
 import PetsTab from "@/components/DashboardContent/PetsTab";
 import DashboardHeader from "@/components/DashboardContent/DashboardHeader";
+import DashboardData from "@/components/DashboardContent/DashboardData";
 
 export default function Dashboard() {
   const { userData } = useUser();
@@ -24,6 +25,7 @@ export default function Dashboard() {
         )}
         <DashboardContent selected={selectedTab} />
       </View>
+      <DashboardData data={userData.posts} />
     </ThemedView>
   );
 }
