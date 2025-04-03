@@ -18,7 +18,6 @@ export function ThemedButton({
     { light: lightColor, dark: darkColor },
     `${color}`,
   );
-  console.log(JSON.stringify(color));
 
   return (
     <TouchableOpacity

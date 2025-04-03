@@ -25,7 +25,10 @@ export default function Dashboard() {
         )}
         <DashboardContent selected={selectedTab} />
       </View>
-      <DashboardData data={userData.posts} />
+      <DashboardData
+        data={userData.posts[selectedTab]}
+        setSelected={setSelectedTab}
+      />
     </ThemedView>
   );
 }

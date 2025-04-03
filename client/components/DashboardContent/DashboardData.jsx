@@ -1,8 +1,24 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import { ThemedText, ThemedButton } from "../ThemedComponents";
 import Feather from "react-native-vector-icons/Feather";
+import { useAuth } from "../../hooks/useAuth";
+import * as Updates from "expo-updates";
 
 export default function DashboardData({ data }) {
+  const { deletePost } = useAuth();
+
+  const confirmDelete = () => {
+    Alert.alert("Confirm Deletion", "Are you sure you want to delete this?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", onPress: handleDelete, style: "destructive" },
+    ]);
+  };
+
+  const handleDelete = async () => {
+    await deletePost(data.id);
+    await Updates.reloadAsync();
+  };
+
   return (
     <View style={styles.container}>
       <ThemedText style={styles.title}>Progress</ThemedText>
@@ -10,7 +26,7 @@ export default function DashboardData({ data }) {
       <View style={styles.buttons}>
         <ThemedButton
           style={styles.actionButton}
-          onPress={() => {}}
+          onPress={confirmDelete}
           borderRadius={50}
           color="attention"
           hollow
