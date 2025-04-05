@@ -40,7 +40,7 @@ export function ThemedButton({
       disabled={disabled}
       {...rest}
     >
-      <ThemedText style={styles.text} color={hollow ? color : ""}>
+      <ThemedText style={styles.text} color={hollow ? color : "white"}>
         {title}
       </ThemedText>
     </TouchableOpacity>
