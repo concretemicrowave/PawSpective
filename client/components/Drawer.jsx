@@ -1,12 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Easing, View } from "react-native";
 import { ThemedView, ThemedText } from "@/components/ThemedComponents";
-import { Colors } from "../constants/Colors";
 import { createPanResponder } from "../utils/panResponder";
 
-export function Drawer({ children, title, height, closed, setClosed }) {
+export function Drawer({
+  children,
+  title,
+  height,
+  closed,
+  setClosed,
+  header = true,
+}) {
   const translateY = useRef(new Animated.Value(height)).current;
-  const borderColor = Colors["light"].border;
 
   useEffect(() => {
     Animated.timing(translateY, {
@@ -32,12 +37,14 @@ export function Drawer({ children, title, height, closed, setClosed }) {
         style={styles.content}
         {...panResponder.panHandlers}
       >
-        <ThemedView color="backgroundGrey" style={styles.header}>
-          <View style={[styles.drag, { backgroundColor: borderColor }]} />
-          <ThemedText type="title" style={styles.title}>
-            {title}
-          </ThemedText>
-        </ThemedView>
+        <View style={styles.drag} />
+        {header && (
+          <ThemedView color="backgroundGrey" style={styles.header}>
+            <ThemedText type="title" style={styles.title}>
+              {title}
+            </ThemedText>
+          </ThemedView>
+        )}
         {children}
       </ThemedView>
     </Animated.View>
@@ -54,14 +61,15 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingTop: 16,
     borderRadius: 20,
     borderEndEndRadius: 0,
     borderEndStartRadius: 0,
+    overflow: "hidden",
   },
   header: {
     flexDirection: "column",
     width: "100%",
+    paddingTop: 16,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -72,6 +80,9 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     marginBottom: 4,
     alignSelf: "center",
+    position: "absolute",
+    top: 8,
+    zIndex: 10000,
   },
   title: {
     fontSize: 20,

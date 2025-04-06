@@ -13,11 +13,11 @@ const pool = new Pool({
 const initializeDatabase = async () => {
   try {
     // Uncomment this if you want to reset everything
-    await pool.query(`
-      DROP TABLE IF EXISTS posts CASCADE;
-      DROP TABLE IF EXISTS users CASCADE;
-    `);
-    console.log("All tables dropped.");
+    // await pool.query(`
+    //   DROP TABLE IF EXISTS posts CASCADE;
+    //   DROP TABLE IF EXISTS users CASCADE;
+    // `);
+    // console.log("All tables dropped.");
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (

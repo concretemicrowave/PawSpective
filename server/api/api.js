@@ -437,8 +437,6 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
       },
     });
 
-    console.log(response.choices[0].message.content);
-
     res.json(response.choices[0].message.content);
     fs.unlinkSync(req.file.path);
   } catch (error) {

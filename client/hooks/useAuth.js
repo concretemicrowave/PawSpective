@@ -85,6 +85,7 @@ export function useAuth() {
   };
 
   const savePost = async (post) => {
+    console.log(post);
     try {
       const token = await SecureStore.getItemAsync(TOKEN_KEY);
 

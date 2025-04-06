@@ -13,20 +13,19 @@ import { useUser } from "../../context/UserContext";
 import { useRouter } from "expo-router";
 import { usePhoto } from "../../context/PhotoContext";
 
-export default function Details({ uri, postId: initialPostId = null }) {
-  const [name, setName] = useState("");
+export default function Details({ uri }) {
+  const { update, postId, setPostId } = usePhoto();
+  const { savePost, predictData } = useAuth();
+  const { userData, setUserData } = useUser();
+  const existingPost = userData.posts[postId];
+  const router = useRouter();
+  const [name, setName] = useState(update ? existingPost.name : "");
   const [weight, setWeight] = useState(0);
   const [age, setAge] = useState(0);
   const [symptoms, setSymptoms] = useState("");
   const [breed, setBreed] = useState("");
   const [time, setTime] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { update } = usePhoto();
-  console.log(update);
-
-  const { savePost, predictData } = useAuth();
-  const { userData, setUserData } = useUser();
-  const router = useRouter();
 
   useEffect(() => {
     const fetchPrediction = async () => {
@@ -52,6 +51,7 @@ export default function Details({ uri, postId: initialPostId = null }) {
   }, [uri]);
 
   const handleSave = async () => {
+    console.log("handleSave called");
     const post = {
       name,
       weight,
@@ -60,11 +60,12 @@ export default function Details({ uri, postId: initialPostId = null }) {
       breed,
       time,
       uri,
-      postId: update ? initialPostId : null,
+      postId: update ? postId : null,
     };
+    console.log(post);
 
     const data = await savePost(post);
-
+    console.log(data);
     if (!data.success) {
       return Alert.alert("Error", data.message.message);
     }
@@ -78,7 +79,7 @@ export default function Details({ uri, postId: initialPostId = null }) {
         [newPost.postId]: newPost,
       },
     });
-
+    setPostId(null);
     router.replace("(tabs)");
   };
 
@@ -100,10 +101,11 @@ export default function Details({ uri, postId: initialPostId = null }) {
               </ThemedText>
             </View>
             <ThemedInput
-              value={name}
+              value={existingPost?.name}
               onChangeText={setName}
-              placeholder="Pet Name?"
+              placeholder="Pet Name"
               style={{ marginBottom: 12 }}
+              type={update ? "read-only" : "default"}
             />
             <View style={styles.inputContainer}>
               <ThemedNumberInput
@@ -135,7 +137,7 @@ export default function Details({ uri, postId: initialPostId = null }) {
       {breed && (
         <ThemedButton
           style={styles.saveButton}
-          title="Save"
+          title={update ? "Update" : "Save"}
           borderRadius={50}
           onPress={handleSave}
         />

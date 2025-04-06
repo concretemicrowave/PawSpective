@@ -15,6 +15,7 @@ export default function Dashboard() {
   const [closed, setClosed] = useState(true);
   const { setUpdate } = usePhoto();
   const pets = userData.posts || {};
+  const petCount = Object.keys(pets).length;
   const key = String(selectedTab + 1);
   const petData = pets[key];
   const history = petData?.history || {};
@@ -23,7 +24,7 @@ export default function Dashboard() {
     <>
       <DashboardDrawer closed={closed} setClosed={setClosed} />
       <ThemedView scrollable style={styles.dashboard}>
-        <DashboardHeader petCount={userData.posts.length} />
+        <DashboardHeader petCount={petCount} />
         <PetsTab
           pets={userData.posts}
           selectedTab={selectedTab}
@@ -41,6 +42,7 @@ export default function Dashboard() {
         </View>
         <DashboardData
           data={history}
+          id={key}
           setSelected={setSelectedTab}
           setClosed={setClosed}
           setUpdate={setUpdate}
