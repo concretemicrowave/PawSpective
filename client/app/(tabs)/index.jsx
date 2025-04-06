@@ -5,7 +5,7 @@ export default function CameraScreen() {
   return (
     <>
       <View style={styles.container}>
-        <CameraComponent onCapture={(photo) => setPhoto(photo)} />
+        <CameraComponent />
       </View>
     </>
   );

@@ -4,9 +4,8 @@ import Feather from "react-native-vector-icons/Feather";
 import { useAuth } from "../../hooks/useAuth";
 import * as Updates from "expo-updates";
 
-export default function DashboardData({ data }) {
+export default function DashboardData({ data, setClosed, setUpdate }) {
   const { deletePost } = useAuth();
-
   const confirmDelete = () => {
     Alert.alert("Confirm Deletion", "Are you sure you want to delete this?", [
       { text: "Cancel", style: "cancel" },
@@ -19,28 +18,38 @@ export default function DashboardData({ data }) {
     await Updates.reloadAsync();
   };
 
-  return (
-    <View style={styles.container}>
-      <ThemedText style={styles.title}>Progress</ThemedText>
-      <ThemedText style={styles.data}>Insert graph of progress here</ThemedText>
-      <View style={styles.buttons}>
-        <ThemedButton
-          style={styles.actionButton}
-          onPress={confirmDelete}
-          borderRadius={50}
-          color="attention"
-          hollow
-          title={<Feather name="trash" size={24} color="#d03533" />}
-        />
-        <ThemedButton
-          style={styles.actionButton}
-          onPress={() => {}}
-          borderRadius={50}
-          title={<Feather name="edit" size={24} color="#fff" />}
-        />
+  const handleUpdate = async () => {
+    console.log("Updating post");
+    setClosed(false);
+    setUpdate(true);
+  };
+
+  return data ? (
+    <>
+      <View style={styles.container}>
+        <ThemedText style={styles.title}>Progress</ThemedText>
+        <ThemedText style={styles.data}>
+          Insert graph of progress here
+        </ThemedText>
+        <View style={styles.buttons}>
+          <ThemedButton
+            style={styles.actionButton}
+            onPress={confirmDelete}
+            borderRadius={50}
+            color="attention"
+            hollow
+            title={<Feather name="trash" size={24} color="#d03533" />}
+          />
+          <ThemedButton
+            style={styles.actionButton}
+            borderRadius={50}
+            onPress={handleUpdate}
+            title={<Feather name="edit" size={24} color="#fff" />}
+          />
+        </View>
       </View>
-    </View>
-  );
+    </>
+  ) : null;
 }
 
 const styles = StyleSheet.create({

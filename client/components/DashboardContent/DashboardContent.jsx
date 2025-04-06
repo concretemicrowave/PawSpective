@@ -9,8 +9,15 @@ export default function DashboardContent({ selected }) {
   const { userData } = useUser();
   const [statusCache, setStatusCache] = useState({});
   const [loading, setLoading] = useState(false);
-  const petData = userData.posts[selected];
   const { fetchHealthStatus } = useAuth();
+  const pets = userData.posts || {};
+  const key = String(selected + 1);
+  const petData = pets[key];
+  const history = petData?.history || {};
+  const latestDate = Object.keys(history).sort(
+    (a, b) => new Date(b) - new Date(a),
+  )[0];
+  const latestEntry = history[latestDate] || {};
 
   useEffect(() => {
     if (petData && !statusCache[selected]) {
@@ -24,16 +31,16 @@ export default function DashboardContent({ selected }) {
     }
   }, [selected, petData]);
 
-  return (
+  return petData ? (
     <View style={styles.container}>
       <HealthStatus status={statusCache[selected]} loading={loading} />
       <DetailCards
-        age={petData?.age}
-        weight={petData?.weight}
-        symptoms={petData?.symptoms}
+        age={latestEntry.age}
+        weight={latestEntry.weight}
+        symptoms={latestEntry.symptoms}
       />
     </View>
-  );
+  ) : null;
 }
 
 const styles = StyleSheet.create({

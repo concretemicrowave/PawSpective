@@ -6,30 +6,48 @@ import { useUser } from "@/context/UserContext";
 import PetsTab from "@/components/DashboardContent/PetsTab";
 import DashboardHeader from "@/components/DashboardContent/DashboardHeader";
 import DashboardData from "@/components/DashboardContent/DashboardData";
+import DashboardDrawer from "@/components/DashboardContent/DashboardDrawer";
+import { usePhoto } from "../../../context/PhotoContext";
 
 export default function Dashboard() {
   const { userData } = useUser();
   const [selectedTab, setSelectedTab] = useState(0);
+  const [closed, setClosed] = useState(true);
+  const { setUpdate } = usePhoto();
+  const pets = userData.posts || {};
+  const key = String(selectedTab + 1);
+  const petData = pets[key];
+  const history = petData?.history || {};
 
   return (
-    <ThemedView scrollable style={styles.dashboard}>
-      <DashboardHeader petCount={userData.posts.length} />
-      <PetsTab
-        pets={userData.posts}
-        selectedTab={selectedTab}
-        setSelectedTab={setSelectedTab}
-      />
-      <View style={styles.heading}>
-        {userData.posts.length < 1 && (
-          <ThemedText style={{ fontSize: 16 }}>Scan your first pet!</ThemedText>
-        )}
-        <DashboardContent selected={selectedTab} />
-      </View>
-      <DashboardData
-        data={userData.posts[selectedTab]}
-        setSelected={setSelectedTab}
-      />
-    </ThemedView>
+    <>
+      <DashboardDrawer closed={closed} setClosed={setClosed} />
+      <ThemedView scrollable style={styles.dashboard}>
+        <DashboardHeader petCount={userData.posts.length} />
+        <PetsTab
+          pets={userData.posts}
+          selectedTab={selectedTab}
+          setSelectedTab={setSelectedTab}
+        />
+        <View style={styles.heading}>
+          {!petData && (
+            <ThemedText
+              style={{ fontSize: 16, marginHorizontal: 8, marginVertical: 8 }}
+            >
+              Scan your first pet!
+            </ThemedText>
+          )}
+          <DashboardContent selected={selectedTab} />
+        </View>
+        <DashboardData
+          data={history}
+          setSelected={setSelectedTab}
+          setClosed={setClosed}
+          setUpdate={setUpdate}
+        />
+      </ThemedView>
+      <DashboardDrawer closed={closed} setClosed={setClosed} />
+    </>
   );
 }
 

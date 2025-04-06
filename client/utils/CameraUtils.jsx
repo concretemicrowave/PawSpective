@@ -35,7 +35,16 @@ const useCameraActions = () => {
     });
   }, []);
 
-  return { takePhoto, deleteImage, uriToBase64 };
+  const handleUpdate = async (data) => {
+    const post = {
+      data,
+      update: true,
+    };
+    await savePost(post);
+    await Updates.reloadAsync();
+  };
+
+  return { takePhoto, deleteImage, uriToBase64, handleUpdate };
 };
 
 export default useCameraActions;

@@ -11,13 +11,18 @@ import { DetailCards } from "../../components/DetailCards/DetailCards";
 import { useAuth } from "../../hooks/useAuth";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "expo-router";
+import { usePhoto } from "../../context/PhotoContext";
 
-export default function Details({ uri }) {
+export default function Details({ uri, postId: initialPostId = null }) {
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
   const [age, setAge] = useState(0);
   const [symptoms, setSymptoms] = useState("");
   const [breed, setBreed] = useState("");
+  const [time, setTime] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { update } = usePhoto();
+  console.log(update);
 
   const { savePost, predictData } = useAuth();
   const { userData, setUserData } = useUser();
@@ -26,13 +31,20 @@ export default function Details({ uri }) {
   useEffect(() => {
     const fetchPrediction = async () => {
       if (!uri) return;
+      setLoading(true);
       const result = await predictData(uri);
+      setLoading(false);
       if (result) {
         const data = JSON.parse(result);
         setBreed(data.breed || null);
         setWeight(data.weight || 0);
         setAge(data.age || 0);
         setSymptoms(data.symptoms || "No Symptoms");
+        const now = new Date();
+        const formattedDate = `${now.getFullYear()}-${String(
+          now.getMonth() + 1,
+        ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+        setTime(formattedDate);
       }
     };
 
@@ -40,14 +52,33 @@ export default function Details({ uri }) {
   }, [uri]);
 
   const handleSave = async () => {
-    const post = { name, weight, age, symptoms, breed, uri };
+    const post = {
+      name,
+      weight,
+      age,
+      symptoms,
+      breed,
+      time,
+      uri,
+      postId: update ? initialPostId : null,
+    };
+
     const data = await savePost(post);
-    if (!data.success) return Alert.alert("Error", data.message.message);
+
+    if (!data.success) {
+      return Alert.alert("Error", data.message.message);
+    }
+
+    const newPost = data.data.post;
 
     setUserData({
       ...userData,
-      posts: [...userData.posts, data.data.post],
+      posts: {
+        ...userData.posts,
+        [newPost.postId]: newPost,
+      },
     });
+
     router.replace("(tabs)");
   };
 
@@ -55,9 +86,11 @@ export default function Details({ uri }) {
     <>
       <ThemedView scrollable style={styles.container}>
         <ThemedText type="subtitle" style={styles.title}>
-          {breed
-            ? `Your ${breed}!`
-            : "Can't seem to find your pet, retake your photo with it in it."}
+          {loading
+            ? "Loading..."
+            : breed
+              ? `Your ${breed}!`
+              : "Can't seem to find your pet, retake your photo with it in it."}
         </ThemedText>
         {breed && (
           <>

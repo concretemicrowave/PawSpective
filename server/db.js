@@ -12,11 +12,12 @@ const pool = new Pool({
 
 const initializeDatabase = async () => {
   try {
-    // await pool.query(`
-    //   DROP TABLE IF EXISTS posts CASCADE;
-    //   DROP TABLE IF EXISTS users CASCADE;
-    // `);
-    // console.log("All tables dropped.");
+    // Uncomment this if you want to reset everything
+    await pool.query(`
+      DROP TABLE IF EXISTS posts CASCADE;
+      DROP TABLE IF EXISTS users CASCADE;
+    `);
+    console.log("All tables dropped.");
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -25,19 +26,22 @@ const initializeDatabase = async () => {
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL
       );
+    `);
 
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS posts (
         id SERIAL PRIMARY KEY,
-        uri TEXT NOT NULL,
         name VARCHAR(255) NOT NULL,
         breed VARCHAR(255) NOT NULL,
-        age INTEGER NOT NULL,
-        weight INTEGER NOT NULL,
-        symptoms TEXT NOT NULL,
-        status TEXT NOT NULL,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
       );
     `);
+
+    // ✅ Add history column separately
+    await pool.query(`
+      ALTER TABLE posts ADD COLUMN IF NOT EXISTS history JSONB DEFAULT '{}'::JSONB;
+    `);
+
     console.log("Database initialized.");
   } catch (err) {
     console.error("Error initializing database:", err);

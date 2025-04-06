@@ -54,8 +54,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingVertical: 16,
+    paddingTop: 16,
     borderRadius: 20,
+    borderEndEndRadius: 0,
+    borderEndStartRadius: 0,
   },
   header: {
     flexDirection: "column",

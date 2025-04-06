@@ -2,18 +2,20 @@ import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { ThemedText } from "../ThemedComponents";
 
 export default function PetsTab({ pets, selectedTab, setSelectedTab }) {
+  const entries = Object.entries(pets);
+
   return (
     <ScrollView horizontal style={styles.petsTab}>
-      {pets.map((post, index) => (
+      {entries.map(([postId, pet], index) => (
         <TouchableOpacity
-          key={index}
+          key={postId}
           style={[
             styles.petCard,
             selectedTab === index && styles.selectedPetCard,
           ]}
           onPress={() => setSelectedTab(index)}
         >
-          <ThemedText style={styles.petName}>{post.name}</ThemedText>
+          <ThemedText style={styles.petName}>{pet.name}</ThemedText>
         </TouchableOpacity>
       ))}
     </ScrollView>

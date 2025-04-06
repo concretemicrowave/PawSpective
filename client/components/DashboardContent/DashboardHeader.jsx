@@ -15,7 +15,7 @@ export default function DashboardHeader({ petCount }) {
     >
       <SafeAreaView style={styles.container}>
         <ThemedText type="subtitle" style={styles.title}>
-          {petCount} pet(s)
+          {petCount ? petCount : 0} pet(s)
         </ThemedText>
       </SafeAreaView>
     </LinearGradient>

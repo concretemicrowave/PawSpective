@@ -210,11 +210,20 @@ api.get("/user", async (req, res) => {
     const user = userResult.rows[0];
 
     const postsResult = await pool.query(
-      `SELECT id, uri, name, breed, weight, age, symptoms FROM posts WHERE user_id = $1`,
+      `SELECT id, name, breed, history FROM posts WHERE user_id = $1`,
       [userId],
     );
 
-    user.posts = postsResult.rows;
+    const posts = {};
+    postsResult.rows.forEach((row) => {
+      posts[row.id] = {
+        name: row.name,
+        breed: row.breed,
+        history: row.history,
+      };
+    });
+
+    user.posts = posts;
 
     res.json(util.success({ message: "User retrieved successfully", user }));
   } catch (err) {
@@ -225,7 +234,7 @@ api.get("/user", async (req, res) => {
 
 // Save post
 api.post("/save", async (req, res) => {
-  const { uri, name, breed, weight, age, symptoms } = req.body;
+  const { uri, name, breed, weight, age, symptoms, time, postId } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
@@ -234,9 +243,7 @@ api.post("/save", async (req, res) => {
 
   if (!uri || !name || !breed || !weight || !age) {
     return res.json(
-      util.error({
-        message: "URI, name, breed, weight, and age are required",
-      }),
+      util.error({ message: "URI, name, breed, weight, and age are required" }),
     );
   }
 
@@ -244,30 +251,75 @@ api.post("/save", async (req, res) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.id;
 
-    const existingPost = await pool.query(
-      "SELECT id FROM posts WHERE uri = $1 AND user_id = $2",
-      [uri, userId],
-    );
+    if (postId !== null) {
+      const existing = await pool.query(
+        "SELECT * FROM posts WHERE id = $1 AND user_id = $2",
+        [postId, userId],
+      );
 
-    if (existingPost.rows.length > 0) {
+      if (existing.rows.length === 0) {
+        return res.json(util.error({ message: "Post not found" }));
+      }
+
+      const currentHistory = existing.rows[0].history || {};
+      currentHistory[time] = {
+        uri,
+        name,
+        breed,
+        weight,
+        age,
+        symptoms,
+      };
+
+      await pool.query(
+        "UPDATE posts SET name = $1, breed = $2, history = $3 WHERE id = $4 AND user_id = $5",
+        [name, breed, JSON.stringify(currentHistory), postId, userId],
+      );
+
       return res.json(
-        util.error({ message: "Post with this URI already exists" }),
+        util.success({
+          message: "Post updated successfully",
+          post: {
+            postId,
+            name,
+            breed,
+            history: currentHistory,
+          },
+        }),
+      );
+    } else {
+      const history = {
+        [time]: {
+          uri,
+          name,
+          breed,
+          weight,
+          age,
+          symptoms,
+        },
+      };
+
+      const result = await pool.query(
+        "INSERT INTO posts (name, breed, history, user_id) VALUES ($1, $2, $3, $4) RETURNING id",
+        [name, breed, JSON.stringify(history), userId],
+      );
+
+      const postId = result.rows[0].id;
+
+      console.log("Post saved successfully");
+
+      return res.json(
+        util.success({
+          message: "Post saved successfully",
+          post: {
+            postId,
+            name,
+            breed,
+            history,
+          },
+        }),
       );
     }
-
-    const result = await pool.query(
-      "INSERT INTO posts (uri, name, breed, weight, age, symptoms, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id",
-      [uri, name, breed, weight, age, symptoms, userId],
-    );
-
-    const postId = result.rows[0].id;
-    const post = { uri, name, breed, weight, age, symptoms, postId };
-    res.json(
-      util.success({
-        message: "Post saved successfully",
-        post,
-      }),
-    );
   } catch (err) {
     console.error(err);
     res.json(util.error({ message: "Internal server error" }));
@@ -365,17 +417,17 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
               weight: {
                 type: "number",
                 description:
-                  "The whole number weight of the pet in kilograms. Do not add the unit at the end. Example: 10. If the pet is not in the photo, enter null",
+                  "The whole number weight of the pet in kilograms. Do not add the unit at the end. Example: 10.",
               },
               age: {
                 type: "number",
                 description:
-                  "The whole number age of the pet in half years. Example: 6. If the pet is not in the photo, enter null",
+                  "The whole number age of the pet in half years. Example: 6.",
               },
               symptoms: {
                 type: "string",
                 description:
-                  "The symptoms of the pet. Example: Ear Infection, Diarrhea. If no symptoms, enter None. If the pet is not in the photo, enter null",
+                  "The symptoms of the pet. Example: Ear Infection, Diarrhea. If no symptoms, enter None.",
               },
             },
             required: ["breed", "weight", "age", "symptoms"],

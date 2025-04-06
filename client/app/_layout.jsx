@@ -7,7 +7,7 @@ import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -27,6 +27,7 @@ export default function RootLayout() {
   });
   const { isLoggedIn } = useAuth();
   const router = useRouter();
+  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     if (loaded) {
