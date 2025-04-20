@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 
 export function ProgressBar({ progress, average }) {
   const maxValue = average * 2;
@@ -9,12 +8,7 @@ export function ProgressBar({ progress, average }) {
   return (
     <View style={styles.container}>
       <View style={styles.progressBackground}>
-        <LinearGradient
-          colors={["#FF8C00", "#4CAF50"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={[styles.progressFill, { width: progressWidth }]}
-        />
+        <View style={[styles.progressFill, { width: progressWidth }]} />
       </View>
       <View style={[styles.averageMarker, { left: averagePosition }]}>
         <View style={styles.markerLine} />
@@ -43,6 +37,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     position: "absolute",
     left: 0,
+    backgroundColor: "#4CAF50",
   },
   averageMarker: {
     position: "absolute",

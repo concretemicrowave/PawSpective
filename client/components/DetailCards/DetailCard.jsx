@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { ThemedView, ThemedText } from "../ThemedComponents";
 import { ProgressBar } from "../ProgressBar";
 
@@ -19,11 +19,9 @@ export function DetailCard({ title, bold, progress, average, style }) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
-    borderRadius: 24,
+    borderRadius: 16,
     padding: 16,
     paddingVertical: 12,
-    borderColor: "rgba(0, 0, 0, 0.1)",
-    borderWidth: 1,
   },
   cardTitle: {
     fontSize: 16,

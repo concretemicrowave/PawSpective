@@ -1,7 +1,6 @@
 require("dotenv").config();
 const { Pool } = require("pg");
 
-// PostgreSQL connection pool
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -12,11 +11,10 @@ const pool = new Pool({
 
 const initializeDatabase = async () => {
   try {
-    // Uncomment this if you want to reset everything
-    // await pool.query(`
-    //   DROP TABLE IF EXISTS posts CASCADE;
-    //   DROP TABLE IF EXISTS users CASCADE;
-    // `);
+    // Optional: Reset everything
+    // await pool.query(
+    //   `DROP TABLE IF EXISTS posts CASCADE; DROP TABLE IF EXISTS users CASCADE;`,
+    // );
     // console.log("All tables dropped.");
 
     await pool.query(`
@@ -30,16 +28,12 @@ const initializeDatabase = async () => {
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS posts (
-        id SERIAL PRIMARY KEY,
+        id INTEGER PRIMARY KEY, -- manual id assignment
         name VARCHAR(255) NOT NULL,
         breed VARCHAR(255) NOT NULL,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        history JSONB DEFAULT '[]'::JSONB
       );
-    `);
-
-    // ✅ Add history column separately
-    await pool.query(`
-      ALTER TABLE posts ADD COLUMN IF NOT EXISTS history JSONB DEFAULT '{}'::JSONB;
     `);
 
     console.log("Database initialized.");

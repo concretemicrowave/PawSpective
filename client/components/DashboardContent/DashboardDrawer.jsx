@@ -4,13 +4,7 @@ import CameraComponent from "../Camera";
 
 export default function DashboardDrawer({ closed, setClosed }) {
   return (
-    <Drawer
-      header={false}
-      closed={closed}
-      setClosed={setClosed}
-      height={790}
-      title="Update"
-    >
+    <Drawer header={false} closed={closed} setClosed={setClosed} title="Update">
       <View style={styles.container}>
         <CameraComponent update={true} />
       </View>

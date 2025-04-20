@@ -27,7 +27,6 @@ export default function RootLayout() {
   });
   const { isLoggedIn } = useAuth();
   const router = useRouter();
-  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     if (loaded) {

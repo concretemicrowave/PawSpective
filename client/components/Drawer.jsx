@@ -1,7 +1,16 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, StyleSheet, Easing, View } from "react-native";
+import {
+  Animated,
+  StyleSheet,
+  Easing,
+  View,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import { ThemedView, ThemedText } from "@/components/ThemedComponents";
 import { createPanResponder } from "../utils/panResponder";
+
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export function Drawer({
   children,
@@ -11,42 +20,48 @@ export function Drawer({
   setClosed,
   header = true,
 }) {
-  const translateY = useRef(new Animated.Value(height)).current;
+  const drawerHeight = height ?? SCREEN_HEIGHT - 135;
+  const translateY = useRef(new Animated.Value(drawerHeight)).current;
 
   useEffect(() => {
     Animated.timing(translateY, {
-      toValue: !closed ? 0 : height,
-      duration: 300,
+      toValue: !closed ? 0 : drawerHeight,
+      duration: 290,
       useNativeDriver: true,
       easing: Easing.out(Easing.cubic),
     }).start();
-  }, [closed]);
+  }, [closed, drawerHeight]);
 
   const panResponder = useRef(
-    createPanResponder(translateY, height, setClosed),
+    createPanResponder(translateY, drawerHeight, setClosed),
   ).current;
 
   if (closed) return null;
 
   return (
     <Animated.View
-      style={[styles.container, { height, transform: [{ translateY }] }]}
+      style={[
+        styles.container,
+        { height: drawerHeight, transform: [{ translateY }] },
+      ]}
     >
-      <ThemedView
-        color="backgroundGrey"
-        style={styles.content}
-        {...panResponder.panHandlers}
-      >
-        <View style={styles.drag} />
-        {header && (
-          <ThemedView color="backgroundGrey" style={styles.header}>
-            <ThemedText type="title" style={styles.title}>
-              {title}
-            </ThemedText>
-          </ThemedView>
-        )}
-        {children}
-      </ThemedView>
+      <SafeAreaView style={styles.safeArea}>
+        <ThemedView
+          color="backgroundGrey"
+          style={styles.content}
+          {...panResponder.panHandlers}
+        >
+          <View style={styles.drag} />
+          {header && (
+            <ThemedView color="backgroundGrey" style={styles.header}>
+              <ThemedText type="title" style={styles.title}>
+                {title}
+              </ThemedText>
+            </ThemedView>
+          )}
+          {children}
+        </ThemedView>
+      </SafeAreaView>
     </Animated.View>
   );
 }
@@ -58,6 +73,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     elevation: 5,
+  },
+  safeArea: {
+    flex: 1,
   },
   content: {
     flex: 1,

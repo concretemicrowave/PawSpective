@@ -1,4 +1,4 @@
-import { PanResponder, Animated, Easing } from "react-native";
+import { PanResponder, Animated } from "react-native";
 
 export const createPanResponder = (translateY, height, setClosed) =>
   PanResponder.create({
@@ -12,9 +12,8 @@ export const createPanResponder = (translateY, height, setClosed) =>
 
       Animated.timing(translateY, {
         toValue: shouldClose ? height : 0,
-        duration: 350,
+        duration: 150,
         useNativeDriver: true,
-        easing: Easing.out(Easing.cubic),
       }).start(() => {
         if (shouldClose) setClosed(true);
       });

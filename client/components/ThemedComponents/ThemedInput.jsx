@@ -7,6 +7,7 @@ export function ThemedInput({
   value,
   height = "50",
   borderRadius = 12,
+  bordered = true,
   onChangeText,
   type = "default",
   editable = true,
@@ -27,6 +28,7 @@ export function ThemedInput({
         { borderRadius },
         isDisabled && styles.disabled,
         isReadOnly && styles.readOnly,
+        bordered ? {} : { borderWidth: 0 },
         (height = { height }),
         style,
       ]}

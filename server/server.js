@@ -16,5 +16,5 @@ app.use("/api", api);
 // Start server
 app.listen(PORT, async () => {
   await initializeDatabase();
-  console.log(`Server running on http://192.168.86.43:${PORT}`);
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
 });

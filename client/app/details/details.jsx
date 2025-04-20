@@ -51,7 +51,6 @@ export default function Details({ uri }) {
   }, [uri]);
 
   const handleSave = async () => {
-    console.log("handleSave called");
     const post = {
       name,
       weight,
@@ -62,10 +61,8 @@ export default function Details({ uri }) {
       uri,
       postId: update ? postId : null,
     };
-    console.log(post);
 
     const data = await savePost(post);
-    console.log(data);
     if (!data.success) {
       return Alert.alert("Error", data.message.message);
     }
@@ -91,7 +88,7 @@ export default function Details({ uri }) {
             ? "Loading..."
             : breed
               ? `Your ${breed}!`
-              : "Can't seem to find your pet, retake your photo with it in it."}
+              : "Can't seem to find your pet. Retake your photo."}
         </ThemedText>
         {breed && (
           <>

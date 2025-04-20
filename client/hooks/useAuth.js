@@ -3,7 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_KEY = "userToken";
-const API_URL = "http://192.168.86.43:3000/api";
+const API_URL = "http://cyrobutcomputer:3000/api";
 
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -85,7 +85,6 @@ export function useAuth() {
   };
 
   const savePost = async (post) => {
-    console.log(post);
     try {
       const token = await SecureStore.getItemAsync(TOKEN_KEY);
 
@@ -118,6 +117,7 @@ export function useAuth() {
   const deletePost = async (postId) => {
     try {
       const token = await SecureStore.getItemAsync(TOKEN_KEY);
+      const cachedKey = `healthStatus_${postId}`;
 
       if (!token) {
         throw new Error("Authentication token not found.");
@@ -136,64 +136,13 @@ export function useAuth() {
         throw new Error(data.message || "Failed to delete post");
       }
 
+      await AsyncStorage.removeItem(cachedKey);
+
       return data;
     } catch (error) {
       console.error("Error deleting the post:", error.message);
       throw error;
     }
-  };
-
-  const fetchHealthStatus = async (petData, setLoading, setHealthStatus) => {
-    setLoading(true);
-
-    try {
-      const cachedStatus = await AsyncStorage.getItem(
-        `healthStatus_${petData.id}`,
-      );
-
-      if (cachedStatus) {
-        console.log("Using cached health status:", cachedStatus);
-        setHealthStatus(cachedStatus);
-      } else {
-        const response = await fetch(`${API_URL}/getHealthStatus`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            weight: petData.weight,
-            age: petData.age,
-            symptoms: petData.symptoms,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (data.success && data.data?.message) {
-          const message = data.data.message;
-          let status = "Unknown";
-
-          if (message.includes("Good")) {
-            status = "Good";
-          } else if (message.includes("Cautious")) {
-            status = "Cautious";
-          } else if (message.includes("Dangerous")) {
-            status = "Dangerous";
-          }
-
-          await AsyncStorage.setItem(`healthStatus_${petData.id}`, status);
-
-          setHealthStatus(status);
-        } else {
-          setHealthStatus("Cautious");
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching health status:", error);
-      setHealthStatus("Cautious");
-    }
-
-    setLoading(false);
   };
 
   const predictData = async (imageUri) => {
@@ -230,6 +179,5 @@ export function useAuth() {
     predictData,
     getUser,
     deletePost,
-    fetchHealthStatus,
   };
 }

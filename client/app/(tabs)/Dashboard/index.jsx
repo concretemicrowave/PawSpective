@@ -14,17 +14,20 @@ export default function Dashboard() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [closed, setClosed] = useState(true);
   const { setUpdate } = usePhoto();
+
   const pets = userData.posts || {};
-  const petCount = Object.keys(pets).length;
   const key = String(selectedTab + 1);
   const petData = pets[key];
-  const history = petData?.history || {};
+  const history = Array.isArray(petData?.history) ? petData.history : [];
+  const sortedHistory = [...history].sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+  );
 
   return (
     <>
       <DashboardDrawer closed={closed} setClosed={setClosed} />
       <ThemedView scrollable style={styles.dashboard}>
-        <DashboardHeader petCount={petCount} />
+        <DashboardHeader petCount={Object.keys(pets).length} />
         <PetsTab
           pets={userData.posts}
           selectedTab={selectedTab}
@@ -35,13 +38,16 @@ export default function Dashboard() {
             <ThemedText
               style={{ fontSize: 16, marginHorizontal: 8, marginVertical: 8 }}
             >
-              Scan your first pet!
+              Scan a pet!
             </ThemedText>
           )}
-          <DashboardContent selected={selectedTab} />
+          <DashboardContent
+            sortedHistory={sortedHistory}
+            selected={selectedTab}
+          />
         </View>
         <DashboardData
-          data={history}
+          sortedHistory={sortedHistory}
           id={key}
           setSelected={setSelectedTab}
           setClosed={setClosed}

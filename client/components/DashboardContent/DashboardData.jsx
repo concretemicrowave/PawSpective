@@ -1,11 +1,11 @@
-import { StyleSheet, View, Alert } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Alert } from "react-native";
 import { ThemedText, ThemedButton } from "../ThemedComponents";
 import Feather from "react-native-vector-icons/Feather";
 import { useAuth } from "../../hooks/useAuth";
 import * as Updates from "expo-updates";
 import { usePhoto } from "../../context/PhotoContext";
 
-export default function DashboardData({ data, id, setClosed, setUpdate }) {
+export default function DashboardData({ id, setClosed, setUpdate }) {
   const { deletePost } = useAuth();
   const confirmDelete = () => {
     Alert.alert("Confirm Deletion", "Are you sure you want to delete this?", [
@@ -26,7 +26,7 @@ export default function DashboardData({ data, id, setClosed, setUpdate }) {
     setPostId(id);
   };
 
-  return data !== "{}" ? (
+  return (
     <>
       <View style={styles.container}>
         <ThemedText style={styles.title}>Progress</ThemedText>
@@ -51,7 +51,7 @@ export default function DashboardData({ data, id, setClosed, setUpdate }) {
         </View>
       </View>
     </>
-  ) : null;
+  );
 }
 
 const styles = StyleSheet.create({
@@ -61,15 +61,18 @@ const styles = StyleSheet.create({
     width: "90%",
     marginLeft: "5%",
   },
-  title: {
-    fontSize: 20,
+  noDataContainer: {
+    padding: 20,
+    alignItems: "center",
   },
-  data: {
-    marginBottom: 8,
+  noDataText: {
+    fontSize: 16,
+    color: "#999",
   },
   buttons: {
     flexDirection: "row",
     gap: 8,
+    marginTop: 12,
   },
   actionButton: {
     flex: 1,
