@@ -2,7 +2,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { ThemedView } from "./ThemedComponents";
 import { useNavigation } from "expo-router";
-import Feather from "@expo/vector-icons/Feather";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export function BackLink({ white = true }) {
   const navigation = useNavigation();
@@ -24,7 +24,7 @@ export function BackLink({ white = true }) {
           ]}
           onPress={handleBack}
         >
-          <Feather
+          <MaterialCommunityIcons
             name="arrow-left"
             size={24}
             color={white ? "#fff" : "#000"}

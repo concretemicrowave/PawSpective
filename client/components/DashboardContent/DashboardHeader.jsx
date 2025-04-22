@@ -2,8 +2,9 @@ import { StyleSheet, SafeAreaView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemedText } from "../ThemedComponents";
 import { Colors } from "../../constants/Colors";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-export default function DashboardHeader({ petCount }) {
+export default function DashboardHeader() {
   const backgroundColor = Colors["light"].background;
   const backgroundGrey = Colors["light"].grey;
 
@@ -14,8 +15,9 @@ export default function DashboardHeader({ petCount }) {
       style={styles.header}
     >
       <SafeAreaView style={styles.container}>
+        <MaterialCommunityIcons name="dog" size={36} color="black" />
         <ThemedText type="subtitle" style={styles.title}>
-          {petCount ? petCount : 0} pet(s)
+          PawSpective
         </ThemedText>
       </SafeAreaView>
     </LinearGradient>
@@ -25,16 +27,17 @@ export default function DashboardHeader({ petCount }) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    transform: [{ translateY: 36 }],
   },
   header: {
     width: "100%",
     height: 400,
     padding: 20,
-    alignItems: "center",
-    flexDirection: "column",
   },
   title: {
     fontSize: 28,
-    marginTop: 10,
   },
 });

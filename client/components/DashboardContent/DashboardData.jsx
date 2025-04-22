@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Alert } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 import { ThemedText, ThemedButton } from "../ThemedComponents";
 import Feather from "react-native-vector-icons/Feather";
 import { useAuth } from "../../hooks/useAuth";

@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 import { Colors } from "@/constants/Colors";
-import Feather from "@expo/vector-icons/Feather";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function TabLayout() {
   return (
@@ -18,9 +18,9 @@ export default function TabLayout() {
         tabBarStyle: Platform.select({
           ios: {
             paddingTop: 8,
-            height: 90,
-            borderWidth: 1,
-            borderColor: Colors["light"].border,
+            height: 100,
+            borderTopWidth: 1,
+            borderTopColor: "rgba(0, 0, 0, 0.1)",
             backgroundColor: Colors["light"].background,
           },
           default: {},
@@ -32,7 +32,7 @@ export default function TabLayout() {
         options={{
           title: "Camera",
           tabBarIcon: ({ color }) => (
-            <Feather name="camera" size={26} color={color} />
+            <MaterialCommunityIcons name="dog" size={30} color={color} />
           ),
         }}
       />
@@ -41,7 +41,7 @@ export default function TabLayout() {
         options={{
           title: "Analytics",
           tabBarIcon: ({ color }) => (
-            <Feather name="bar-chart-2" size={26} color={color} />
+            <MaterialCommunityIcons name="chart-bar" size={30} color={color} />
           ),
         }}
       />
@@ -50,7 +50,7 @@ export default function TabLayout() {
         options={{
           title: "Account",
           tabBarIcon: ({ color }) => (
-            <Feather name="user" size={26} color={color} />
+            <MaterialCommunityIcons name="account" size={30} color={color} />
           ),
         }}
       />
