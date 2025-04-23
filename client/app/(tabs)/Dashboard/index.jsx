@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
 import DashboardContent from "../../../components/DashboardContent/DashboardContent";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useUser } from "@/context/UserContext";
-import PetsTab from "@/components/DashboardContent/PetsTab";
+import SwitchPetDrawer from "@/components/DashboardContent/SwitchPetDrawer";
 import DashboardHeader from "@/components/DashboardContent/DashboardHeader";
 import DashboardData from "@/components/DashboardContent/DashboardData";
 import DashboardDrawer from "@/components/DashboardContent/DashboardDrawer";
@@ -14,7 +15,7 @@ export default function Dashboard() {
   const [selectedTab, setSelectedTab] = useState(0);
   const [closed, setClosed] = useState(true);
   const { setUpdate } = usePhoto();
-
+  const [visible, setVisible] = useState(false);
   const pets = userData.posts || {};
   const key = String(selectedTab + 1);
   const petData = pets[key];
@@ -28,9 +29,19 @@ export default function Dashboard() {
       <DashboardDrawer closed={closed} setClosed={setClosed} />
       <ThemedView scrollable style={styles.dashboard}>
         <DashboardHeader petCount={Object.keys(pets).length} />
-        <PetsTab
+        <TouchableOpacity
+          style={styles.switchButton}
+          onPress={() => setVisible(true)}
+        >
+          <MaterialCommunityIcons name="swap-horizontal" size={24} />
+          <ThemedText type="subtitle" style={styles.switchButtonText}>
+            {petData.name}
+          </ThemedText>
+        </TouchableOpacity>
+        <SwitchPetDrawer
           pets={userData.posts}
-          selectedTab={selectedTab}
+          visible={visible}
+          setVisible={setVisible}
           setSelectedTab={setSelectedTab}
         />
         <View style={styles.heading}>
@@ -69,5 +80,24 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -285 }],
     width: "90%",
     marginLeft: "5%",
+  },
+  switchButton: {
+    backgroundColor: "#e6e6e6",
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderWidth: 1,
+    borderRadius: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    elevation: 2,
+    marginLeft: "5%",
+    marginRight: "5%",
+    transform: [{ translateY: -295 }],
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+  },
+  switchButtonText: {
+    fontSize: 18,
   },
 });
