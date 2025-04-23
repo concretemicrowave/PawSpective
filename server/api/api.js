@@ -206,7 +206,6 @@ api.get("/user", async (req, res) => {
         history: row.history,
       };
     });
-    console.log(posts);
     res.json(
       util.success({
         message: "User retrieved successfully",

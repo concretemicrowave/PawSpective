@@ -1,5 +1,4 @@
 import {
-  View,
   StyleSheet,
   TouchableOpacity,
   Modal,
@@ -8,9 +7,11 @@ import {
   Pressable,
   ScrollView,
   Dimensions,
+  StyleSheet as RNStyleSheet,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { ThemedText, ThemedView } from "../ThemedComponents";
+import * as Haptics from "expo-haptics";
 
 const MAX_DRAWER_HEIGHT = Dimensions.get("window").height * 0.6;
 
@@ -23,15 +24,23 @@ export default function SwitchPetDrawer({
   const [internalVisible, setInternalVisible] = useState(visible);
   const translateY = useRef(new Animated.Value(MAX_DRAWER_HEIGHT)).current;
 
+  const overlayOpacity = translateY.interpolate({
+    inputRange: [0, MAX_DRAWER_HEIGHT],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
+
   useEffect(() => {
     if (visible) {
       setInternalVisible(true);
+      translateY.setValue(MAX_DRAWER_HEIGHT);
       Animated.timing(translateY, {
         toValue: 0,
         duration: 250,
         easing: Easing.out(Easing.cubic),
         useNativeDriver: true,
       }).start();
+      Haptics.impactAsync();
     } else {
       Animated.timing(translateY, {
         toValue: MAX_DRAWER_HEIGHT,
@@ -48,9 +57,12 @@ export default function SwitchPetDrawer({
 
   return (
     <Modal visible={internalVisible} transparent animationType="none">
-      <View style={styles.overlay}>
-        <Pressable style={styles.overlay} onPress={() => setVisible(false)} />
-      </View>
+      <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]}>
+        <Pressable
+          style={RNStyleSheet.absoluteFill}
+          onPress={() => setVisible(false)}
+        />
+      </Animated.View>
       <Animated.View
         style={[
           styles.drawer,
@@ -73,6 +85,7 @@ export default function SwitchPetDrawer({
                   key={postId}
                   style={[styles.petOption, isLast && { borderBottomWidth: 0 }]}
                   onPress={() => {
+                    Haptics.selectionAsync();
                     setSelectedTab(index);
                     setVisible(false);
                   }}
@@ -93,7 +106,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0,0,0,0.25)",
+    backgroundColor: "rgba(0,0,0,0.45)",
     zIndex: 1,
   },
   drawer: {

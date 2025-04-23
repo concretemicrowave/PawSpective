@@ -23,6 +23,7 @@ export default function Dashboard() {
   const sortedHistory = [...history].sort(
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
   );
+  const latestEntry = Array.isArray(sortedHistory) ? sortedHistory[0] : null;
 
   return (
     <>
@@ -52,16 +53,12 @@ export default function Dashboard() {
               Scan a pet!
             </ThemedText>
           )}
-          <DashboardContent
-            sortedHistory={sortedHistory}
-            selected={selectedTab}
-          />
+          <DashboardData latestEntry={latestEntry} />
         </View>
-        <DashboardData
-          sortedHistory={sortedHistory}
-          id={key}
-          setSelected={setSelectedTab}
+        <DashboardContent
+          latestEntry={latestEntry}
           setClosed={setClosed}
+          id={petData.id}
           setUpdate={setUpdate}
         />
       </ThemedView>
@@ -79,7 +76,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     transform: [{ translateY: -285 }],
     width: "90%",
-    marginLeft: "5%",
+    padding: 12,
+    marginHorizontal: 20,
+    minHeight: 200,
   },
   switchButton: {
     backgroundColor: "#e6e6e6",
@@ -89,8 +88,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     elevation: 2,
-    marginLeft: "5%",
-    marginRight: "5%",
+    marginHorizontal: 20,
     transform: [{ translateY: -295 }],
     flexDirection: "row",
     alignItems: "center",

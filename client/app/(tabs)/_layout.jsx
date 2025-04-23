@@ -3,6 +3,7 @@ import React from "react";
 import { Platform } from "react-native";
 import { Colors } from "@/constants/Colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
@@ -41,7 +42,7 @@ export default function TabLayout() {
         options={{
           title: "Analytics",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="chart-bar" size={30} color={color} />
+            <Ionicons name="stats-chart" size={30} color={color} />
           ),
         }}
       />

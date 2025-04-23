@@ -8,7 +8,6 @@ import RadialBlob from "../../assets/svgs/RadialBlob";
 export default function DashboardHeader() {
   const backgroundColor = Colors["light"].background;
   const backgroundGrey = Colors["light"].grey;
-  const pastelOrange = "#FFD9A0";
 
   return (
     <View style={styles.header}>
@@ -19,7 +18,7 @@ export default function DashboardHeader() {
       />
       <RadialBlob />
       <SafeAreaView style={styles.container}>
-        <MaterialCommunityIcons name="dog" size={36} color="black" />
+        <MaterialCommunityIcons name="paw" size={36} color="black" />
         <ThemedText type="subtitle" style={styles.title}>
           PawSpective
         </ThemedText>
