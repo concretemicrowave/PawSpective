@@ -11,6 +11,7 @@ import { DetailCards } from "../../components/DetailCards/DetailCards";
 import { useAuth } from "../../hooks/useAuth";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "expo-router";
+import { Haptics } from "expo-haptics";
 import { usePhoto } from "../../context/PhotoContext";
 
 export default function Details({ uri }) {
@@ -51,6 +52,7 @@ export default function Details({ uri }) {
   }, [uri]);
 
   const handleSave = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     const post = {
       name,
       weight,

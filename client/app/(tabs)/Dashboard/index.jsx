@@ -30,15 +30,17 @@ export default function Dashboard() {
       <DashboardDrawer closed={closed} setClosed={setClosed} />
       <ThemedView scrollable style={styles.dashboard}>
         <DashboardHeader petCount={Object.keys(pets).length} />
-        <TouchableOpacity
-          style={styles.switchButton}
-          onPress={() => setVisible(true)}
-        >
-          <MaterialCommunityIcons name="swap-horizontal" size={24} />
-          <ThemedText type="subtitle" style={styles.switchButtonText}>
-            {petData.name}
-          </ThemedText>
-        </TouchableOpacity>
+        {petData && (
+          <TouchableOpacity
+            style={styles.switchButton}
+            onPress={() => setVisible(true)}
+          >
+            <MaterialCommunityIcons name="swap-horizontal" size={24} />
+            <ThemedText type="subtitle" style={styles.switchButtonText}>
+              {petData.name}
+            </ThemedText>
+          </TouchableOpacity>
+        )}
         <SwitchPetDrawer
           pets={userData.posts}
           visible={visible}
@@ -46,21 +48,27 @@ export default function Dashboard() {
           setSelectedTab={setSelectedTab}
         />
         <View style={styles.heading}>
-          {!petData && (
+          {!petData || !latestEntry ? (
             <ThemedText
-              style={{ fontSize: 16, marginHorizontal: 8, marginVertical: 8 }}
+              style={{
+                fontSize: 16,
+                opacity: 0.8,
+              }}
             >
               Scan a pet!
             </ThemedText>
+          ) : (
+            <DashboardData latestEntry={latestEntry} />
           )}
-          <DashboardData latestEntry={latestEntry} />
         </View>
-        <DashboardContent
-          latestEntry={latestEntry}
-          setClosed={setClosed}
-          id={petData.id}
-          setUpdate={setUpdate}
-        />
+        {petData && (
+          <DashboardContent
+            latestEntry={latestEntry}
+            setClosed={setClosed}
+            id={petData.id}
+            setUpdate={setUpdate}
+          />
+        )}
       </ThemedView>
       <DashboardDrawer closed={closed} setClosed={setClosed} />
     </>

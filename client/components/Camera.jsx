@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import useCameraActions from "../utils/CameraUtils";
+import { Haptics } from "expo-haptics";
 
 export default function CameraComponent() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -31,16 +32,17 @@ export default function CameraComponent() {
         type="back"
         ref={(ref) => setCamera(ref)}
       />
-
       {loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="white" />
         </View>
       )}
-
       <TouchableOpacity
         style={styles.captureButton}
-        onPress={() => takePhoto(camera, setLoading)}
+        onPress={() => {
+          takePhoto(camera, setLoading);
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }}
         disabled={loading}
       >
         <View style={styles.inner} />
