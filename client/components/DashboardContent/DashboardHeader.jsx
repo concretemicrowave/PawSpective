@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 400,
     padding: 20,
-    position: "relative",
+    position: "absolute",
     overflow: "hidden",
   },
   container: {

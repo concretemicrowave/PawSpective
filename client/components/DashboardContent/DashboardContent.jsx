@@ -19,7 +19,7 @@ export default function DashboardContent({
   };
 
   return latestEntry ? (
-    <View style={styles.container}>
+    <View>
       <HealthStatus
         status={latestEntry.health_status}
         score={latestEntry.score}
@@ -50,11 +50,6 @@ export default function DashboardContent({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    margin: 20,
-    marginVertical: 0,
-    transform: [{ translateY: -285 }],
-  },
   buttons: {
     flexDirection: "row",
     gap: 8,

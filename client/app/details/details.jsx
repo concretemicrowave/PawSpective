@@ -13,6 +13,7 @@ import { DetailCards } from "../../components/DetailCards/DetailCards";
 import { useAuth } from "../../hooks/useAuth";
 import { useUser } from "../../context/UserContext";
 import { usePhoto } from "../../context/PhotoContext";
+import * as Updates from "expo-updates";
 
 export default function Details({ uri }) {
   const router = useRouter();
@@ -113,6 +114,7 @@ export default function Details({ uri }) {
 
     setPostId(null);
     router.replace("(tabs)");
+    await Updates.reloadAsync();
   };
 
   return (

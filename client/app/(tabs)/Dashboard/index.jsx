@@ -31,23 +31,15 @@ export default function Dashboard() {
       <ThemedView scrollable style={styles.dashboard}>
         <DashboardHeader petCount={Object.keys(pets).length} />
         {petData && (
-          <>
-            <TouchableOpacity
-              style={styles.switchButton}
-              onPress={() => setVisible(true)}
-            >
-              <MaterialCommunityIcons name="swap-horizontal" size={24} />
-              <ThemedText type="subtitle" style={styles.switchButtonText}>
-                {petData.name}
-              </ThemedText>
-            </TouchableOpacity>
-            <DashboardContent
-              latestEntry={latestEntry}
-              setClosed={setClosed}
-              id={petData.id}
-              setUpdate={setUpdate}
-            />
-          </>
+          <TouchableOpacity
+            style={styles.switchButton}
+            onPress={() => setVisible(true)}
+          >
+            <MaterialCommunityIcons name="swap-horizontal" size={24} />
+            <ThemedText type="subtitle" style={styles.switchButtonText}>
+              {petData.name}
+            </ThemedText>
+          </TouchableOpacity>
         )}
         <SwitchPetDrawer
           pets={userData.posts}
@@ -66,9 +58,15 @@ export default function Dashboard() {
               Scan a pet!
             </ThemedText>
           ) : (
-            <DashboardData history={sortedHistory} />
+            <DashboardContent
+              latestEntry={latestEntry}
+              setClosed={setClosed}
+              id={petData.id}
+              setUpdate={setUpdate}
+            />
           )}
         </View>
+        {petData && <DashboardData history={sortedHistory} />}
       </ThemedView>
       <DashboardDrawer closed={closed} setClosed={setClosed} />
     </>
@@ -80,14 +78,13 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   heading: {
-    backgroundColor: "#ececec",
+    backgroundColor: "#F5F5F5",
     borderRadius: 12,
-    transform: [{ translateY: -285 }],
     width: "90%",
     padding: 12,
+    paddingBottom: 0,
     marginHorizontal: 20,
-    minHeight: 200,
-    marginTop: 16,
+    minHeight: 250,
   },
   switchButton: {
     backgroundColor: "#e6e6e6",
@@ -98,10 +95,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     elevation: 2,
     marginHorizontal: 20,
-    transform: [{ translateY: -295 }],
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    marginTop: 105,
+    marginBottom: 10,
     backgroundColor: "rgba(255, 255, 255, 0.2)",
   },
   switchButtonText: {

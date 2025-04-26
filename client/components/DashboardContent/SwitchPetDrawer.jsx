@@ -7,11 +7,14 @@ import {
   Pressable,
   ScrollView,
   Dimensions,
+  Alert,
   StyleSheet as RNStyleSheet,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { ThemedText, ThemedView } from "../ThemedComponents";
 import * as Haptics from "expo-haptics";
+import { Feather } from "@expo/vector-icons";
+import { useAuth } from "../../hooks/useAuth";
 
 const MAX_DRAWER_HEIGHT = Dimensions.get("window").height * 0.6;
 
@@ -29,6 +32,22 @@ export default function SwitchPetDrawer({
     outputRange: [1, 0],
     extrapolate: "clamp",
   });
+  const { deletePost } = useAuth();
+
+  const confirmDelete = (postId) => {
+    Alert.alert("Confirm Deletion", "Are you sure you want to delete this?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        onPress: () => handleDelete(postId), //FIX TS
+        style: "destructive",
+      },
+    ]);
+  };
+  const handleDelete = async (id) => {
+    await deletePost(id);
+    await Updates.reloadAsync();
+  };
 
   useEffect(() => {
     if (visible) {
@@ -91,6 +110,9 @@ export default function SwitchPetDrawer({
                   }}
                 >
                   <ThemedText style={styles.petName}>{pet.name}</ThemedText>
+                  <TouchableOpacity onPress={() => confirmDelete(postId)}>
+                    <Feather name="trash-2" size={24} color="#d03533" />
+                  </TouchableOpacity>
                 </TouchableOpacity>
               );
             })}
@@ -142,6 +164,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: "#bababa",
     transform: [{ translateY: 1 }],
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   petName: {
     fontSize: 18,
