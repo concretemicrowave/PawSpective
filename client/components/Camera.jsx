@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import useCameraActions from "../utils/CameraUtils";
-import { Haptics } from "expo-haptics";
+import * as Haptics from "expo-haptics";
 
 export default function CameraComponent() {
   const [permission, requestPermission] = useCameraPermissions();

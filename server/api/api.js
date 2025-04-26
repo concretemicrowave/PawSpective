@@ -294,14 +294,12 @@ api.post("/save", async (req, res) => {
       score,
     };
 
-    if (postId !== null) {
-      const existing = await pool.query(
-        "SELECT * FROM posts WHERE id = $1 AND user_id = $2",
-        [postId, userId],
-      );
-      if (existing.rows.length === 0)
-        return res.json(util.error({ message: "Post not found" }));
+    const existing = await pool.query(
+      "SELECT * FROM posts WHERE id = $1 AND user_id = $2",
+      [postId, userId],
+    );
 
+    if (existing.rows.length > 0) {
       await pool.query(
         `
         UPDATE posts
@@ -326,20 +324,18 @@ api.post("/save", async (req, res) => {
         }),
       );
     } else {
-      const newId = await getNextAvailablePostId();
-
       await pool.query(
         `
         INSERT INTO posts (id, name, breed, history, user_id)
         VALUES ($1, $2, $3, jsonb_build_array($4::jsonb), $5)
         `,
-        [newId, name, breed, JSON.stringify(entry), userId],
+        [postId, name, breed, JSON.stringify(entry), userId],
       );
 
       return res.json(
         util.success({
           message: "Post saved successfully",
-          post: { postId: newId, name, breed },
+          post: { postId, name, breed },
         }),
       );
     }
@@ -407,12 +403,12 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
               weight: {
                 type: "number",
                 description:
-                  "The whole number weight of the pet in kilograms. Do not add the unit at the end. Example: 10. If the pet is not in the photo, enter null.",
+                  "The whole number weight of the pet in kilograms. Do not add the unit at the end. Example: 10.",
               },
               age: {
                 type: "number",
                 description:
-                  "The whole number age of the pet in half years. Example: 6. If the pet is not in the photo, enter null.",
+                  "The whole number age of the pet in years. Example: 6.",
               },
               symptoms: {
                 type: "string",

@@ -31,15 +31,23 @@ export default function Dashboard() {
       <ThemedView scrollable style={styles.dashboard}>
         <DashboardHeader petCount={Object.keys(pets).length} />
         {petData && (
-          <TouchableOpacity
-            style={styles.switchButton}
-            onPress={() => setVisible(true)}
-          >
-            <MaterialCommunityIcons name="swap-horizontal" size={24} />
-            <ThemedText type="subtitle" style={styles.switchButtonText}>
-              {petData.name}
-            </ThemedText>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity
+              style={styles.switchButton}
+              onPress={() => setVisible(true)}
+            >
+              <MaterialCommunityIcons name="swap-horizontal" size={24} />
+              <ThemedText type="subtitle" style={styles.switchButtonText}>
+                {petData.name}
+              </ThemedText>
+            </TouchableOpacity>
+            <DashboardContent
+              latestEntry={latestEntry}
+              setClosed={setClosed}
+              id={petData.id}
+              setUpdate={setUpdate}
+            />
+          </>
         )}
         <SwitchPetDrawer
           pets={userData.posts}
@@ -58,17 +66,9 @@ export default function Dashboard() {
               Scan a pet!
             </ThemedText>
           ) : (
-            <DashboardData latestEntry={latestEntry} />
+            <DashboardData history={sortedHistory} />
           )}
         </View>
-        {petData && (
-          <DashboardContent
-            latestEntry={latestEntry}
-            setClosed={setClosed}
-            id={petData.id}
-            setUpdate={setUpdate}
-          />
-        )}
       </ThemedView>
       <DashboardDrawer closed={closed} setClosed={setClosed} />
     </>
@@ -80,13 +80,14 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   heading: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#ececec",
     borderRadius: 12,
     transform: [{ translateY: -285 }],
     width: "90%",
     padding: 12,
     marginHorizontal: 20,
     minHeight: 200,
+    marginTop: 16,
   },
   switchButton: {
     backgroundColor: "#e6e6e6",

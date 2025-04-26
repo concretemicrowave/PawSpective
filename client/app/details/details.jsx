@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, View, Alert } from "react-native";
+import { useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 import {
   ThemedView,
   ThemedText,
@@ -10,49 +12,76 @@ import {
 import { DetailCards } from "../../components/DetailCards/DetailCards";
 import { useAuth } from "../../hooks/useAuth";
 import { useUser } from "../../context/UserContext";
-import { useRouter } from "expo-router";
-import { Haptics } from "expo-haptics";
 import { usePhoto } from "../../context/PhotoContext";
 
 export default function Details({ uri }) {
-  const { update, postId, setPostId } = usePhoto();
-  const { savePost, predictData } = useAuth();
-  const { userData, setUserData } = useUser();
-  const existingPost = userData.posts[postId];
   const router = useRouter();
-  const [name, setName] = useState(update ? existingPost.name : "");
+  const { update, postId, setPostId } = usePhoto();
+  const { userData, setUserData } = useUser();
+  const { savePost, predictData } = useAuth();
+  const existingPost = postId ? userData.posts?.[String(postId)] : null;
+  const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
   const [age, setAge] = useState(0);
   const [symptoms, setSymptoms] = useState("");
   const [breed, setBreed] = useState("");
   const [time, setTime] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [predicting, setPredicting] = useState(false);
+  const [fetchedPrediction, setFetchedPrediction] = useState(false);
+
+  useEffect(() => {
+    if (update && existingPost) {
+      setName(existingPost.name || "");
+      setWeight(existingPost.weight || 0);
+      setAge(existingPost.age || 0);
+      setSymptoms(existingPost.symptoms || "");
+      setBreed(existingPost.breed || "");
+      setTime(existingPost.time || null);
+    }
+  }, [update, existingPost]);
 
   useEffect(() => {
     const fetchPrediction = async () => {
-      if (!uri) return;
-      setLoading(true);
+      if (!uri || update || fetchedPrediction) return;
+
+      setPredicting(true);
       const result = await predictData(uri);
-      setLoading(false);
+      setPredicting(false);
+
       if (result) {
-        const data = JSON.parse(result);
-        setBreed(data.breed || null);
-        setWeight(data.weight || 0);
-        setAge(data.age || 0);
-        setSymptoms(data.symptoms || "No Symptoms");
-        const now = new Date();
-        const formattedDate = `${now.getFullYear()}-${String(
-          now.getMonth() + 1,
-        ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-        setTime(formattedDate);
+        try {
+          const data = JSON.parse(result);
+          setBreed(data.breed || "");
+          setWeight(data.weight || 0);
+          setAge(data.age || 0);
+          setSymptoms(data.symptoms || "No Symptoms");
+
+          const now = new Date();
+          const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+          setTime(formattedDate);
+
+          setFetchedPrediction(true);
+        } catch (error) {
+          console.error("Failed to parse prediction result:", error);
+        }
       }
     };
 
     fetchPrediction();
-  }, [uri]);
+  }, [uri, update]);
 
   const handleSave = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    let finalPostId = postId;
+    if (!update) {
+      const existingIds = Object.keys(userData.posts || {});
+      const maxId = existingIds.length
+        ? Math.max(...existingIds.map((id) => parseInt(id)))
+        : 0;
+      finalPostId = String(maxId + 1);
+    }
+
     const post = {
       name,
       weight,
@@ -61,23 +90,27 @@ export default function Details({ uri }) {
       breed,
       time,
       uri,
-      postId: update ? postId : null,
+      postId: finalPostId,
     };
 
     const data = await savePost(post);
     if (!data.success) {
-      return Alert.alert("Error", data.message.message);
+      return Alert.alert(
+        "Error",
+        data.message?.message || "Something went wrong",
+      );
     }
 
     const newPost = data.data.post;
 
-    setUserData({
-      ...userData,
+    setUserData((prev) => ({
+      ...prev,
       posts: {
-        ...userData.posts,
+        ...prev.posts,
         [newPost.postId]: newPost,
       },
-    });
+    }));
+
     setPostId(null);
     router.replace("(tabs)");
   };
@@ -86,7 +119,7 @@ export default function Details({ uri }) {
     <>
       <ThemedView scrollable style={styles.container}>
         <ThemedText type="subtitle" style={styles.title}>
-          {loading
+          {predicting
             ? "Loading..."
             : breed
               ? `Your ${breed}!`
@@ -100,7 +133,7 @@ export default function Details({ uri }) {
               </ThemedText>
             </View>
             <ThemedInput
-              value={existingPost?.name}
+              value={name}
               onChangeText={setName}
               placeholder="Pet Name"
               style={{ marginBottom: 12 }}
@@ -125,6 +158,7 @@ export default function Details({ uri }) {
               onChangeText={setSymptoms}
               placeholder="Symptoms"
             />
+
             <DetailCards
               weight={weight}
               age={age}

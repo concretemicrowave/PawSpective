@@ -1,10 +1,9 @@
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { DetailCards } from "../DetailCards/DetailCards";
-import { ThemedButton } from "../ThemedComponents";
-import * as Updates from "expo-updates";
+import { ThemedButton, ThemedText } from "../ThemedComponents";
 import Feather from "react-native-vector-icons/Feather";
-import { useAuth } from "../../hooks/useAuth";
 import { usePhoto } from "../../context/PhotoContext";
+import HealthStatus from "../HealthStatus";
 
 export default function DashboardContent({
   latestEntry,
@@ -12,19 +11,7 @@ export default function DashboardContent({
   id,
   setUpdate,
 }) {
-  const { deletePost } = useAuth();
-  const confirmDelete = () => {
-    Alert.alert("Confirm Deletion", "Are you sure you want to delete this?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Delete", onPress: handleDelete, style: "destructive" },
-    ]);
-  };
   const { setPostId } = usePhoto();
-  const handleDelete = async () => {
-    await deletePost(id);
-    await Updates.reloadAsync();
-  };
-
   const handleUpdate = () => {
     setClosed(false);
     setUpdate(true);
@@ -33,6 +20,10 @@ export default function DashboardContent({
 
   return latestEntry ? (
     <View style={styles.container}>
+      <HealthStatus
+        status={latestEntry.health_status}
+        score={latestEntry.score}
+      />
       <DetailCards
         age={latestEntry.age}
         weight={latestEntry.weight}
@@ -41,17 +32,17 @@ export default function DashboardContent({
       <View style={styles.buttons}>
         <ThemedButton
           style={styles.actionButton}
-          onPress={confirmDelete}
-          borderRadius={50}
-          color="attention"
-          hollow
-          title={<Feather name="trash" size={24} color="#d03533" />}
-        />
-        <ThemedButton
-          style={styles.actionButton}
           borderRadius={50}
           onPress={handleUpdate}
-          title={<Feather name="edit" size={24} color="#fff" />}
+          title={
+            <View style={styles.buttonContent}>
+              <Feather name="edit" size={24} color="#fff" />
+              <View style={{ width: 8 }} />
+              <ThemedText type="subtitle" style={styles.updateText}>
+                Update
+              </ThemedText>
+            </View>
+          }
         />
       </View>
     </View>
@@ -61,16 +52,25 @@ export default function DashboardContent({
 const styles = StyleSheet.create({
   container: {
     margin: 20,
-    marginTop: 12,
+    marginVertical: 0,
     transform: [{ translateY: -285 }],
   },
   buttons: {
     flexDirection: "row",
     gap: 8,
-    marginTop: 20,
-    marginBottom: 12,
+    marginTop: 10,
   },
   actionButton: {
     flex: 1,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  updateText: {
+    fontSize: 16,
+    color: "#fff",
+    fontWeight: "600",
   },
 });

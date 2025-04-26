@@ -1,19 +1,11 @@
 import { StyleSheet, View } from "react-native";
-import { ThemedText } from "../ThemedComponents";
-import HealthStatus from "../HealthStatus";
+import { Graph } from "./Graph/Graph";
 
-export default function DashboardData({ latestEntry }) {
+export default function DashboardData({ history }) {
   return (
     <>
       <View style={styles.container}>
-        <HealthStatus
-          status={latestEntry.health_status}
-          score={latestEntry.score}
-        />
-        <ThemedText type="subtitle" style={styles.title}>
-          PROGRESS
-        </ThemedText>
-        <ThemedText>Insert graph of progress here</ThemedText>
+        <Graph history={history} />
       </View>
     </>
   );
@@ -22,10 +14,5 @@ export default function DashboardData({ latestEntry }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  title: {
-    opacity: 0.8,
-    fontSize: 18,
-    marginBottom: 6,
   },
 });

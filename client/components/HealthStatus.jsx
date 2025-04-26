@@ -28,7 +28,7 @@ export default function HealthStatus({ status, score, loading }) {
       <ThemedText style={styles.healthScoreText}>
         Health Score:{" "}
         <ThemedText style={styles.healthScoreText} type="title">
-          {loading ? <ActivityIndicator /> : (score ?? "Unknown")}
+          {loading ? <ActivityIndicator /> : (`${score} / 10` ?? "Unknown")}
         </ThemedText>
       </ThemedText>
       <View style={styles.healthBarContainer}>
@@ -49,7 +49,7 @@ export default function HealthStatus({ status, score, loading }) {
 const styles = StyleSheet.create({
   healthScore: {
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 14,
     marginBottom: 10,
     padding: 12,
     alignItems: "center",
