@@ -1,5 +1,6 @@
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { ThemedText } from "../../ThemedComponents";
+import * as Haptics from "expo-haptics";
 
 export function GraphToggle({ isWeight, setIsWeight }) {
   return (
@@ -8,7 +9,10 @@ export function GraphToggle({ isWeight, setIsWeight }) {
         style={
           isWeight ? styles.toggleButtonActive : styles.toggleButtonInactive
         }
-        onPress={() => setIsWeight(true)}
+        onPress={() => {
+          Haptics.selectionAsync();
+          setIsWeight(true);
+        }}
       >
         <ThemedText
           type="subtitle"
@@ -17,12 +21,14 @@ export function GraphToggle({ isWeight, setIsWeight }) {
           Weight
         </ThemedText>
       </TouchableOpacity>
-
       <TouchableOpacity
         style={
           !isWeight ? styles.toggleButtonActive : styles.toggleButtonInactive
         }
-        onPress={() => setIsWeight(false)}
+        onPress={() => {
+          Haptics.selectionAsync();
+          setIsWeight(false);
+        }}
       >
         <ThemedText
           type="subtitle"

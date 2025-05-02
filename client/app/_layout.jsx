@@ -13,6 +13,7 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { UserProvider } from "@/context/UserContext";
 import { PhotoProvider } from "@/context/PhotoContext";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -50,21 +51,23 @@ export default function RootLayout() {
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-          <Stack>
-            <Stack.Screen
-              name="openScreen/index"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="openScreen/authForms/register"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="details/index"
-              options={{ headerShown: false }}
-            />
-          </Stack>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen
+                name="openScreen/index"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="openScreen/authForms/register"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="details/index"
+                options={{ headerShown: false }}
+              />
+            </Stack>
+          </GestureHandlerRootView>
           <StatusBar style="auto" />
         </ThemeProvider>
       </UserProvider>

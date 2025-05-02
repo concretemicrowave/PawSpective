@@ -152,7 +152,7 @@ export default function Details({ uri }) {
                 value={age}
                 setValue={setAge}
                 style={styles.numberInput}
-                label="age (half yrs)"
+                label="age"
               />
             </View>
             <ThemedInput

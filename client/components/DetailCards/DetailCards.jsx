@@ -7,15 +7,15 @@ export function DetailCards({ weight, age, symptoms }) {
       <DetailCard title="Symptoms" bold={symptoms} />
       <View style={{ flexDirection: "row", gap: 8 }}>
         <DetailCard
-          title="Weight(kg)"
-          bold={weight}
+          title="Weight"
+          bold={`${weight} kg`}
           progress={weight}
           average={50}
           style={{ flex: 1 }}
         />
         <DetailCard
           title="Age"
-          bold={age}
+          bold={`${age} years`}
           progress={age}
           average={20}
           style={{ flex: 1 }}

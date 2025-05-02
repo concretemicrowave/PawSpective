@@ -345,6 +345,7 @@ api.post("/save", async (req, res) => {
   }
 });
 
+// Predict Breed, Age, Weight, Symptoms
 api.post("/predict-breed", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {

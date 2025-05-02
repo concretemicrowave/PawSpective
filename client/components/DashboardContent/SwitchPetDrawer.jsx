@@ -105,7 +105,7 @@ export default function SwitchPetDrawer({
                   style={[styles.petOption, isLast && { borderBottomWidth: 0 }]}
                   onPress={() => {
                     Haptics.selectionAsync();
-                    setSelectedTab(index);
+                    setSelectedTab(index > 0 ? index : postId++);
                     setVisible(false);
                   }}
                 >

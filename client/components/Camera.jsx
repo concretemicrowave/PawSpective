@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -8,11 +8,14 @@ import {
 import { CameraView, useCameraPermissions } from "expo-camera";
 import useCameraActions from "../utils/CameraUtils";
 import * as Haptics from "expo-haptics";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, { runOnJS } from "react-native-reanimated";
 
 export default function CameraComponent() {
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [zoom, setZoom] = useState(0);
   const { takePhoto } = useCameraActions();
 
   useEffect(() => {
@@ -21,17 +24,28 @@ export default function CameraComponent() {
     }
   }, []);
 
-  if (!permission?.granted) {
-    return null;
-  }
+  const handleZoomChange = (value) => {
+    setZoom(Math.min(Math.max(value, 0), 1));
+  };
+
+  const pinchGesture = Gesture.Pinch().onUpdate((e) => {
+    runOnJS(handleZoomChange)((e.scale - 1) / 5);
+  });
+
+  if (!permission?.granted) return null;
 
   return (
     <View style={styles.cameraWrapper}>
-      <CameraView
-        style={styles.camera}
-        type="back"
-        ref={(ref) => setCamera(ref)}
-      />
+      <GestureDetector gesture={pinchGesture}>
+        <Animated.View style={StyleSheet.absoluteFill}>
+          <CameraView
+            style={styles.camera}
+            type="back"
+            ref={(ref) => setCamera(ref)}
+            zoom={zoom}
+          />
+        </Animated.View>
+      </GestureDetector>
       {loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="white" />

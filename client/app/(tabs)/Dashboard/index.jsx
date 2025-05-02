@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
 import DashboardContent from "../../../components/DashboardContent/DashboardContent";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -12,11 +12,21 @@ import { usePhoto } from "../../../context/PhotoContext";
 
 export default function Dashboard() {
   const { userData } = useUser();
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(1);
   const [closed, setClosed] = useState(true);
   const { setUpdate } = usePhoto();
   const [visible, setVisible] = useState(false);
+
   const pets = userData.posts || {};
+
+  useEffect(() => {
+    const keys = Object.keys(pets);
+    if (keys.length > 0) {
+      const latestKey = Math.max(...keys.map(Number));
+      setSelectedTab(latestKey - 1);
+    }
+  }, [pets]);
+
   const key = String(selectedTab + 1);
   const petData = pets[key];
   const history = Array.isArray(petData?.history) ? petData.history : [];
@@ -47,7 +57,7 @@ export default function Dashboard() {
           setVisible={setVisible}
           setSelectedTab={setSelectedTab}
         />
-        <View style={styles.heading}>
+        <View style={[styles.heading, !petData && { marginTop: 110 }]}>
           {!petData || !latestEntry ? (
             <ThemedText
               style={{
