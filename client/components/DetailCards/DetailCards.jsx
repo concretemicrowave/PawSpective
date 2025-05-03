@@ -15,7 +15,7 @@ export function DetailCards({ weight, age, symptoms }) {
         />
         <DetailCard
           title="Age"
-          bold={`${age} years`}
+          bold={age}
           progress={age}
           average={20}
           style={{ flex: 1 }}

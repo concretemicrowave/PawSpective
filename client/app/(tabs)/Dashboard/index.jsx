@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
 import DashboardContent from "../../../components/DashboardContent/DashboardContent";
