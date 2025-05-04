@@ -29,16 +29,6 @@ api.get("/", (req, res) => {
 });
 
 console.log("API loaded.");
-const getNextAvailablePostId = async () => {
-  const result = await pool.query("SELECT id FROM posts ORDER BY id ASC");
-  const ids = result.rows.map((row) => row.id);
-
-  for (let i = 1; i <= ids.length + 1; i++) {
-    if (!ids.includes(i)) return i;
-  }
-
-  return 1;
-};
 
 api.post("/accounts", async (req, res) => {
   const { name, email, password } = req.body;

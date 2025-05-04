@@ -3,7 +3,7 @@ import {
   ThemedInput,
   ThemedButton,
 } from "@/components/ThemedComponents";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Alert } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "@/hooks/useAuth";
@@ -13,23 +13,28 @@ import * as Updates from "expo-updates";
 export default function Login() {
   const { login } = useAuth();
   const navigation = useNavigation();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setDisabled(!(email.trim() && password.trim()));
   }, [email, password]);
 
   const handleLogin = async () => {
+    setLoading(true);
     const data = await login(email, password);
 
     if (data.success) {
       try {
         await Updates.reloadAsync();
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error reloading app:", error);
       }
+    } else {
+      Alert.alert("Login Failed", data.message || "Please try again.");
     }
   };
 
@@ -47,6 +52,7 @@ export default function Login() {
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        editable={!loading}
       />
       <ThemedInput
         required
@@ -55,11 +61,13 @@ export default function Login() {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        editable={!loading}
       />
       <ThemedButton
         color="primary"
         title="Login"
         disabled={disabled}
+        loading={loading}
         onPress={handleLogin}
         borderRadius={50}
       />

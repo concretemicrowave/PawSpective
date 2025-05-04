@@ -1,32 +1,29 @@
-import { useState, useEffect } from "react";
-import { StyleSheet, View, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
-import * as Haptics from "expo-haptics";
-import {
-  ThemedView,
-  ThemedText,
-  ThemedInput,
-  ThemedNumberInput,
-  ThemedButton,
-} from "../../components/ThemedComponents";
-import { DetailCards } from "../../components/DetailCards/DetailCards";
+import { ThemedView } from "../../components/ThemedComponents";
 import { useAuth } from "../../hooks/useAuth";
 import { useUser } from "../../context/UserContext";
 import { usePhoto } from "../../context/PhotoContext";
-import * as Updates from "expo-updates";
+import PredictionHeader from "./content/PredictionHeader";
+import PetForm from "./content/PetForm";
+import SaveButton from "./content/SaveButton";
+import { handleSave } from "../../utils/handleSave";
 
 export default function Details({ uri }) {
   const router = useRouter();
   const { update, postId, setPostId } = usePhoto();
   const { userData, setUserData } = useUser();
   const { savePost, predictData } = useAuth();
-  const existingPost = postId ? userData.posts?.[String(postId)] : null;
+  const existingPost = postId ? userData.posts?.[postId] : null;
+
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
   const [age, setAge] = useState(0);
   const [symptoms, setSymptoms] = useState("");
   const [breed, setBreed] = useState("");
   const [time, setTime] = useState(null);
+
   const [predicting, setPredicting] = useState(false);
   const [fetchedPrediction, setFetchedPrediction] = useState(false);
 
@@ -42,141 +39,59 @@ export default function Details({ uri }) {
   }, [update, existingPost]);
 
   useEffect(() => {
-    const fetchPrediction = async () => {
+    async function fetchPrediction() {
       if (!uri || update || fetchedPrediction) return;
-
       setPredicting(true);
       const result = await predictData(uri);
       setPredicting(false);
-
-      if (result) {
-        try {
-          const data = JSON.parse(result);
-          setBreed(data.breed || "");
-          setWeight(data.weight || 0);
-          setAge(data.age || 0);
-          setSymptoms(data.symptoms || "No Symptoms");
-
-          const now = new Date();
-          const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-          setTime(formattedDate);
-
-          setFetchedPrediction(true);
-        } catch (error) {
-          console.error("Failed to parse prediction result:", error);
-        }
+      if (!result) return;
+      try {
+        const data = JSON.parse(result);
+        setBreed(data.breed || "");
+        setWeight(data.weight || 0);
+        setAge(data.age || 0);
+        setSymptoms(data.symptoms || "No Symptoms");
+        setTime(new Date().toISOString().slice(0, 10));
+        setFetchedPrediction(true);
+      } catch {
+        console.error("Failed to parse prediction:", result);
       }
-    };
-
+    }
     fetchPrediction();
-  }, [uri, update]);
+  }, [uri, update, fetchedPrediction]);
 
-  const handleSave = async () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-    let finalPostId = postId;
-    if (!update) {
-      const existingIds = Object.keys(userData.posts || {});
-      const maxId = existingIds.length
-        ? Math.max(...existingIds.map((id) => parseInt(id)))
-        : 0;
-      finalPostId = String(maxId + 1);
-    }
-
-    const post = {
-      name,
-      weight,
-      age,
-      symptoms,
-      breed,
-      time,
-      uri,
-      postId: finalPostId,
-    };
-
-    const data = await savePost(post);
-    if (!data.success) {
-      return Alert.alert(
-        "Error",
-        data.message?.message || "Something went wrong",
-      );
-    }
-
-    const newPost = data.data.post;
-
-    setUserData((prev) => ({
-      ...prev,
-      posts: {
-        ...prev.posts,
-        [newPost.postId]: newPost,
-      },
-    }));
-
-    setPostId(null);
-    router.replace("(tabs)");
-    await Updates.reloadAsync();
-  };
+  const onSave = () =>
+    handleSave({
+      update,
+      postId,
+      userData,
+      setUserData,
+      setPostId,
+      router,
+      savePost,
+      postFields: { name, weight, age, symptoms, breed, time, uri },
+    });
 
   return (
     <>
       <ThemedView scrollable style={styles.container}>
-        <ThemedText type="subtitle" style={styles.title}>
-          {predicting
-            ? "Loading..."
-            : breed
-              ? `Your ${breed}!`
-              : "Can't seem to find your pet. Retake your photo."}
-        </ThemedText>
+        <PredictionHeader predicting={predicting} breed={breed} />
         {breed && (
-          <>
-            <View style={styles.note}>
-              <ThemedText style={{ fontSize: 14 }}>
-                Results are AI, not always accurate.
-              </ThemedText>
-            </View>
-            <ThemedInput
-              value={name}
-              onChangeText={setName}
-              placeholder="Pet Name"
-              style={{ marginBottom: 12 }}
-              type={update ? "read-only" : "default"}
-            />
-            <View style={styles.inputContainer}>
-              <ThemedNumberInput
-                value={weight}
-                setValue={setWeight}
-                style={styles.numberInput}
-                label="kg"
-              />
-              <ThemedNumberInput
-                value={age}
-                setValue={setAge}
-                style={styles.numberInput}
-                label="age"
-              />
-            </View>
-            <ThemedInput
-              value={symptoms}
-              onChangeText={setSymptoms}
-              placeholder="Symptoms"
-            />
-
-            <DetailCards
+          <View>
+            <PetForm
+              name={name}
+              setName={setName}
               weight={weight}
+              setWeight={setWeight}
               age={age}
-              symptoms={symptoms || "None"}
+              setAge={setAge}
+              symptoms={symptoms}
+              setSymptoms={setSymptoms}
             />
-          </>
+          </View>
         )}
       </ThemedView>
-      {breed && (
-        <ThemedButton
-          style={styles.saveButton}
-          title={update ? "Update" : "Save"}
-          borderRadius={50}
-          onPress={handleSave}
-        />
-      )}
+      <SaveButton breed={breed} update={update} onPress={onSave} />
     </>
   );
 }
@@ -190,36 +105,5 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "68%",
     borderRadius: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 12,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 8,
-  },
-  numberInput: {
-    flex: 1,
-  },
-  saveButton: {
-    position: "absolute",
-    bottom: 40,
-    left: 20,
-    right: 20,
-  },
-  note: {
-    backgroundColor: "#e6e6e6",
-    padding: 4,
-    borderRadius: 12,
-    marginBottom: 12,
-    width: "auto",
-    alignItems: "center",
-    opacity: 0.7,
   },
 });

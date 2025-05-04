@@ -1,4 +1,10 @@
-import { TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  ViewStyle,
+} from "react-native";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import { ThemedText } from "./ThemedText";
 
@@ -11,6 +17,7 @@ export function ThemedButton({
   hollow = false,
   color = "primary",
   disabled = false,
+  loading = false, // new prop
   padding = true,
   ...rest
 }) {
@@ -19,43 +26,57 @@ export function ThemedButton({
     `${color}`,
   );
 
+  // if loading, we also disable the button
+  const isDisabled = disabled || loading;
+  // spinner should match text color
+  const spinnerColor = hollow ? backgroundColor : "#fff";
+
   return (
     <TouchableOpacity
       style={[
-        padding ? { paddingVertical: 14, paddingHorizontal: 10 } : null,
+        padding && styles.padding,
         styles.button,
         { backgroundColor },
-        disabled ? { opacity: 0.5 } : null,
+        isDisabled && styles.disabled,
         { borderRadius },
-        hollow
-          ? {
-              backgroundColor: "transparent",
-              borderWidth: 1,
-              borderColor: backgroundColor,
-            }
-          : null,
+        hollow && {
+          backgroundColor: "transparent",
+          borderWidth: 1,
+          borderColor: backgroundColor,
+        },
         style,
       ]}
       activeOpacity={0.6}
-      disabled={disabled}
+      disabled={isDisabled}
       {...rest}
     >
-      <ThemedText
-        type="subtitle"
-        style={styles.text}
-        color={hollow ? color : "white"}
-      >
-        {title}
-      </ThemedText>
+      {loading ? (
+        <ActivityIndicator size="small" color={spinnerColor} />
+      ) : (
+        <ThemedText
+          type="subtitle"
+          style={styles.text}
+          color={hollow ? color : "white"}
+        >
+          {title}
+        </ThemedText>
+      )}
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
+  padding: {
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+  },
   button: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  disabled: {
+    opacity: 0.5,
   },
   text: {
     fontSize: 16,
