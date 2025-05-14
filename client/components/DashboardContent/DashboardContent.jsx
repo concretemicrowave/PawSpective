@@ -4,18 +4,16 @@ import { ThemedButton, ThemedText } from "../ThemedComponents";
 import Feather from "react-native-vector-icons/Feather";
 import { usePhoto } from "../../context/PhotoContext";
 import HealthStatus from "../HealthStatus";
+import { useNavigation } from "@react-navigation/native";
 
-export default function DashboardContent({
-  latestEntry,
-  setClosed,
-  id,
-  setUpdate,
-}) {
+export default function DashboardContent({ latestEntry, id, setUpdate }) {
   const { setPostId } = usePhoto();
+  const navigation = useNavigation();
+
   const handleUpdate = () => {
-    setClosed(false);
     setUpdate(true);
     setPostId(id);
+    navigation.navigate("update/update");
   };
 
   return latestEntry ? (

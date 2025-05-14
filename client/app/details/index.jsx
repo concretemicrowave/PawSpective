@@ -1,8 +1,9 @@
 import { usePhoto } from "../../context/PhotoContext";
-import { Image, StyleSheet, SafeAreaView, View } from "react-native";
-import { ThemedView, ThemedText } from "../../components/ThemedComponents";
-import Details from "./Details";
+import { Image, StyleSheet, View } from "react-native";
+import { ThemedView } from "../../components/ThemedComponents";
+import Details from "./details";
 import { BackLink } from "../../components/BackLink";
+import Title from "../../components/Title";
 
 export default function DetailsScreen() {
   const { photoUri } = usePhoto();
@@ -12,9 +13,7 @@ export default function DetailsScreen() {
       <BackLink white={false} />
       <ThemedView style={styles.container}>
         <View style={{ height: "100%", width: "100%" }}>
-          <SafeAreaView style={styles.title}>
-            <ThemedText style={styles.text}>Overview</ThemedText>
-          </SafeAreaView>
+          <Title text="Overview" />
           <Image source={{ uri: photoUri }} style={styles.image} />
         </View>
         <Details uri={photoUri} />
@@ -31,17 +30,5 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "35%",
-  },
-  title: {
-    position: "absolute",
-    zIndex: 10000,
-    width: "100%",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
-    marginTop: 10,
   },
 });

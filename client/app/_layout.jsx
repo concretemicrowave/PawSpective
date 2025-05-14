@@ -66,6 +66,10 @@ export default function RootLayout() {
                 name="details/index"
                 options={{ headerShown: false }}
               />
+              <Stack.Screen
+                name="update/update"
+                options={{ headerShown: false }}
+              />
             </Stack>
           </GestureHandlerRootView>
           <StatusBar style="auto" />

@@ -15,7 +15,8 @@ export default function Details({ uri }) {
   const { update, postId, setPostId } = usePhoto();
   const { userData, setUserData } = useUser();
   const { savePost, predictData } = useAuth();
-  const existingPost = postId ? userData.posts?.[postId] : null;
+  const existingPost =
+    postId !== null && postId !== undefined ? userData.posts?.[postId] : null;
 
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
@@ -30,17 +31,12 @@ export default function Details({ uri }) {
   useEffect(() => {
     if (update && existingPost) {
       setName(existingPost.name || "");
-      setWeight(existingPost.weight || 0);
-      setAge(existingPost.age || 0);
-      setSymptoms(existingPost.symptoms || "");
-      setBreed(existingPost.breed || "");
-      setTime(existingPost.time || null);
     }
   }, [update, existingPost]);
 
   useEffect(() => {
     async function fetchPrediction() {
-      if (!uri || update || fetchedPrediction) return;
+      if (!uri || fetchedPrediction) return;
       setPredicting(true);
       const result = await predictData(uri);
       setPredicting(false);
