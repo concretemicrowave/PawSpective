@@ -14,7 +14,13 @@ app.use(bodyParser.json());
 app.use("/api", api);
 
 // Start server
-app.listen(PORT, async () => {
+async function startServer() {
   await initializeDatabase();
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log("Server running on http://10.173.21.46:3000");
+  });
+}
+
+startServer().catch((err) => {
+  console.error("Failed to start server:", err);
 });
