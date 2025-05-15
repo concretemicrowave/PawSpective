@@ -18,14 +18,13 @@ export default function DashboardContent({ latestEntry, id, setUpdate }) {
 
   return latestEntry ? (
     <View>
-      <HealthStatus
-        status={latestEntry.health_status}
-        score={latestEntry.score}
-      />
+      <HealthStatus score={latestEntry.score} />
       <DetailCards
         age={latestEntry.age}
         weight={latestEntry.weight}
         symptoms={latestEntry.symptoms}
+        avgWeight={latestEntry.averageHealthyWeight}
+        avgLifespan={latestEntry.averageLifespan}
       />
       <View style={styles.buttons}>
         <ThemedButton

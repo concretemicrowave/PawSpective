@@ -1,18 +1,12 @@
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { ThemedText } from "./ThemedComponents";
 
-export default function HealthStatus({ status, score, loading }) {
+export default function HealthStatus({ score, loading }) {
   const getColor = () => {
-    switch (status) {
-      case "Good":
-        return "#17C964";
-      case "Cautious":
-        return "#E9D502";
-      case "Dangerous":
-        return "#d03533";
-      default:
-        return "gray";
-    }
+    if (typeof score !== "number") return "gray";
+    if (score >= 8) return "#17C964";
+    if (score >= 5) return "#E9D502";
+    return "#d03533";
   };
 
   const getWidth = () => {
