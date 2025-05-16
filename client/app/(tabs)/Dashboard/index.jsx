@@ -7,28 +7,25 @@ import { useUser } from "@/context/UserContext";
 import SwitchPetDrawer from "@/components/DashboardContent/SwitchPetDrawer";
 import DashboardHeader from "@/components/DashboardContent/DashboardHeader";
 import DashboardData from "@/components/DashboardContent/DashboardData";
-import DashboardDrawer from "@/components/DashboardContent/DashboardDrawer";
 import { usePhoto } from "../../../context/PhotoContext";
 
 export default function Dashboard() {
   const { userData } = useUser();
-  const [selectedTab, setSelectedTab] = useState(1);
-  const [closed, setClosed] = useState(true);
   const { setUpdate } = usePhoto();
   const [visible, setVisible] = useState(false);
 
   const pets = userData.posts || {};
+  const keys = Object.keys(pets);
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
   useEffect(() => {
-    const keys = Object.keys(pets);
     if (keys.length > 0) {
-      const latestKey = Math.max(...keys.map(Number));
-      setSelectedTab(latestKey - 1);
+      const latestKey = String(Math.max(...keys.map(Number)));
+      setSelectedPostId(latestKey);
     }
-  }, [pets]);
+  }, [keys.length]);
 
-  const key = String(selectedTab + 1);
-  const petData = pets[key];
+  const petData = pets[selectedPostId];
   const history = Array.isArray(petData?.history) ? petData.history : [];
   const sortedHistory = [...history].sort(
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
@@ -37,9 +34,8 @@ export default function Dashboard() {
 
   return (
     <>
-      <DashboardDrawer closed={closed} setClosed={setClosed} />
       <ThemedView scrollable style={styles.dashboard}>
-        <DashboardHeader petCount={Object.keys(pets).length} />
+        <DashboardHeader petCount={keys.length} />
         {petData && (
           <TouchableOpacity
             style={styles.switchButton}
@@ -55,7 +51,7 @@ export default function Dashboard() {
           pets={userData.posts}
           visible={visible}
           setVisible={setVisible}
-          setSelectedTab={setSelectedTab}
+          setSelectedTab={setSelectedPostId}
         />
         <View style={[styles.heading, !petData && { marginTop: 110 }]}>
           {!petData || !latestEntry ? (
@@ -70,15 +66,13 @@ export default function Dashboard() {
           ) : (
             <DashboardContent
               latestEntry={latestEntry}
-              setClosed={setClosed}
-              id={petData.id}
+              id={selectedPostId}
               setUpdate={setUpdate}
             />
           )}
         </View>
         {petData && <DashboardData history={sortedHistory} />}
       </ThemedView>
-      <DashboardDrawer closed={closed} setClosed={setClosed} />
     </>
   );
 }
@@ -97,7 +91,7 @@ const styles = StyleSheet.create({
     minHeight: 250,
   },
   switchButton: {
-    backgroundColor: "#e6e6e6",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderColor: "rgba(0, 0, 0, 0.1)",
     borderWidth: 1,
     borderRadius: 18,
@@ -110,7 +104,6 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 105,
     marginBottom: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
   },
   switchButtonText: {
     fontSize: 18,

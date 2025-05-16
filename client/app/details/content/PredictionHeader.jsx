@@ -11,13 +11,11 @@ export default function PredictionHeader({ breed, predicting }) {
             ? `Your ${breed}!`
             : "Can't seem to find your pet. Retake your photo."}
       </ThemedText>
-
       {predicting && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#000" />
         </View>
       )}
-
       {!predicting && breed && (
         <View style={styles.note}>
           <ThemedText style={{ fontSize: 14 }}>

@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { DetailCard } from "./DetailCard";
 
-export function DetailCards({ weight, age, symptoms }) {
+export function DetailCards({ weight, age, symptoms, avgWeight, avgLifespan }) {
   return (
     <View style={styles.cards}>
       <DetailCard title="Symptoms" bold={symptoms} />
@@ -10,14 +10,14 @@ export function DetailCards({ weight, age, symptoms }) {
           title="Weight"
           bold={`${weight} kg`}
           progress={weight}
-          average={50}
+          average={avgWeight}
           style={{ flex: 1 }}
         />
         <DetailCard
           title="Age"
           bold={age}
           progress={age}
-          average={20}
+          average={avgLifespan}
           style={{ flex: 1 }}
         />
       </View>

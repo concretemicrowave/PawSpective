@@ -15,7 +15,8 @@ export default function Details({ uri }) {
   const { update, postId, setPostId } = usePhoto();
   const { userData, setUserData } = useUser();
   const { savePost, predictData } = useAuth();
-  const existingPost = postId ? userData.posts?.[postId] : null;
+  const existingPost =
+    postId !== null && postId !== undefined ? userData.posts?.[postId] : null;
 
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
@@ -23,6 +24,8 @@ export default function Details({ uri }) {
   const [symptoms, setSymptoms] = useState("");
   const [breed, setBreed] = useState("");
   const [time, setTime] = useState(null);
+  const [averageHealthyWeight, setAverageHealthyWeight] = useState(null);
+  const [averageLifespan, setAverageLifespan] = useState(null);
 
   const [predicting, setPredicting] = useState(false);
   const [fetchedPrediction, setFetchedPrediction] = useState(false);
@@ -30,28 +33,27 @@ export default function Details({ uri }) {
   useEffect(() => {
     if (update && existingPost) {
       setName(existingPost.name || "");
-      setWeight(existingPost.weight || 0);
-      setAge(existingPost.age || 0);
-      setSymptoms(existingPost.symptoms || "");
-      setBreed(existingPost.breed || "");
-      setTime(existingPost.time || null);
     }
   }, [update, existingPost]);
 
   useEffect(() => {
     async function fetchPrediction() {
-      if (!uri || update || fetchedPrediction) return;
+      if (!uri || fetchedPrediction) return;
       setPredicting(true);
       const result = await predictData(uri);
       setPredicting(false);
       if (!result) return;
       try {
-        const data = JSON.parse(result);
+        const data = typeof result === "string" ? JSON.parse(result) : result;
+
         setBreed(data.breed || "");
         setWeight(data.weight || 0);
         setAge(data.age || 0);
         setSymptoms(data.symptoms || "No Symptoms");
         setTime(new Date().toISOString().slice(0, 10));
+        setAverageHealthyWeight(data.averageHealthyWeight || null);
+        setAverageLifespan(data.averageLifespan || null);
+
         setFetchedPrediction(true);
       } catch {
         console.error("Failed to parse prediction:", result);
@@ -87,6 +89,8 @@ export default function Details({ uri }) {
               setAge={setAge}
               symptoms={symptoms}
               setSymptoms={setSymptoms}
+              averageHealthyWeight={averageHealthyWeight}
+              averageLifespan={averageLifespan}
             />
           </View>
         )}

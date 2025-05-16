@@ -10,6 +10,7 @@ const multer = require("multer");
 const fs = require("fs");
 const sharp = require("sharp");
 const fileType = require("file-type");
+const breedStats = require("../util/breedStats");
 
 const upload = multer({ dest: "uploads/" });
 
@@ -230,7 +231,7 @@ api.post("/save", async (req, res) => {
         {
           role: "system",
           content:
-            "You are a veterinary assistant that classifies pet health into Good, Cautious, or Dangerous, as well as a health score between 0 and 10 based on weight, age, and symptoms.",
+            "You are a veterinary assistant that classifies pet's health score between 0 and 10 based on weight, age, and symptoms.",
         },
         {
           role: "user",
@@ -238,8 +239,9 @@ api.post("/save", async (req, res) => {
           - Weight: ${weight} kg
           - Age: ${age} years
           - Symptoms: ${symptoms}
+          - Breed: ${breed}
 
-          Classify the pet's health status strictly as "Good", "Cautious", or "Dangerous" as well as a health score between 0 and 10.`,
+          Classify the pet's health status strictly as a health score between 0 and 10, where 10 is very healthy, 5 is on the way to being unhealthy and 1 is extreme and needs to seek medical attention immediately.`,
         },
       ],
       response_format: {
@@ -250,17 +252,13 @@ api.post("/save", async (req, res) => {
             strict: true,
             type: "object",
             properties: {
-              health_status: {
-                type: "string",
-                description:
-                  "The health status of the pet. Example: Good, Cautious, Dangerous.",
-              },
               score: {
                 type: "number",
-                description: "The health score between 0 and 10. Example: 7.",
+                description:
+                  "The health score between 0 and 10, where 10 is very healthy, 5 is on the way to being unhealthy and 1 is extreme and needs to seek medical attention immediately. Example: 7.",
               },
             },
-            required: ["health_status", "score"],
+            required: ["score"],
             additionalProperties: false,
           },
         },
@@ -367,6 +365,8 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
               text: "You are a veterinary expert trained to identify pet(mainly dogs and cats) breeds, weight, age (in half years), and symptoms based on an image. You are given an image of a pet. Please provide a strict description of the pet's breed, weight, age, and symptoms.",
             },
           ],
+        },
+        {
           role: "user",
           content: [
             {
@@ -414,7 +414,18 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
       },
     });
 
-    res.json(response.choices[0].message.content);
+    const result = JSON.parse(response.choices[0].message.content);
+    const breed = result.breed;
+    const stats = breedStats[breed];
+
+    const enhancedResult = {
+      ...result,
+      averageHealthyWeight: stats?.avgWeightKg || null,
+      averageLifespan: stats?.avgLifespanYears || null,
+    };
+
+    res.json(enhancedResult);
+
     fs.unlinkSync(req.file.path);
   } catch (error) {
     console.error("Error processing image:", error);

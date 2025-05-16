@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 
 export function ProgressBar({ progress, average }) {
   const maxValue = average * 2;
-  const averagePosition = "50%";
+  const averagePosition = "60%";
   const progressWidth = `${(progress / maxValue) * 100}%`;
 
   return (
@@ -12,7 +12,7 @@ export function ProgressBar({ progress, average }) {
       </View>
       <View style={[styles.averageMarker, { left: averagePosition }]}>
         <View style={styles.markerLine} />
-        <Text style={styles.markerText}>Avg.({average})</Text>
+        <Text style={styles.markerText}>{average}</Text>
       </View>
     </View>
   );

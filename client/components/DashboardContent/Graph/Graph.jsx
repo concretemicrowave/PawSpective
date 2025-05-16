@@ -1,14 +1,8 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
-import { format, parseISO } from "date-fns";
+import { View, StyleSheet, Dimensions } from "react-native";
 import { GraphToggle } from "./GraphToggle";
-import { ThemedText } from "../../ThemedComponents";
+import { GraphBar } from "./GraphBar";
+import { GraphPagination } from "./GraphPagination";
 
 const screenWidth = Dimensions.get("window").width;
 const CHART_WIDTH = screenWidth - 80;
@@ -26,77 +20,44 @@ export function Graph({ history }) {
 
   const totalPages = Math.ceil(history.length / BARS_PER_PAGE);
 
-  const currentPageData = history.slice(
-    page * BARS_PER_PAGE,
-    (page + 1) * BARS_PER_PAGE,
-  );
+  const currentPageData = history
+    .slice(page * BARS_PER_PAGE, (page + 1) * BARS_PER_PAGE)
+    .reverse();
 
   const values = currentPageData.map((entry) =>
     showWeight ? entry.weight : entry.score,
   );
   const maxValue = Math.max(...values, 1);
+  const getScoreColor = (score) => {
+    if (typeof score !== "number") return "gray";
+    if (score >= 8) return "#17C964";
+    if (score >= 5) return "#E9D502";
+    return "#d03533";
+  };
 
   return (
     <>
       <GraphToggle isWeight={showWeight} setIsWeight={setShowWeight} />
       <View style={styles.wrapper}>
         <View style={styles.chart}>
-          {currentPageData.map((entry, index) => {
-            const value = showWeight ? entry.weight : entry.score;
-            const height = (value / maxValue) * MAX_BAR_HEIGHT;
-            const color = showWeight ? "black" : "#17C964";
-            const dateLabel = format(parseISO(entry.timestamp), "MMM d");
-
-            return (
-              <View
-                key={index}
-                style={[
-                  styles.barContainer,
-                  { marginRight: index < BARS_PER_PAGE - 1 ? BAR_SPACING : 0 },
-                ]}
-              >
-                <Text style={[styles.barLabel, { color }]}>
-                  {value}
-                  {showWeight ? "kg" : ""}
-                </Text>
-                <View
-                  style={{
-                    width: BAR_WIDTH,
-                    height,
-                    backgroundColor: color,
-                    borderRadius: 8,
-                  }}
-                />
-                <ThemedText type="subtitle" style={styles.dateLabel}>
-                  {dateLabel}
-                </ThemedText>
-              </View>
-            );
-          })}
+          {currentPageData.map((entry, index) => (
+            <GraphBar
+              key={index}
+              entry={entry}
+              isWeight={showWeight}
+              maxValue={maxValue}
+              barWidth={BAR_WIDTH}
+              color={showWeight ? "black" : getScoreColor(entry.score)}
+              showSpacing={index < BARS_PER_PAGE - 1}
+            />
+          ))}
         </View>
         {totalPages > 1 && (
-          <View style={styles.pagination}>
-            <TouchableOpacity
-              onPress={() => setPage((p) => Math.max(p - 1, 0))}
-              disabled={page === 0}
-              style={[styles.navButton, page === 0 && styles.disabled]}
-            >
-              <Text style={styles.navText}>←</Text>
-            </TouchableOpacity>
-            <Text style={styles.pageText}>
-              Page {page + 1} / {totalPages}
-            </Text>
-            <TouchableOpacity
-              onPress={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
-              disabled={page === totalPages - 1}
-              style={[
-                styles.navButton,
-                page === totalPages - 1 && styles.disabled,
-              ]}
-            >
-              <Text style={styles.navText}>→</Text>
-            </TouchableOpacity>
-          </View>
+          <GraphPagination
+            page={page}
+            totalPages={totalPages}
+            setPage={setPage}
+          />
         )}
       </View>
     </>
@@ -120,40 +81,5 @@ const styles = StyleSheet.create({
     width: CHART_WIDTH,
     height: MAX_BAR_HEIGHT + 40,
     paddingHorizontal: 0,
-  },
-  barContainer: {
-    alignItems: "center",
-  },
-  barLabel: {
-    marginBottom: 4,
-    fontSize: 14,
-    fontWeight: "bold",
-    fontFamily: "Poppins-Regular",
-  },
-  dateLabel: {
-    fontSize: 14,
-    opacity: 0.7,
-    marginTop: 4,
-  },
-  pagination: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  navButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  navText: {
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  pageText: {
-    fontSize: 14,
-    fontWeight: "500",
-    marginHorizontal: 10,
-  },
-  disabled: {
-    opacity: 0.3,
   },
 });

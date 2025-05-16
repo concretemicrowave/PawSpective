@@ -14,6 +14,8 @@ export default function PetForm({
   setAge,
   symptoms,
   setSymptoms,
+  averageHealthyWeight,
+  averageLifespan,
 }) {
   return (
     <>
@@ -42,7 +44,13 @@ export default function PetForm({
         onChangeText={setSymptoms}
         placeholder="Symptoms"
       />
-      <DetailCards weight={weight} age={age} symptoms={symptoms || "None"} />
+      <DetailCards
+        weight={weight}
+        age={age}
+        symptoms={symptoms || "None"}
+        avgWeight={averageHealthyWeight}
+        avgLifespan={averageLifespan}
+      />
     </>
   );
 }
