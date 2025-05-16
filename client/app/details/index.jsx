@@ -1,7 +1,7 @@
 import { usePhoto } from "../../context/PhotoContext";
 import { Image, StyleSheet, SafeAreaView, View } from "react-native";
 import { ThemedView, ThemedText } from "../../components/ThemedComponents";
-import Details from "./Details";
+import Details from "./details";
 import { BackLink } from "../../components/BackLink";
 
 export default function DetailsScreen() {
