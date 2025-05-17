@@ -16,6 +16,8 @@ export default function DashboardContent({ latestEntry, id, setUpdate }) {
     navigation.navigate("update/update");
   };
 
+  console.log(latestEntry);
+
   return latestEntry ? (
     <View>
       <HealthStatus score={latestEntry.score} />

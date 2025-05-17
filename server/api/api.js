@@ -362,7 +362,7 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
           content: [
             {
               type: "text",
-              text: "You are a veterinary expert trained to identify pet(mainly dogs and cats) breeds, weight, age (in half years), and symptoms based on an image. You are given an image of a pet. Please provide a strict description of the pet's breed, weight, age, and symptoms.",
+              text: "You are a veterinary expert trained to identify pet(mainly dogs and cats) breeds, weight, age, and symptoms based on an image. You are given an image of a pet. Please provide a strict description of the pet's breed, weight, age, and symptoms.",
             },
           ],
         },

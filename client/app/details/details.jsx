@@ -71,7 +71,17 @@ export default function Details({ uri }) {
       setPostId,
       router,
       savePost,
-      postFields: { name, weight, age, symptoms, breed, time, uri },
+      postFields: {
+        name,
+        weight,
+        age,
+        symptoms,
+        breed,
+        time,
+        uri,
+        averageHealthyWeight,
+        averageLifespan,
+      },
     });
 
   return (
