@@ -9,14 +9,14 @@ import PredictionHeader from "./content/PredictionHeader";
 import PetForm from "./content/PetForm";
 import SaveButton from "./content/SaveButton";
 import { handleSave } from "../../utils/handleSave";
+import dogBreedData from "../../constants/dogBreedData";
 
 export default function Details({ uri }) {
   const router = useRouter();
   const { update, postId, setPostId } = usePhoto();
   const { userData, setUserData } = useUser();
   const { savePost, predictData } = useAuth();
-  const existingPost =
-    postId !== null && postId !== undefined ? userData.posts?.[postId] : null;
+  const existingPost = postId != null ? userData.posts?.[postId] : null;
 
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(0);
@@ -46,19 +46,23 @@ export default function Details({ uri }) {
       try {
         const data = typeof result === "string" ? JSON.parse(result) : result;
 
-        setBreed(data.breed || "");
+        const breedName = data.breed || "";
+        const breedInfo = dogBreedData[breedName] || {};
+
+        setBreed(breedName);
         setWeight(data.weight || 0);
         setAge(data.age || 0);
         setSymptoms(data.symptoms || "No Symptoms");
         setTime(new Date().toISOString().slice(0, 10));
-        setAverageHealthyWeight(data.averageHealthyWeight || null);
-        setAverageLifespan(data.averageLifespan || null);
+        setAverageHealthyWeight(breedInfo.avgWeightKg || null);
+        setAverageLifespan(breedInfo.avgLifespanYears || null);
 
         setFetchedPrediction(true);
       } catch {
         console.error("Failed to parse prediction:", result);
       }
     }
+
     fetchPrediction();
   }, [uri, update, fetchedPrediction]);
 

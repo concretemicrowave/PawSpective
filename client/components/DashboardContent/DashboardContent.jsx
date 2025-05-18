@@ -3,12 +3,14 @@ import { DetailCards } from "../DetailCards/DetailCards";
 import { ThemedButton, ThemedText } from "../ThemedComponents";
 import Feather from "react-native-vector-icons/Feather";
 import { usePhoto } from "../../context/PhotoContext";
+import dogBreedData from "../../constants/dogBreedData";
 import HealthStatus from "../HealthStatus";
 import { useNavigation } from "@react-navigation/native";
 
 export default function DashboardContent({ latestEntry, id, setUpdate }) {
   const { setPostId } = usePhoto();
   const navigation = useNavigation();
+  const breedInfo = latestEntry?.breed ? dogBreedData[latestEntry.breed] : {};
 
   const handleUpdate = () => {
     setUpdate(true);
@@ -23,8 +25,8 @@ export default function DashboardContent({ latestEntry, id, setUpdate }) {
         age={latestEntry.age}
         weight={latestEntry.weight}
         symptoms={latestEntry.symptoms}
-        avgWeight={latestEntry.averageHealthyWeight}
-        avgLifespan={latestEntry.averageLifespan}
+        avgWeight={breedInfo?.avgWeightKg}
+        avgLifespan={breedInfo?.avgLifespanYears}
       />
       <View style={styles.buttons}>
         <ThemedButton

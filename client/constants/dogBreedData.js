@@ -1,4 +1,4 @@
-module.exports = {
+const dogBreedData = {
   "Golden Retriever": { avgWeightKg: 29.5, avgLifespanYears: 13.2 },
   "Labrador Retriever": { avgWeightKg: 29.5, avgLifespanYears: 13.1 },
   "German Shepherd": { avgWeightKg: 31.8, avgLifespanYears: 11.3 },
@@ -41,3 +41,5 @@ module.exports = {
   "Presa Canario": { avgWeightKg: 45.4, avgLifespanYears: 7.7 },
   "Caucasian Shepherd Dog": { avgWeightKg: 45.4, avgLifespanYears: 5.4 },
 };
+
+export default dogBreedData;

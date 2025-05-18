@@ -17,7 +17,7 @@ app.use("/api", api);
 async function startServer() {
   await initializeDatabase();
   app.listen(PORT, "0.0.0.0", () => {
-    console.log("Server running on http://10.173.21.46:3000");
+    console.log(`Server running on http://0.0.0.0:${PORT}`);
   });
 }
 
