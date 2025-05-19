@@ -7,7 +7,7 @@ import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -70,6 +70,7 @@ export default function RootLayout() {
                 name="update/update"
                 options={{ headerShown: false }}
               />
+              <Stack.Screen name="add/index" options={{ headerShown: false }} />
             </Stack>
           </GestureHandlerRootView>
           <StatusBar style="auto" />

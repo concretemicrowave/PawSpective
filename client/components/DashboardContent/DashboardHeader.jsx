@@ -1,11 +1,13 @@
-import { StyleSheet, SafeAreaView, View } from "react-native";
+import { StyleSheet, SafeAreaView, View, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ThemedText } from "../ThemedComponents";
 import { Colors } from "../../constants/Colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import RadialBlob from "../../assets/svgs/RadialBlob";
+import { useRouter } from "expo-router";
 
 export default function DashboardHeader() {
+  const router = useRouter();
   const backgroundColor = Colors["light"].background;
   const backgroundGrey = Colors["light"].grey;
 
@@ -22,10 +24,16 @@ export default function DashboardHeader() {
         <ThemedText type="subtitle" style={styles.title}>
           PawSpective
         </ThemedText>
+
+        <View style={{ flex: 1 }} />
+        <TouchableOpacity onPress={() => router.push("add")}>
+          <MaterialCommunityIcons name="plus" size={32} color="black" />
+        </TouchableOpacity>
       </SafeAreaView>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   header: {
     width: "100%",

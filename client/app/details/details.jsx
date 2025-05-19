@@ -10,6 +10,7 @@ import PetForm from "./content/PetForm";
 import SaveButton from "./content/SaveButton";
 import { handleSave } from "../../utils/handleSave";
 import dogBreedData from "../../constants/dogBreedData";
+import LoadingSkeleton from "../../components/LoadingSkeleton";
 
 export default function Details({ uri }) {
   const router = useRouter();
@@ -33,6 +34,7 @@ export default function Details({ uri }) {
   useEffect(() => {
     if (update && existingPost) {
       setName(existingPost.name || "");
+      setBreed(existingPost.breed || "");
     }
   }, [update, existingPost]);
 
@@ -49,7 +51,7 @@ export default function Details({ uri }) {
         const breedName = data.breed || "";
         const breedInfo = dogBreedData[breedName] || {};
 
-        setBreed(breedName);
+        if (!update) setBreed(breedName);
         setWeight(data.weight || 0);
         setAge(data.age || 0);
         setSymptoms(data.symptoms || "No Symptoms");
@@ -81,25 +83,32 @@ export default function Details({ uri }) {
   return (
     <>
       <ThemedView scrollable style={styles.container}>
-        <PredictionHeader predicting={predicting} breed={breed} />
-        {breed && (
-          <View>
-            <PetForm
-              name={name}
-              setName={setName}
-              weight={weight}
-              setWeight={setWeight}
-              age={age}
-              setAge={setAge}
-              symptoms={symptoms}
-              setSymptoms={setSymptoms}
-              averageHealthyWeight={averageHealthyWeight}
-              averageLifespan={averageLifespan}
-            />
-          </View>
+        {predicting && <LoadingSkeleton />}
+        {!predicting && (
+          <>
+            <PredictionHeader predicting={predicting} breed={breed} />
+            {breed && (
+              <View>
+                <PetForm
+                  name={name}
+                  setName={setName}
+                  weight={weight}
+                  setWeight={setWeight}
+                  age={age}
+                  setAge={setAge}
+                  symptoms={symptoms}
+                  setSymptoms={setSymptoms}
+                  averageHealthyWeight={averageHealthyWeight}
+                  averageLifespan={averageLifespan}
+                />
+              </View>
+            )}
+          </>
         )}
       </ThemedView>
-      <SaveButton breed={breed} update={update} onPress={onSave} />
+      {!predicting && (
+        <SaveButton breed={breed} update={update} onPress={onSave} />
+      )}
     </>
   );
 }

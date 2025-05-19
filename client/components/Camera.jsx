@@ -31,7 +31,6 @@ export default function CameraComponent() {
           style={styles.camera}
           type="back"
           ref={(ref) => setCamera(ref)}
-          zoom={0.1}
         />
       </Animated.View>
       {loading && (
