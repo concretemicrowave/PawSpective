@@ -1,6 +1,5 @@
 import { Alert } from "react-native";
 import * as Haptics from "expo-haptics";
-import * as Updates from "expo-updates";
 
 export const handleSave = async ({
   update,
@@ -48,5 +47,4 @@ export const handleSave = async ({
 
   setPostId(null);
   router.replace("(tabs)");
-  await Updates.reloadAsync();
 };

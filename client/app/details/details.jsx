@@ -10,7 +10,7 @@ import PetForm from "./content/PetForm";
 import SaveButton from "./content/SaveButton";
 import { handleSave } from "../../utils/handleSave";
 import dogBreedData from "../../constants/dogBreedData";
-import LoadingSkeleton from "../../components/LoadingSkeleton";
+import LoadingSkeleton from "./content/LoadingSkeleton";
 
 export default function Details({ uri }) {
   const router = useRouter();

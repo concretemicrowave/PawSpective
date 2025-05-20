@@ -1,4 +1,5 @@
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useRef } from "react";
+import { View, Animated, Pressable, StyleSheet } from "react-native";
 import { Tabs, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -11,12 +12,47 @@ export default function TabLayout() {
   const { setPostId, setUpdate } = usePhoto();
   const { latestPostId } = useUser();
 
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
+
   const handleFloatingPress = () => {
     if (latestPostId) {
       setUpdate(true);
       setPostId(latestPostId);
     }
     router.push("/update/update");
+  };
+
+  const animateIn = () => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: 0.95,
+        useNativeDriver: true,
+        speed: 50,
+        bounciness: 8,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: 0.6,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const animateOut = () => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        speed: 20,
+        bounciness: 8,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
   return (
@@ -55,12 +91,23 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-      <TouchableOpacity
+      <Pressable
+        onPressIn={animateIn}
+        onPressOut={animateOut}
         onPress={handleFloatingPress}
-        style={styles.floatingButton}
       >
-        <MaterialCommunityIcons name="camera" size={32} color="white" />
-      </TouchableOpacity>
+        <Animated.View
+          style={[
+            styles.floatingButton,
+            {
+              transform: [{ translateX: -40 }, { scale: scaleAnim }],
+              opacity: opacityAnim,
+            },
+          ]}
+        >
+          <MaterialCommunityIcons name="camera" size={32} color="white" />
+        </Animated.View>
+      </Pressable>
     </View>
   );
 }
@@ -70,11 +117,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 55,
     left: "50%",
-    transform: [{ translateX: -35 }],
     backgroundColor: "#000",
     width: 80,
     height: 80,
-    borderRadius: 55,
+    borderRadius: 35,
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,

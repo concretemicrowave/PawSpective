@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { ThemedView, ThemedText } from "../../components/ThemedComponents";
 import DashboardContent from "../../components/DashboardContent/DashboardContent";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -7,12 +8,25 @@ import { useUser } from "@/context/UserContext";
 import SwitchPetDrawer from "@/components/DashboardContent/SwitchPetDrawer";
 import DashboardHeader from "@/components/DashboardContent/DashboardHeader";
 import DashboardData from "@/components/DashboardContent/DashboardData";
+import LoadingSkeleton from "../../components/DashboardContent/LoadingSkeleton";
 import { usePhoto } from "../../context/PhotoContext";
 
 export default function Dashboard() {
-  const { userData } = useUser();
+  const { userData, refetchUser } = useUser();
   const { setUpdate } = usePhoto();
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        await refetchUser();
+        setLoading(false);
+      };
+      fetchData();
+    }, []),
+  );
 
   const pets = userData.posts || {};
   const keys = Object.keys(pets);
@@ -31,6 +45,19 @@ export default function Dashboard() {
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
   );
   const latestEntry = Array.isArray(sortedHistory) ? sortedHistory[0] : null;
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#f5f5f5",
+        }}
+      >
+        <LoadingSkeleton />
+      </View>
+    );
+  }
 
   return (
     <>
