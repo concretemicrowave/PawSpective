@@ -46,5 +46,5 @@ export const handleSave = async ({
   }));
 
   setPostId(null);
-  router.replace("(tabs)");
+  router.push("(tabs)");
 };

@@ -46,12 +46,6 @@ export default function Register() {
     setLoading(false);
 
     if (data.success) {
-      try {
-        await Updates.reloadAsync();
-      } catch (error) {
-        console.error("Error reloading app:", error);
-      }
-    } else {
       Alert.alert("Registration Failed", data.message || "Please try again.");
     }
   };
