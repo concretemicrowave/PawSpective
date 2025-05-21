@@ -1,19 +1,23 @@
 import { View, Text, StyleSheet } from "react-native";
 
 export function ProgressBar({ progress, average }) {
-  const maxValue = average * 2;
-  const averagePosition = "60%";
-  const progressWidth = `${(progress / maxValue) * 100}%`;
+  const maxValue = average ? average * 2 : 100;
+  const progressWidth = `${Math.min((progress / maxValue) * 100, 100)}%`;
+
+  const showAverage = average != null;
+  const averagePosition = showAverage ? `${(average / maxValue) * 100}%` : null;
 
   return (
     <View style={styles.container}>
       <View style={styles.progressBackground}>
         <View style={[styles.progressFill, { width: progressWidth }]} />
       </View>
-      <View style={[styles.averageMarker, { left: averagePosition }]}>
-        <View style={styles.markerLine} />
-        <Text style={styles.markerText}>{average}</Text>
-      </View>
+      {showAverage && (
+        <View style={[styles.averageMarker, { left: averagePosition }]}>
+          <View style={styles.markerLine} />
+          <Text style={styles.markerText}>{average}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -37,13 +41,13 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     position: "absolute",
     left: 0,
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#000",
   },
   averageMarker: {
     position: "absolute",
     top: -20,
     alignItems: "center",
-    transform: [{ translateX: -24 }, { translateY: 10 }],
+    transform: [{ translateX: -12 }, { translateY: 10 }],
   },
   markerLine: {
     height: 20,

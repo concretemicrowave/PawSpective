@@ -1,5 +1,6 @@
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { ThemedText } from "./ThemedComponents";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function HealthStatus({ score, loading }) {
   const getColor = () => {
@@ -18,48 +19,81 @@ export default function HealthStatus({ score, loading }) {
   };
 
   return (
-    <View style={styles.healthScore}>
-      <ThemedText style={styles.healthScoreText}>
-        Health Score:{" "}
-        <ThemedText style={styles.healthScoreText} type="title">
-          {loading ? <ActivityIndicator /> : (`${score} / 10` ?? "Unknown")}
-        </ThemedText>
-      </ThemedText>
-      <View style={styles.healthBarContainer}>
-        <View
-          style={[
-            styles.healthBar,
-            {
-              backgroundColor: getColor(),
-              width: getWidth(),
-            },
-          ]}
-        />
+    <View style={styles.container}>
+      <View style={styles.iconContainer}>
+        <MaterialCommunityIcons name="heart-pulse" size={28} color="#FF6B6B" />
+      </View>
+      <View style={styles.content}>
+        <View style={styles.headerRow}>
+          <ThemedText style={styles.label}>Health Score</ThemedText>
+          <ThemedText type="subtitle" style={styles.score}>
+            {loading ? (
+              <ActivityIndicator size="small" />
+            ) : (
+              `${score ?? "?"} / 10`
+            )}
+          </ThemedText>
+        </View>
+        <View style={styles.healthBarContainer}>
+          <View
+            style={[
+              styles.healthBar,
+              {
+                backgroundColor: getColor(),
+                width: getWidth(),
+              },
+            ]}
+          />
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  healthScore: {
-    backgroundColor: "#fff",
+  container: {
+    flexDirection: "row",
+    backgroundColor: "rgba(255,255,255,0.6)",
     borderRadius: 14,
     marginBottom: 10,
     padding: 12,
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
     alignItems: "center",
   },
-  healthScoreText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
+  iconContainer: {
+    padding: 12,
+    borderRadius: 10,
+    backgroundColor: "#e8e8e8",
+    marginRight: 12,
+  },
+  content: {
+    flex: 1,
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 6,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  score: {
+    fontSize: 16,
+    fontWeight: "600",
   },
   healthBarContainer: {
-    width: "100%",
     height: 10,
     borderRadius: 5,
     backgroundColor: "#e0e0e0",
     overflow: "hidden",
-    marginTop: 8,
   },
   healthBar: {
     height: "100%",

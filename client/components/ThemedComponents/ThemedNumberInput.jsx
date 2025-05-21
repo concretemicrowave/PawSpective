@@ -4,7 +4,7 @@ import { ThemedText } from "./ThemedText";
 
 export function ThemedNumberInput({ label, value, setValue, style, ...rest }) {
   const increaseValue = () => setValue((prev) => prev + 1);
-  const decreaseValue = () => setValue((prev) => Math.max(0, prev - 1));
+  const decreaseValue = () => setValue((prev) => Math.max(1, prev - 1));
 
   return (
     <ThemedView style={[styles.container, style]} {...rest}>

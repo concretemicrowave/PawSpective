@@ -28,7 +28,7 @@ const initializeDatabase = async () => {
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS posts (
-        id INTEGER PRIMARY KEY, -- manual id assignment
+        id INTEGER PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         breed VARCHAR(255) NOT NULL,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,

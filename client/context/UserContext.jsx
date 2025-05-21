@@ -12,31 +12,45 @@ export const UserProvider = ({ children }) => {
     posts: [],
   });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await getUser();
+  const [latestPostId, setLatestPostId] = useState(null);
 
-        if (response?.data) {
-          setUserData({
-            userId: response.data.user.id,
-            name: response.data.user.name,
-            email: response.data.user.email,
-            posts: response.data.user.posts || [],
-          });
-        } else {
-          console.warn("No user data received.");
-        }
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
+  const refetchUser = async () => {
+    try {
+      const response = await getUser();
+      if (response?.data) {
+        const posts = response.data.user.posts || [];
+        setUserData({
+          userId: response.data.user.id,
+          name: response.data.user.name,
+          email: response.data.user.email,
+          posts,
+        });
+      } else {
+        console.warn("No user data received.");
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+    }
+  };
 
-    fetchUser();
+  useEffect(() => {
+    refetchUser();
   }, []);
 
+  useEffect(() => {
+    const postKeys = Object.keys(userData.posts || {});
+    if (postKeys.length > 0) {
+      const latestId = String(Math.max(...postKeys.map(Number)));
+      setLatestPostId(latestId);
+    } else {
+      setLatestPostId(null);
+    }
+  }, [userData.posts]);
+
   return (
-    <UserContext.Provider value={{ userData, setUserData }}>
+    <UserContext.Provider
+      value={{ userData, setUserData, latestPostId, refetchUser }}
+    >
       {children}
     </UserContext.Provider>
   );

@@ -8,6 +8,7 @@ import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import Login from "./authForms/login";
+import RadialBlob from "../../assets/svgs/RadialBlob";
 
 export default function openScreen() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function openScreen() {
           onPress={() => router.push("openScreen/authForms/register")}
         />
       </ThemedView>
+      <RadialBlob bottom={-20} right={-20} />
     </>
   );
 }
@@ -53,5 +55,6 @@ const styles = StyleSheet.create({
     marginTop: "auto",
     marginHorizontal: 30,
     marginVertical: 30,
+    zIndex: 1,
   },
 });

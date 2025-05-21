@@ -53,8 +53,7 @@ const styles = StyleSheet.create({
   },
   toggleButtonInactive: {
     borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 9,
     backgroundColor: "#e6e6e6",
     flex: 1,
     alignItems: "center",
@@ -62,8 +61,7 @@ const styles = StyleSheet.create({
   },
   toggleButtonActive: {
     borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 9,
     backgroundColor: "#000",
     flex: 1,
     alignItems: "center",

@@ -10,7 +10,6 @@ const multer = require("multer");
 const fs = require("fs");
 const sharp = require("sharp");
 const fileType = require("file-type");
-const breedStats = require("../util/breedStats");
 
 const upload = multer({ dest: "uploads/" });
 
@@ -230,8 +229,20 @@ api.post("/save", async (req, res) => {
       messages: [
         {
           role: "system",
-          content:
-            "You are a veterinary assistant that classifies pet's health score between 0 and 10 based on weight, age, and symptoms.",
+          content: `You are a veterinary assistant AI that classifies a pet’s health score from 0 to 10.
+
+          Focus on the following:
+          1. Breed-specific average weight is **critical**. A deviation of more than 20% under or over average is unhealthy.
+          2. Young pets (under 1 year) or elderly pets (over breed's average lifespan) may have different thresholds.
+          3. Symptoms such as vomiting, fatigue, loss of appetite, or difficulty breathing significantly lower the score.
+          4. Assign a score:
+             - 10: Perfect health, optimal weight, no symptoms
+             - 7–9: Slight weight variation, mild or no symptoms
+             - 4–6: Noticeable weight issues OR moderate symptoms
+             - 1–3: Severe under/overweight OR critical symptoms
+             - 0: Life-threatening condition or extremely abnormal stats
+
+          Respond with only a **single number between 0 and 10**.`,
         },
         {
           role: "user",
@@ -267,7 +278,6 @@ api.post("/save", async (req, res) => {
     });
 
     const parsed = JSON.parse(openaiResponse.choices[0].message.content.trim());
-    const health_status = parsed.health_status;
     const score = parsed.score;
 
     const entry = {
@@ -278,7 +288,6 @@ api.post("/save", async (req, res) => {
       weight,
       age,
       symptoms,
-      health_status,
       score,
     };
 
@@ -362,7 +371,7 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
           content: [
             {
               type: "text",
-              text: "You are a veterinary expert trained to identify pet(mainly dogs and cats) breeds, weight, age, and symptoms based on an image. You are given an image of a pet. Please provide a strict description of the pet's breed, weight, age, and symptoms.",
+              text: "You are a veterinary expert trained to identify pet(mainly dogs and cats) breeds, weight, age(in years), and symptoms based on an image. You are given an image of a pet. Please provide a strict description of the pet's breed, weight, age, and symptoms.",
             },
           ],
         },
@@ -416,12 +425,9 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
 
     const result = JSON.parse(response.choices[0].message.content);
     const breed = result.breed;
-    const stats = breedStats[breed];
 
     const enhancedResult = {
       ...result,
-      averageHealthyWeight: stats?.avgWeightKg || null,
-      averageLifespan: stats?.avgLifespanYears || null,
     };
 
     res.json(enhancedResult);

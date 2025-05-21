@@ -7,13 +7,14 @@ import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { UserProvider } from "@/context/UserContext";
 import { PhotoProvider } from "@/context/PhotoContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ReloadProvider } from "@/context/ReloadContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,32 +49,38 @@ export default function RootLayout() {
   return (
     <PhotoProvider>
       <UserProvider>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Stack>
-              <Stack.Screen
-                name="openScreen/index"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="openScreen/authForms/register"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="details/index"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="update/update"
-                options={{ headerShown: false }}
-              />
-            </Stack>
-          </GestureHandlerRootView>
-          <StatusBar style="auto" />
-        </ThemeProvider>
+        <ReloadProvider>
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <Stack>
+                <Stack.Screen
+                  name="openScreen/index"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="openScreen/authForms/register"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="details/index"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="update/update"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="add/index"
+                  options={{ headerShown: false }}
+                />
+              </Stack>
+            </GestureHandlerRootView>
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </ReloadProvider>
       </UserProvider>
     </PhotoProvider>
   );

@@ -18,10 +18,17 @@ export function DetailCard({ title, bold, progress, average, style }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
     borderRadius: 16,
     padding: 16,
     paddingVertical: 12,
+    shadowColor: "#000",
+    backgroundColor: "transparent",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
   },
   cardTitle: {
     fontSize: 16,

@@ -6,15 +6,15 @@ import { GraphPagination } from "./GraphPagination";
 
 const screenWidth = Dimensions.get("window").width;
 const CHART_WIDTH = screenWidth - 80;
-const BAR_SPACING = 10;
-const BARS_PER_PAGE = 7;
+const BAR_SPACING = 8;
+const BARS_PER_PAGE = 6;
 const MAX_BAR_HEIGHT = 150;
 const BAR_WIDTH =
-  (CHART_WIDTH - BAR_SPACING * (BARS_PER_PAGE - 1)) / BARS_PER_PAGE;
+  (CHART_WIDTH - BAR_SPACING * (BARS_PER_PAGE - 1)) / BARS_PER_PAGE - 6;
 
 export function Graph({ history }) {
   const [showWeight, setShowWeight] = useState(true);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(Math.floor(history.length / 6));
 
   if (!history || history.length === 0) return null;
 
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   chart: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "flex-end",
     width: CHART_WIDTH,
     height: MAX_BAR_HEIGHT + 40,
