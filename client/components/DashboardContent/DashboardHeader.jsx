@@ -18,13 +18,12 @@ export default function DashboardHeader() {
         locations={[0.999, 0]}
         style={StyleSheet.absoluteFill}
       />
-      <RadialBlob />
+      <RadialBlob top={-80} right={-80} />
       <SafeAreaView style={styles.container}>
         <MaterialCommunityIcons name="paw" size={36} color="black" />
         <ThemedText type="subtitle" style={styles.title}>
           PawSpective
         </ThemedText>
-
         <View style={{ flex: 1 }} />
         <TouchableOpacity onPress={() => router.push("add")}>
           <MaterialCommunityIcons name="plus" size={32} color="black" />

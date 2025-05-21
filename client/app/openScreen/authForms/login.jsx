@@ -8,11 +8,12 @@ import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigation } from "expo-router";
+import { useRouter } from "expo-router";
 
 export default function Login() {
   const { login } = useAuth();
   const navigation = useNavigation();
-
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(true);
@@ -25,10 +26,10 @@ export default function Login() {
   const handleLogin = async () => {
     setLoading(true);
     const data = await login(email, password);
-
     if (!data.success) {
       Alert.alert("Login Failed", data.message || "Please try again.");
     }
+    router.replace("(tabs)");
   };
 
   useFocusEffect(

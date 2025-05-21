@@ -1,5 +1,4 @@
 import { StyleSheet, SafeAreaView, View } from "react-native";
-import { Colors } from "../../../constants/Colors";
 import {
   ThemedView,
   ThemedText,
@@ -11,7 +10,6 @@ import { useNavigation } from "@react-navigation/native";
 export default function Dashboard() {
   const navigation = useNavigation();
   const { logout } = useAuth();
-  const backgroundColor = Colors["light"].background;
 
   const handleLogout = () => {
     logout();
@@ -20,12 +18,11 @@ export default function Dashboard() {
 
   return (
     <ThemedView scrollable secondary style={styles.dashboard}>
-      <View style={[styles.header, { backgroundColor }]}>
+      <View style={styles.header}>
         <SafeAreaView style={styles.container}>
           <ThemedText type="subtitle" style={styles.title}>
             Account
           </ThemedText>
-          <ThemedButton title="Edit" />
         </SafeAreaView>
       </View>
       <View style={styles.content}>

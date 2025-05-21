@@ -1,11 +1,31 @@
+import React from "react";
 import Svg, { Defs, RadialGradient, Stop, Rect } from "react-native-svg";
 
-function RadialBlob() {
+const RadialBlob = ({
+  top,
+  right,
+  bottom,
+  left,
+  width = 250,
+  height = 250,
+  style,
+  ...props
+}) => {
+  const positionStyles = {
+    position: "absolute",
+    zIndex: 0,
+    ...(top !== undefined ? { top } : {}),
+    ...(right !== undefined ? { right } : {}),
+    ...(bottom !== undefined ? { bottom } : {}),
+    ...(left !== undefined ? { left } : {}),
+  };
+
   return (
     <Svg
-      width="250"
-      height="250"
-      style={{ position: "absolute", top: -80, right: -80 }}
+      width={width}
+      height={height}
+      style={[positionStyles, style]}
+      {...props}
     >
       <Defs>
         <RadialGradient
@@ -21,9 +41,9 @@ function RadialBlob() {
           <Stop offset="100%" stopColor="#FFD9A0" stopOpacity="0" />
         </RadialGradient>
       </Defs>
-      <Rect width="300" height="300" fill="url(#grad)" />
+      <Rect width={width * 1.2} height={height * 1.2} fill="url(#grad)" />
     </Svg>
   );
-}
+};
 
 export default RadialBlob;

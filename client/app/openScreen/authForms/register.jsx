@@ -3,7 +3,7 @@ import { Icon } from "@/components/Icon";
 import { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import * as Updates from "expo-updates";
+import { useRouter } from "expo-router";
 import {
   ThemedText,
   ThemedView,
@@ -17,6 +17,7 @@ import { BackLink } from "@/components/BackLink";
 export default function Register() {
   const { register } = useAuth();
   const navigation = useNavigation();
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,11 +44,11 @@ export default function Register() {
   const handleRegister = async () => {
     setLoading(true);
     const data = await register(name, email, password);
-    setLoading(false);
 
-    if (data.success) {
+    if (!data.success) {
       Alert.alert("Registration Failed", data.message || "Please try again.");
     }
+    router.push("/login");
   };
 
   return (
