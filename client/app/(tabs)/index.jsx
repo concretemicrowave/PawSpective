@@ -17,7 +17,6 @@ export default function Dashboard() {
   const { setUpdate } = usePhoto();
   const [visible, setVisible] = useState(false);
   const { shouldReload, acknowledgeReload } = useReload();
-  console.log(shouldReload);
   const [loading, setLoading] = useState(false);
 
   useFocusEffect(
