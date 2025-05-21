@@ -10,12 +10,15 @@ import DashboardHeader from "@/components/DashboardContent/DashboardHeader";
 import DashboardData from "@/components/DashboardContent/DashboardData";
 import LoadingSkeleton from "../../components/DashboardContent/LoadingSkeleton";
 import { usePhoto } from "../../context/PhotoContext";
+import { useReload } from "@/context/ReloadContext";
 
 export default function Dashboard() {
   const { userData, refetchUser } = useUser();
   const { setUpdate } = usePhoto();
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { shouldReload, acknowledgeReload } = useReload();
+  console.log(shouldReload);
+  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -23,9 +26,13 @@ export default function Dashboard() {
         setLoading(true);
         await refetchUser();
         setLoading(false);
+        acknowledgeReload();
       };
-      fetchData();
-    }, []),
+
+      if (shouldReload) {
+        fetchData();
+      }
+    }, [shouldReload]),
   );
 
   const pets = userData.posts || {};

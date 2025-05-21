@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     position: "absolute",
     left: 0,
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#000",
   },
   averageMarker: {
     position: "absolute",
