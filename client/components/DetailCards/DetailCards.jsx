@@ -2,7 +2,6 @@ import { StyleSheet, View } from "react-native";
 import { DetailCard } from "./DetailCard";
 
 export function DetailCards({ weight, age, symptoms, avgWeight, avgLifespan }) {
-  console.log(avgWeight, avgLifespan);
   return (
     <View style={styles.cards}>
       <DetailCard title="Symptoms" bold={symptoms} />
