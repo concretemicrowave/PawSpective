@@ -26,6 +26,7 @@ export default function Login() {
   const handleLogin = async () => {
     setLoading(true);
     const data = await login(email, password);
+    console.log(data);
     if (!data.success) {
       Alert.alert("Login Failed", data.message || "Please try again.");
     }
