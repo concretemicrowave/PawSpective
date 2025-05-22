@@ -91,23 +91,25 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-      <Pressable
-        onPressIn={animateIn}
-        onPressOut={animateOut}
-        onPress={handleFloatingPress}
-      >
-        <Animated.View
-          style={[
-            styles.floatingButton,
-            {
-              transform: [{ translateX: -40 }, { scale: scaleAnim }],
-              opacity: opacityAnim,
-            },
-          ]}
+      {latestPostId && (
+        <Pressable
+          onPressIn={animateIn}
+          onPressOut={animateOut}
+          onPress={handleFloatingPress}
         >
-          <MaterialCommunityIcons name="camera" size={32} color="white" />
-        </Animated.View>
-      </Pressable>
+          <Animated.View
+            style={[
+              styles.floatingButton,
+              {
+                transform: [{ translateX: -40 }, { scale: scaleAnim }],
+                opacity: opacityAnim,
+              },
+            ]}
+          >
+            <MaterialCommunityIcons name="camera" size={32} color="white" />
+          </Animated.View>
+        </Pressable>
+      )}
     </View>
   );
 }

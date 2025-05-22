@@ -1,20 +1,19 @@
 import {
-  StyleSheet,
-  TouchableOpacity,
   Modal,
   Animated,
-  Easing,
   Pressable,
   ScrollView,
   Dimensions,
-  Alert,
   StyleSheet as RNStyleSheet,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
-import { ThemedText, ThemedView } from "../ThemedComponents";
-import * as Haptics from "expo-haptics";
-import { Feather } from "@expo/vector-icons";
-import { useAuth } from "../../hooks/useAuth";
+import PetOption from "./PetOption";
+import { ThemedView } from "../../ThemedComponents";
+import {
+  animateDrawerIn,
+  animateDrawerOut,
+  triggerHaptic,
+} from "../../../utils/petDrawerUtils";
 
 const MAX_DRAWER_HEIGHT = Dimensions.get("window").height * 0.6;
 
@@ -22,6 +21,7 @@ export default function SwitchPetDrawer({
   visible,
   setVisible,
   pets,
+  selectedPostId,
   setSelectedTab,
 }) {
   const [internalVisible, setInternalVisible] = useState(visible);
@@ -32,41 +32,15 @@ export default function SwitchPetDrawer({
     outputRange: [1, 0],
     extrapolate: "clamp",
   });
-  const { deletePost } = useAuth();
-
-  const confirmDelete = (postId) => {
-    Alert.alert("Confirm Deletion", "Are you sure you want to delete this?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        onPress: () => handleDelete(postId), //FIX TS
-        style: "destructive",
-      },
-    ]);
-  };
-  const handleDelete = async (id) => {
-    await deletePost(id);
-    await Updates.reloadAsync();
-  };
 
   useEffect(() => {
     if (visible) {
       setInternalVisible(true);
       translateY.setValue(MAX_DRAWER_HEIGHT);
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 250,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }).start();
-      Haptics.impactAsync();
+      animateDrawerIn(translateY, 0).start();
+      triggerHaptic();
     } else {
-      Animated.timing(translateY, {
-        toValue: MAX_DRAWER_HEIGHT,
-        duration: 200,
-        easing: Easing.in(Easing.cubic),
-        useNativeDriver: true,
-      }).start(() => {
+      animateDrawerOut(translateY, MAX_DRAWER_HEIGHT).start(() => {
         setInternalVisible(false);
       });
     }
@@ -93,27 +67,19 @@ export default function SwitchPetDrawer({
         ]}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <ThemedText type="subtitle" style={styles.title}>
-            Switch Pets
-          </ThemedText>
           <ThemedView style={styles.petList}>
             {Object.entries(pets).map(([postId, pet], index, array) => {
               const isLast = index === array.length - 1;
               return (
-                <TouchableOpacity
+                <PetOption
                   key={postId}
-                  style={[styles.petOption, isLast && { borderBottomWidth: 0 }]}
-                  onPress={() => {
-                    Haptics.selectionAsync();
-                    setSelectedTab(index > 0 ? index : postId++);
-                    setVisible(false);
-                  }}
-                >
-                  <ThemedText style={styles.petName}>{pet.name}</ThemedText>
-                  <TouchableOpacity onPress={() => confirmDelete(postId)}>
-                    <Feather name="trash-2" size={24} color="#d03533" />
-                  </TouchableOpacity>
-                </TouchableOpacity>
+                  postId={postId}
+                  pet={pet}
+                  isLast={isLast}
+                  setSelectedTab={setSelectedTab}
+                  setVisible={setVisible}
+                  selectedPostId={selectedPostId}
+                />
               );
             })}
           </ThemedView>
@@ -123,7 +89,7 @@ export default function SwitchPetDrawer({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = RNStyleSheet.create({
   overlay: {
     position: "absolute",
     width: "100%",
@@ -145,30 +111,14 @@ const styles = StyleSheet.create({
     paddingTop: 22,
     paddingBottom: 32,
   },
-  title: {
-    fontSize: 22,
-    marginBottom: 8,
-  },
   scrollContent: {
     paddingBottom: 10,
   },
   petList: {
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#a7a7a7",
+    borderWidth: 1.5,
+    borderColor: "rgba(0,0,0,0.2)",
     marginBottom: 10,
     backgroundColor: "#e6e6e6",
-  },
-  petOption: {
-    padding: 12,
-    borderBottomWidth: 0.5,
-    borderColor: "#bababa",
-    transform: [{ translateY: 1 }],
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  petName: {
-    fontSize: 18,
   },
 });

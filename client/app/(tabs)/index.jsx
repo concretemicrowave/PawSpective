@@ -5,7 +5,7 @@ import { ThemedView, ThemedText } from "../../components/ThemedComponents";
 import DashboardContent from "../../components/DashboardContent/DashboardContent";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useUser } from "@/context/UserContext";
-import SwitchPetDrawer from "@/components/DashboardContent/SwitchPetDrawer";
+import SwitchPetDrawer from "@/components/DashboardContent/SwitchPetDrawer/SwitchPetDrawer";
 import DashboardHeader from "@/components/DashboardContent/DashboardHeader";
 import DashboardData from "@/components/DashboardContent/DashboardData";
 import LoadingSkeleton from "../../components/DashboardContent/LoadingSkeleton";
@@ -84,6 +84,7 @@ export default function Dashboard() {
           pets={userData.posts}
           visible={visible}
           setVisible={setVisible}
+          selectedPostId={selectedPostId}
           setSelectedTab={setSelectedPostId}
         />
         <View style={[styles.heading, !petData && { marginTop: 110 }]}>
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingBottom: 0,
     marginHorizontal: 20,
-    minHeight: 250,
+    minHeight: 350,
   },
   switchButton: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",

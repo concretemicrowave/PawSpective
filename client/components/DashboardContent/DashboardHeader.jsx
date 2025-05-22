@@ -36,7 +36,7 @@ export default function DashboardHeader() {
 const styles = StyleSheet.create({
   header: {
     width: "100%",
-    height: 400,
+    height: 450,
     padding: 20,
     position: "absolute",
     overflow: "hidden",
