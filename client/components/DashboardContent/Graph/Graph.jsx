@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
   },
   chart: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "flex-end",
     width: CHART_WIDTH,
     height: MAX_BAR_HEIGHT + 40,
