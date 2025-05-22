@@ -48,7 +48,7 @@ export default function Register() {
     if (!data.success) {
       Alert.alert("Registration Failed", data.message || "Please try again.");
     }
-    router.push("/login");
+    router.push("/(tabs)");
   };
 
   return (

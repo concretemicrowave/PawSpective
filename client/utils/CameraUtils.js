@@ -7,14 +7,23 @@ const useCameraActions = () => {
   const { setPhotoUri } = usePhoto();
   const router = useRouter();
 
-  const takePhoto = async (camera, setLoading) => {
-    if (camera) {
-      const photo = await camera.takePictureAsync({ quality: 1 });
-      setPhotoUri(photo.uri);
-      setLoading(true);
-      setLoading(false);
-      router.push("details");
+  const takePhoto = async (cameraOrUri, setLoading) => {
+    let uri;
+
+    if (typeof cameraOrUri === "string") {
+      uri = cameraOrUri;
+    } else if (cameraOrUri?.takePictureAsync) {
+      const photo = await cameraOrUri.takePictureAsync({ quality: 1 });
+      uri = photo.uri;
+    } else {
+      console.error("Invalid camera reference or URI.");
+      return;
     }
+
+    setLoading(true);
+    setPhotoUri(uri);
+    setLoading(false);
+    router.push("details");
   };
 
   const deleteImage = useCallback(async (uri) => {
