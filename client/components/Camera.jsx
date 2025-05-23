@@ -6,11 +6,10 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import * as ImagePicker from "expo-image-picker";
 import useCameraActions from "../utils/CameraUtils";
 import * as Haptics from "expo-haptics";
 import Animated from "react-native-reanimated";
-import { Ionicons } from "@expo/vector-icons";
+import ImagePickerButton from "./ImagePickerButton";
 
 export default function CameraComponent() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -24,22 +23,9 @@ export default function CameraComponent() {
     }
   }, []);
 
-  const handlePickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") return;
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-      allowsEditing: false,
-    });
-
-    if (!result.canceled) {
-      const imageUri = result.assets[0].uri;
-      console.log("Picked image URI:", imageUri);
-      takePhoto(imageUri, setLoading);
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
+  const handleImagePicked = (imageUri) => {
+    console.log("Picked image URI:", imageUri);
+    takePhoto(imageUri, setLoading);
   };
 
   if (!permission?.granted) return null;
@@ -53,11 +39,13 @@ export default function CameraComponent() {
           ref={(ref) => setCamera(ref)}
         />
       </Animated.View>
+
       {loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="white" />
         </View>
       )}
+
       <TouchableOpacity
         style={styles.captureButton}
         onPress={() => {
@@ -68,9 +56,8 @@ export default function CameraComponent() {
       >
         <View style={styles.inner} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.libraryButton} onPress={handlePickImage}>
-        <Ionicons name="image-outline" size={30} color="white" />
-      </TouchableOpacity>
+
+      <ImagePickerButton onImagePicked={handleImagePicked} disabled={loading} />
     </View>
   );
 }
@@ -109,13 +96,5 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
-  },
-  libraryButton: {
-    position: "absolute",
-    bottom: 50,
-    left: 50,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-    borderRadius: 20,
-    padding: 10,
   },
 });

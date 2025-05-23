@@ -131,6 +131,7 @@ export function useAuth() {
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to delete post");

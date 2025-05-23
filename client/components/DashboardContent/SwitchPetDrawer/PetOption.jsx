@@ -1,11 +1,10 @@
-import { View, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Image, StyleSheet, Alert } from "react-native";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { ThemedText } from "../../ThemedComponents";
-import {
-  confirmDelete,
-  handleDeleteWithReload,
-} from "../../../utils/petDrawerUtils";
+import { useAuth } from "../../../hooks/useAuth";
+import { useUser } from "@/context/UserContext";
+import { useReload } from "@/context/ReloadContext";
 
 export default function PetOption({
   postId,
@@ -15,6 +14,10 @@ export default function PetOption({
   setSelectedTab,
   selectedPostId,
 }) {
+  const { deletePost } = useAuth();
+  const { refetchUser } = useUser();
+  const { acknowledgeReload } = useReload();
+
   const latestImageUri = pet.history?.[pet.history.length - 1]?.uri || null;
   const isSelected = selectedPostId === postId;
 
@@ -25,11 +28,22 @@ export default function PetOption({
   };
 
   const handleDelete = async () => {
-    await handleDeleteWithReload(postId);
+    try {
+      await deletePost(postId);
+      await refetchUser();
+      setVisible(false);
+      await acknowledgeReload();
+    } catch (error) {
+      console.error("Delete failed:", error);
+      Alert.alert("Error", "Failed to delete the post. Please try again.");
+    }
   };
 
   const confirmAndDelete = () => {
-    confirmDelete(postId, handleDelete);
+    Alert.alert("Confirm Deletion", "Are you sure you want to delete this?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: handleDelete },
+    ]);
   };
 
   return (
@@ -53,13 +67,13 @@ export default function PetOption({
           <MaterialIcons
             name="check-circle"
             size={20}
-            color="#4CAF50"
+            color="#4a70e2"
             style={{ marginLeft: 8 }}
           />
         )}
       </View>
       <TouchableOpacity onPress={confirmAndDelete}>
-        <Feather name="trash-2" size={28} color="rgba(0,0,0,0.75)" />
+        <Feather name="trash-2" size={28} color="rgba(0,0,0,0.7)" />
       </TouchableOpacity>
     </TouchableOpacity>
   );

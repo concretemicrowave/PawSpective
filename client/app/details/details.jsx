@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleSheet } from "react-native";
 import { ThemedView } from "../../components/ThemedComponents";
 import SaveButton from "./content/SaveButton";

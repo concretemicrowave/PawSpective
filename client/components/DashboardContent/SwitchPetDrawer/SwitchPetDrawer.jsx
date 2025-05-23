@@ -116,7 +116,7 @@ const styles = RNStyleSheet.create({
   },
   petList: {
     borderRadius: 20,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: "rgba(0,0,0,0.2)",
     marginBottom: 10,
     backgroundColor: "#e6e6e6",
