@@ -6,7 +6,12 @@ export function DetailCard({ title, bold, progress, average, style }) {
   return (
     <ThemedView style={[styles.card, style]}>
       <ThemedText style={styles.cardTitle}>{title}</ThemedText>
-      <ThemedText type="title" style={styles.bold}>
+      <ThemedText
+        numberOfLines={2}
+        ellipsizeMode="tail"
+        type="title"
+        style={styles.bold}
+      >
         {bold}
       </ThemedText>
       {title !== "Symptoms" && (

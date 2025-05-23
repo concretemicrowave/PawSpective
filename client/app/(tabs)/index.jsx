@@ -75,7 +75,12 @@ export default function Dashboard() {
             onPress={() => setVisible(true)}
           >
             <MaterialCommunityIcons name="swap-horizontal" size={24} />
-            <ThemedText type="subtitle" style={styles.switchButtonText}>
+            <ThemedText
+              type="subtitle"
+              style={styles.switchButtonText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {petData.name}
             </ThemedText>
           </TouchableOpacity>
@@ -141,5 +146,6 @@ const styles = StyleSheet.create({
   },
   switchButtonText: {
     fontSize: 18,
+    maxWidth: "90%",
   },
 });

@@ -42,7 +42,13 @@ export default function PetOption({
           source={{ uri: latestImageUri || "https://place-puppy.com/80x80" }}
           style={styles.avatar}
         />
-        <ThemedText style={styles.petName}>{pet.name}</ThemedText>
+        <ThemedText
+          style={styles.petName}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {pet.name}
+        </ThemedText>
         {isSelected && (
           <MaterialIcons
             name="check-circle"
@@ -75,6 +81,7 @@ const styles = StyleSheet.create({
   petName: {
     fontSize: 18,
     marginLeft: 12,
+    maxWidth: "65%",
   },
   avatar: {
     width: 44,
