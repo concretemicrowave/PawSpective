@@ -1,10 +1,12 @@
 import { SafeAreaView, StyleSheet } from "react-native";
 import { ThemedText } from "./ThemedComponents";
 
-export default function Title({ text }) {
+export default function Title({ text, color = "white" }) {
   return (
     <SafeAreaView style={styles.title}>
-      <ThemedText style={styles.text}>{text}</ThemedText>
+      <ThemedText style={styles.text} color={color}>
+        {text}
+      </ThemedText>
     </SafeAreaView>
   );
 }
@@ -19,7 +21,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "white",
     marginTop: 10,
   },
 });

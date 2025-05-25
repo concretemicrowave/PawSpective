@@ -1,9 +1,8 @@
-import React from "react";
 import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  ViewStyle,
+  View,
 } from "react-native";
 import { useThemeColor } from "../../hooks/useThemeColor";
 import { ThemedText } from "./ThemedText";
@@ -17,8 +16,10 @@ export function ThemedButton({
   hollow = false,
   color = "primary",
   disabled = false,
-  loading = false, // new prop
+  loading = false,
   padding = true,
+  leftIcon,
+  rightIcon,
   ...rest
 }) {
   const backgroundColor = useThemeColor(
@@ -26,9 +27,7 @@ export function ThemedButton({
     `${color}`,
   );
 
-  // if loading, we also disable the button
   const isDisabled = disabled || loading;
-  // spinner should match text color
   const spinnerColor = hollow ? backgroundColor : "#fff";
 
   return (
@@ -53,13 +52,17 @@ export function ThemedButton({
       {loading ? (
         <ActivityIndicator size="small" color={spinnerColor} />
       ) : (
-        <ThemedText
-          type="subtitle"
-          style={styles.text}
-          color={hollow ? color : "white"}
-        >
-          {title}
-        </ThemedText>
+        <View style={styles.content}>
+          {leftIcon && <View style={styles.icon}>{leftIcon}</View>}
+          <ThemedText
+            type="subtitle"
+            style={styles.text}
+            color={hollow ? color : "white"}
+          >
+            {title}
+          </ThemedText>
+          {rightIcon && <View style={styles.icon}>{rightIcon}</View>}
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -74,6 +77,13 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  content: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  icon: {
+    marginHorizontal: 6,
   },
   disabled: {
     opacity: 0.5,

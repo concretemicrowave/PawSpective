@@ -193,6 +193,7 @@ api.get("/user", async (req, res) => {
       posts[row.id] = {
         name: row.name,
         breed: row.breed,
+        weightGoal: row.weightGoal,
         history: row.history,
       };
     });
@@ -302,6 +303,7 @@ api.post("/save", async (req, res) => {
         UPDATE posts
         SET name = $1,
             breed = $2,
+            weightGoal = $3,
             history =
               CASE
                 WHEN jsonb_typeof(history) = 'array' THEN
@@ -311,7 +313,7 @@ api.post("/save", async (req, res) => {
               END
         WHERE id = $4 AND user_id = $5
         `,
-        [name, breed, JSON.stringify(entry), postId, userId],
+        [name, breed, existing.rows[0].weightGoal, JSON.stringify(entry), postId, userId],
       );
 
       return res.json(
@@ -323,10 +325,10 @@ api.post("/save", async (req, res) => {
     } else {
       await pool.query(
         `
-        INSERT INTO posts (id, name, breed, history, user_id)
-        VALUES ($1, $2, $3, jsonb_build_array($4::jsonb), $5)
+        INSERT INTO posts (id, name, breed, weightGoal, history, user_id)
+        VALUES ($1, $2, $3, $4, jsonb_build_array($5::jsonb), $6)
         `,
-        [postId, name, breed, JSON.stringify(entry), userId],
+        [postId, name, breed, null, JSON.stringify(entry), userId],
       );
 
       return res.json(

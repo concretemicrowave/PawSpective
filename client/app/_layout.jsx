@@ -76,6 +76,10 @@ export default function RootLayout() {
                   name="add/index"
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="numberLine/NumberLine"
+                  options={{ headerShown: false }}
+                />
               </Stack>
             </GestureHandlerRootView>
             <StatusBar style="auto" />
