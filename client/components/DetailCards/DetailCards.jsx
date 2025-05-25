@@ -1,10 +1,27 @@
 import { StyleSheet, View } from "react-native";
 import { DetailCard } from "./DetailCard";
+import { useState } from "react";
 
-export function DetailCards({ weight, age, symptoms, avgWeight, avgLifespan }) {
+export function DetailCards({
+  weight,
+  age,
+  symptoms,
+  setSymptoms,
+  avgWeight,
+  avgLifespan,
+}) {
+  const [editing, setEditing] = useState(false);
+
   return (
     <View style={styles.cards}>
-      <DetailCard title="Symptoms" bold={symptoms} />
+      <DetailCard
+        title="Symptoms"
+        bold={symptoms}
+        editable
+        isEditing={editing}
+        onEditPress={() => setEditing((prev) => !prev)}
+        onChangeText={setSymptoms}
+      />
       <View style={{ flexDirection: "row", gap: 8 }}>
         <DetailCard
           title="Weight"

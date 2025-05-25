@@ -19,6 +19,10 @@ export function Dropdown({ title, children }) {
   const animation = useRef(new Animated.Value(0)).current;
   const triggerRef = useRef(null);
   const screenWidth = Dimensions.get("window").width;
+  const screenHeight = Dimensions.get("window").height;
+
+  const dropdownWidth = 200;
+  const dropdownHeight = 150;
 
   const openDropdown = () => {
     const handle = findNodeHandle(triggerRef.current);
@@ -46,11 +50,21 @@ export function Dropdown({ title, children }) {
 
   const dropdownOpacity = animation;
 
-  const dropdownWidth = 200; // Set the dropdown width you want
-  const calculatedLeft = Math.min(
-    position.x + position.width - dropdownWidth,
-    screenWidth - dropdownWidth - 8,
-  );
+  const fitsBelow =
+    position.y + position.height + dropdownHeight < screenHeight;
+  const fitsRight = position.x + dropdownWidth < screenWidth;
+
+  const dropdownStyle = {
+    width: dropdownWidth,
+    opacity: dropdownOpacity,
+    transform: [{ translateY: dropdownTranslateY }],
+    ...(fitsBelow
+      ? { top: position.y + position.height }
+      : { bottom: screenHeight - position.y }),
+    ...(fitsRight
+      ? { left: position.x }
+      : { right: screenWidth - (position.x + position.width) }),
+  };
 
   return (
     <>
@@ -66,22 +80,10 @@ export function Dropdown({ title, children }) {
           title
         )}
       </TouchableOpacity>
-
       <Modal transparent visible={isOpen} animationType="none">
         <TouchableWithoutFeedback onPress={() => setIsOpen(false)}>
           <View style={styles.modalOverlay}>
-            <Animated.View
-              style={[
-                styles.contentWrapper,
-                {
-                  top: position.y + position.height,
-                  left: calculatedLeft,
-                  width: dropdownWidth,
-                  opacity: dropdownOpacity,
-                  transform: [{ translateY: dropdownTranslateY }],
-                },
-              ]}
-            >
+            <Animated.View style={[styles.contentWrapper, dropdownStyle]}>
               <View style={styles.dropdownContainer}>{children}</View>
             </Animated.View>
           </View>

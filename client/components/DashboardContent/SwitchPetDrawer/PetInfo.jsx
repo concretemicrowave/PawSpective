@@ -20,7 +20,7 @@ export default function PetInfo({ pet, isSelected }) {
         <MaterialIcons
           name="check-circle"
           size={20}
-          color="#4a70e2"
+          color="#222"
           style={{ marginLeft: 8 }}
         />
       )}
