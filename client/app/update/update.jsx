@@ -11,7 +11,7 @@ export default function UpdateCameraScreen() {
     <>
       <BackLink white={false} />
       <View style={styles.container}>
-        <Title text="Update Photo" />
+        <Title text="Add Entry" />
         {isFocused ? <UpdateCameraComponent /> : null}
       </View>
     </>
