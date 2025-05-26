@@ -1,9 +1,22 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
+import { useUser } from "./UserContext";
 
 const WeightGoalContext = createContext();
 
 export const WeightGoalProvider = ({ children }) => {
+  const { userData, latestPostId } = useUser();
   const [weightGoal, setWeightGoal] = useState(null);
+
+  useEffect(() => {
+    if (
+      userData?.posts &&
+      latestPostId != null &&
+      userData.posts[latestPostId]?.weightGoal != null
+    ) {
+      setWeightGoal(userData.posts[latestPostId].weightGoal);
+      console.log("userData");
+    }
+  }, [userData.posts, latestPostId]);
 
   return (
     <WeightGoalContext.Provider value={{ weightGoal, setWeightGoal }}>

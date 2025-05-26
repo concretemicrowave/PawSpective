@@ -8,11 +8,16 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { ThemedView, ThemedText } from "../../components/ThemedComponents";
+import {
+  ThemedView,
+  ThemedText,
+  ThemedButton,
+} from "../../components/ThemedComponents";
 import { BackLink } from "../../components/BackLink";
 import Title from "../../components/Title";
 import * as Haptics from "expo-haptics";
 import { useWeightGoal } from "../../context/WeightGoalContext";
+import { useRouter } from "expo-router";
 
 const ITEM_WIDTH = 60;
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -24,8 +29,9 @@ export default function NumberLine() {
   const [selectedIndex, setSelectedIndex] = useState(null);
 
   const { setWeightGoal } = useWeightGoal();
+  const router = useRouter();
 
-  const { initialWeight } = params ?? {};
+  const { initialWeight } = params || {};
   const currentWeight =
     typeof initialWeight === "string"
       ? parseInt(initialWeight, 10)
@@ -57,6 +63,10 @@ export default function NumberLine() {
     }
   };
 
+  const onDone = () => {
+    router.back();
+  };
+
   return (
     <ThemedView style={styles.container}>
       <BackLink />
@@ -65,20 +75,15 @@ export default function NumberLine() {
           <Title color="black" text="Weight Goal" />
         </View>
       </SafeAreaView>
-
-      {/* vertical indicator */}
       <View style={[styles.indicator, { left: SCREEN_WIDTH * 0.5 - 1 }]} />
-
       <ScrollView
         ref={scrollRef}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.scrollContainer,
-          {
-            paddingHorizontal: SCREEN_WIDTH * 0.5 - ITEM_WIDTH / 2,
-          },
-        ]}
+        contentContainerStyle={{
+          alignItems: "center",
+          paddingHorizontal: SCREEN_WIDTH * 0.5 - ITEM_WIDTH / 2,
+        }}
         snapToInterval={ITEM_WIDTH}
         decelerationRate="fast"
         snapToAlignment="start"
@@ -88,7 +93,6 @@ export default function NumberLine() {
           const isCurrent = number === currentWeight;
           const diff = number - currentWeight;
           const label = diff === 0 ? "" : `${diff > 0 ? "+" : ""}${diff}kg`;
-
           return (
             <View key={number} style={styles.item}>
               <Text style={[styles.label, isCurrent && styles.currentLabel]}>
@@ -103,6 +107,10 @@ export default function NumberLine() {
           );
         })}
       </ScrollView>
+
+      <View style={{ padding: 26, paddingBottom: 30 }}>
+        <ThemedButton title="Done" onPress={onDone} borderRadius={50} />
+      </View>
     </ThemedView>
   );
 }
@@ -123,7 +131,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#888",
     zIndex: 1,
   },
-  scrollContainer: { alignItems: "center" },
   item: { width: ITEM_WIDTH, alignItems: "center" },
   number: { fontSize: 20, color: "#555" },
   currentNumber: {

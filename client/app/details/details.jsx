@@ -1,18 +1,16 @@
 import { StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { ThemedView } from "../../components/ThemedComponents";
 import SaveButton from "./content/SaveButton";
 import PredictionHandler from "./content/PredictionHandler";
 import usePrediction from "@/utils/usePrediction";
 
 export default function Details({ uri }) {
-  const navigation = useNavigation();
   const {
     predicting,
     breed,
     name,
     setName,
-    weight, // <-- predicted weight
+    weight,
     setWeight,
     age,
     setAge,

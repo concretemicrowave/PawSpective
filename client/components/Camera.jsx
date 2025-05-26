@@ -24,7 +24,6 @@ export default function CameraComponent() {
   }, []);
 
   const handleImagePicked = (imageUri) => {
-    console.log("Picked image URI:", imageUri);
     takePhoto(imageUri, setLoading);
   };
 

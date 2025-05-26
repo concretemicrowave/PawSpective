@@ -4,12 +4,14 @@ import { useUser } from "@/context/UserContext";
 import { useAuth } from "@/hooks/useAuth";
 import dogBreedData from "@/constants/dogBreedData";
 import { useHandleSave } from "@/utils/handleSave";
+import { useWeightGoal } from "@/context/WeightGoalContext";
 
 export default function usePrediction(uri) {
   const { update, postId, setPostId } = usePhoto();
   const { userData, setUserData } = useUser();
-  const { savePost, predictData } = useAuth();
+  const { predictData } = useAuth();
   const handleSave = useHandleSave();
+  const { weightGoal, setWeightGoal } = useWeightGoal();
 
   const existingPost = postId != null ? userData.posts?.[postId] : null;
 
@@ -28,8 +30,11 @@ export default function usePrediction(uri) {
     if (update && existingPost) {
       setName(existingPost.name || "");
       setBreed(existingPost.breed || "");
+      if (existingPost.weightGoal != null) {
+        setWeightGoal(existingPost.weightGoal);
+      }
     }
-  }, [update, existingPost]);
+  }, [update, existingPost, setWeightGoal]);
 
   useEffect(() => {
     async function fetchPrediction() {
@@ -41,7 +46,6 @@ export default function usePrediction(uri) {
 
       try {
         const data = typeof result === "string" ? JSON.parse(result) : result;
-
         const breedName = data.breed || "";
         const breedInfo = dogBreedData[breedName] || {};
 
@@ -52,7 +56,7 @@ export default function usePrediction(uri) {
         setTime(new Date().toISOString().slice(0, 10));
         setAverageHealthyWeight(breedInfo.avgWeightKg || null);
         setAverageLifespan(breedInfo.avgLifespanYears || null);
-
+        setWeightGoal(data.weight || 0);
         setFetchedPrediction(true);
       } catch {
         console.error("Failed to parse prediction:", result);
@@ -60,7 +64,7 @@ export default function usePrediction(uri) {
     }
 
     fetchPrediction();
-  }, [uri, update, fetchedPrediction]);
+  }, [uri, update, fetchedPrediction, predictData, setWeightGoal]);
 
   const onSave = () =>
     handleSave({
@@ -69,8 +73,16 @@ export default function usePrediction(uri) {
       userData,
       setUserData,
       setPostId,
-      savePost,
-      postFields: { name, weight, age, symptoms, breed, time, uri },
+      postFields: {
+        name,
+        weight,
+        age,
+        symptoms,
+        breed,
+        time,
+        uri,
+        weightGoal,
+      },
     });
 
   return {
@@ -87,6 +99,7 @@ export default function usePrediction(uri) {
     averageHealthyWeight,
     averageLifespan,
     update,
+    weightGoal,
     onSave,
   };
 }

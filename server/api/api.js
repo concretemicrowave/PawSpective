@@ -177,30 +177,45 @@ api.get("/user", async (req, res) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.id;
+
     const userResult = await pool.query(
       "SELECT id, name, email FROM users WHERE id = $1",
       [userId],
     );
-    if (userResult.rows.length === 0)
+    if (!userResult.rows.length)
       return res.json(util.error({ message: "User not found" }));
 
     const postsResult = await pool.query(
-      "SELECT id, name, breed, history FROM posts WHERE user_id = $1",
+      `
+      SELECT
+        id,
+        name,
+        breed,
+        weightgoal    AS "weightGoal",
+        history
+      FROM posts
+      WHERE user_id = $1
+      `,
       [userId],
     );
+
     const posts = {};
-    postsResult.rows.forEach((row) => {
+    for (const row of postsResult.rows) {
       posts[row.id] = {
         name: row.name,
         breed: row.breed,
         weightGoal: row.weightGoal,
         history: row.history,
       };
-    });
+    }
+
     res.json(
       util.success({
         message: "User retrieved successfully",
-        user: { ...userResult.rows[0], posts },
+        user: {
+          ...userResult.rows[0],
+          posts,
+        },
       }),
     );
   } catch (err) {
@@ -211,49 +226,42 @@ api.get("/user", async (req, res) => {
 
 // Save post
 api.post("/save", async (req, res) => {
-  const { uri, name, breed, weight, age, symptoms, time, postId } = req.body;
+  const { uri, name, breed, weight, age, symptoms, time, postId, weightGoal } =
+    req.body;
+
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token)
-    return res.json(util.error({ message: "Authorization token required" }));
-  if (!uri || !name || !breed || !weight || !age) {
-    return res.json(
-      util.error({ message: "URI, name, breed, weight, and age are required" }),
+  if (!token) {
+    return res
+      .status(401)
+      .json(util.error({ message: "Authorization required" }));
+  }
+
+  if (!uri || !name || !breed || weight == null || age == null) {
+    return res.status(400).json(
+      util.error({
+        message: "uri, name, breed, weight, and age are required",
+      }),
     );
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.id;
+    const { id: userId } = jwt.verify(token, JWT_SECRET);
+    await pool.query("BEGIN");
 
-    const openaiResponse = await openai.chat.completions.create({
+    const openaiResp = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content: `You are a veterinary assistant AI that classifies a pet’s health score from 0 to 10.
-
-          Focus on the following:
-          1. Breed-specific average weight is **critical**. A deviation of more than 20% under or over average is unhealthy.
-          2. Young pets (under 1 year) or elderly pets (over breed's average lifespan) may have different thresholds.
-          3. Symptoms such as vomiting, fatigue, loss of appetite, or difficulty breathing significantly lower the score.
-          4. Assign a score:
-             - 10: Perfect health, optimal weight, no symptoms
-             - 7–9: Slight weight variation, mild or no symptoms
-             - 4–6: Noticeable weight issues OR moderate symptoms
-             - 1–3: Severe under/overweight OR critical symptoms
-             - 0: Life-threatening condition or extremely abnormal stats
-
-          Respond with only a **single number between 0 and 10**.`,
+          content: `You are a veterinary assistant AI... respond with a single number.`,
         },
         {
           role: "user",
-          content: `A pet has the following characteristics:
-          - Weight: ${weight} kg
-          - Age: ${age} years
-          - Symptoms: ${symptoms}
-          - Breed: ${breed}
-
-          Classify the pet's health status strictly as a health score between 0 and 10, where 10 is very healthy, 5 is on the way to being unhealthy and 1 is extreme and needs to seek medical attention immediately.`,
+          content: `Weight: ${weight} kg
+Age: ${age} years
+Symptoms: ${symptoms}
+Breed: ${breed}
+Return a score 0–10.`,
         },
       ],
       response_format: {
@@ -263,13 +271,7 @@ api.post("/save", async (req, res) => {
           schema: {
             strict: true,
             type: "object",
-            properties: {
-              score: {
-                type: "number",
-                description:
-                  "The health score between 0 and 10, where 10 is very healthy, 5 is on the way to being unhealthy and 1 is extreme and needs to seek medical attention immediately. Example: 7.",
-              },
-            },
+            properties: { score: { type: "number" } },
             required: ["score"],
             additionalProperties: false,
           },
@@ -278,9 +280,7 @@ api.post("/save", async (req, res) => {
       temperature: 0.3,
     });
 
-    const parsed = JSON.parse(openaiResponse.choices[0].message.content.trim());
-    const score = parsed.score;
-
+    const { score } = JSON.parse(openaiResp.choices[0].message.content);
     const entry = {
       timestamp: time,
       uri,
@@ -293,54 +293,66 @@ api.post("/save", async (req, res) => {
     };
 
     const existing = await pool.query(
-      "SELECT * FROM posts WHERE id = $1 AND user_id = $2",
+      `
+      SELECT
+        weightgoal AS "weightGoal"
+      FROM posts
+      WHERE id = $1
+        AND user_id = $2
+      `,
       [postId, userId],
     );
 
-    if (existing.rows.length > 0) {
+    if (existing.rows.length) {
+      const newGoal =
+        weightGoal != null ? weightGoal : existing.rows[0].weightgoal;
       await pool.query(
         `
         UPDATE posts
-        SET name = $1,
-            breed = $2,
-            weightGoal = $3,
-            history =
-              CASE
-                WHEN jsonb_typeof(history) = 'array' THEN
-                  jsonb_build_array($3::jsonb) || history
-                ELSE
-                  jsonb_build_array($3::jsonb)
-              END
-        WHERE id = $4 AND user_id = $5
+        SET
+          name       = $1,
+          breed      = $2,
+          weightgoal = $3,
+          history    = jsonb_build_array($4::jsonb) || history
+        WHERE id = $5
+          AND user_id = $6
         `,
-        [name, breed, existing.rows[0].weightGoal, JSON.stringify(entry), postId, userId],
+        [name, breed, newGoal, JSON.stringify(entry), postId, userId],
       );
 
-      return res.json(
+      await pool.query("COMMIT");
+      return res.status(200).json(
         util.success({
-          message: "Post updated successfully",
+          message: "Post updated",
           post: { postId, name, breed },
         }),
       );
     } else {
+      const initGoal = weightGoal != null ? weightGoal : score;
       await pool.query(
         `
-        INSERT INTO posts (id, name, breed, weightGoal, history, user_id)
-        VALUES ($1, $2, $3, $4, jsonb_build_array($5::jsonb), $6)
+        INSERT INTO posts
+          (id, name, breed, weightgoal, history, user_id)
+        VALUES
+          ($1, $2, $3, $4, jsonb_build_array($5::jsonb), $6)
         `,
-        [postId, name, breed, null, JSON.stringify(entry), userId],
+        [postId, name, breed, initGoal, JSON.stringify(entry), userId],
       );
 
-      return res.json(
+      await pool.query("COMMIT");
+      return res.status(201).json(
         util.success({
-          message: "Post saved successfully",
+          message: "Post created",
           post: { postId, name, breed },
         }),
       );
     }
   } catch (err) {
+    await pool.query("ROLLBACK");
     console.error(err);
-    res.json(util.error({ message: "Internal server error" }));
+    return res
+      .status(500)
+      .json(util.error({ message: "Internal server error" }));
   }
 });
 
