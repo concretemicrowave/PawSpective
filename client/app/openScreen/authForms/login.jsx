@@ -29,6 +29,7 @@ export default function Login() {
     console.log(data);
     if (!data.success) {
       Alert.alert("Login Failed", data.message || "Please try again.");
+      setLoading(false);
     }
     router.replace("(tabs)");
   };

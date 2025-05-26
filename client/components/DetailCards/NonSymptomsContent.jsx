@@ -7,6 +7,7 @@ export default function NonSymptomsContent({
   progress,
   average,
   showProgress,
+  type,
 }) {
   return (
     <>
@@ -18,7 +19,9 @@ export default function NonSymptomsContent({
       >
         {text}
       </ThemedText>
-      {showProgress && <ProgressBar progress={progress} average={average} />}
+      {showProgress && (
+        <ProgressBar progress={progress} average={average} type={type} />
+      )}
     </>
   );
 }

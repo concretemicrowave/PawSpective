@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -7,40 +7,66 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import { ThemedView, ThemedText } from "../../components/ThemedComponents";
-import { useWeightGoal } from "../../context/WeightGoalContext";
 import { BackLink } from "../../components/BackLink";
 import Title from "../../components/Title";
+import * as Haptics from "expo-haptics";
+import { useWeightGoal } from "../../context/WeightGoalContext";
 
 const ITEM_WIDTH = 60;
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const DEFAULT_WEIGHT = 55;
+const DEFAULT_WEIGHT = 0;
 
 export default function NumberLine() {
+  const { params } = useRoute();
   const scrollRef = useRef(null);
-  const weightGoalContext = useWeightGoal();
-  const currentWeight = weightGoalContext?.weightGoal ?? DEFAULT_WEIGHT;
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  const { setWeightGoal } = useWeightGoal();
+
+  const { initialWeight } = params ?? {};
+  const currentWeight =
+    typeof initialWeight === "string"
+      ? parseInt(initialWeight, 10)
+      : typeof initialWeight === "number"
+        ? initialWeight
+        : DEFAULT_WEIGHT;
 
   const numbers = Array.from({ length: 201 }, (_, i) => i);
-  const initialIndex = numbers.findIndex((n) => n === currentWeight);
-  const visualCenterOffset = SCREEN_WIDTH * 0.5 - ITEM_WIDTH / 2;
-  const initialOffset = initialIndex * ITEM_WIDTH - visualCenterOffset;
+  const initialIndex = numbers.indexOf(currentWeight);
+  const offset = initialIndex * ITEM_WIDTH;
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTo({ x: initialOffset, animated: false });
+      scrollRef.current.scrollTo({ x: offset, animated: false });
+      setSelectedIndex(initialIndex);
+      setWeightGoal(currentWeight);
     }
-  }, []);
+  }, [offset, initialIndex, currentWeight, setWeightGoal]);
+
+  const handleSnap = (e) => {
+    const x =
+      e.nativeEvent.contentOffset.x + (SCREEN_WIDTH * 0.5 - ITEM_WIDTH / 2);
+    const idx = Math.round(x / ITEM_WIDTH);
+
+    if (idx !== selectedIndex) {
+      Haptics.notificationAsync();
+      setSelectedIndex(idx);
+      setWeightGoal(numbers[idx] - 3);
+    }
+  };
 
   return (
     <ThemedView style={styles.container}>
       <BackLink />
       <SafeAreaView>
         <View style={styles.header}>
-          <Title color="black" text="Add Goal" />
+          <Title color="black" text="Weight Goal" />
         </View>
       </SafeAreaView>
 
+      {/* vertical indicator */}
       <View style={[styles.indicator, { left: SCREEN_WIDTH * 0.5 - 1 }]} />
 
       <ScrollView
@@ -49,11 +75,14 @@ export default function NumberLine() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContainer,
-          { paddingHorizontal: visualCenterOffset },
+          {
+            paddingHorizontal: SCREEN_WIDTH * 0.5 - ITEM_WIDTH / 2,
+          },
         ]}
         snapToInterval={ITEM_WIDTH}
         decelerationRate="fast"
         snapToAlignment="start"
+        onMomentumScrollEnd={handleSnap}
       >
         {numbers.map((number) => {
           const isCurrent = number === currentWeight;
@@ -79,9 +108,7 @@ export default function NumberLine() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   header: {
     alignItems: "center",
     paddingTop: 16,
@@ -96,27 +123,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#888",
     zIndex: 1,
   },
-  scrollContainer: {
-    alignItems: "center",
-  },
-  item: {
-    width: ITEM_WIDTH,
-    alignItems: "center",
-  },
-  number: {
-    fontSize: 20,
-    color: "#555",
-  },
+  scrollContainer: { alignItems: "center" },
+  item: { width: ITEM_WIDTH, alignItems: "center" },
+  number: { fontSize: 20, color: "#555" },
   currentNumber: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#000",
   },
-  label: {
-    fontSize: 12,
-    color: "#aaa",
-    marginBottom: 4,
-  },
+  label: { fontSize: 12, color: "#aaa", marginBottom: 4 },
   currentLabel: {
     fontSize: 12,
     fontWeight: "600",

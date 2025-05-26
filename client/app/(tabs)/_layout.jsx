@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { WeightGoalProvider } from "../../context/WeightGoalContext";
 import { View, Animated, Pressable, StyleSheet } from "react-native";
 import { Tabs, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
@@ -57,8 +56,7 @@ export default function TabLayout() {
   };
 
   return (
-    <WeightGoalProvider>
-      <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -112,8 +110,7 @@ export default function TabLayout() {
           </Animated.View>
         </Pressable>
       )}
-      </View>
-    </WeightGoalProvider>
+    </View>
   );
 }
 

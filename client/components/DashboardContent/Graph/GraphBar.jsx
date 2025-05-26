@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { format, parseISO } from "date-fns";
 import { ThemedText } from "../../ThemedComponents";

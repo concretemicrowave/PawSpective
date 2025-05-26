@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { View, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function SaveButton({ breed, update, onPress }) {
+export default function SaveButton({ breed, update, weight, onPress }) {
   const router = useRouter();
 
   if (!breed) return null;
@@ -14,7 +14,12 @@ export default function SaveButton({ breed, update, onPress }) {
         title="Add Goal"
         hollow
         borderRadius={50}
-        onPress={() => router.push("numberLine/NumberLine")}
+        onPress={() =>
+          router.push({
+            pathname: "numberLine/NumberLine",
+            params: { initialWeight: weight.toString() },
+          })
+        }
         leftIcon={<MaterialCommunityIcons name="plus" size={20} color="#000" />}
         style={styles.sideButton}
       />

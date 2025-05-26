@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import { GraphToggle } from "./GraphToggle";
 import { GraphBar } from "./GraphBar";

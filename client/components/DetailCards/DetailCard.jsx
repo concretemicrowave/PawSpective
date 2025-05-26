@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 import { ThemedView, ThemedText } from "../ThemedComponents";
-import { ProgressBar } from "../ProgressBar";
 import SymptomsEditableText from "./SymptomsEditableText";
 import NonSymptomsContent from "./NonSymptomsContent";
 
@@ -14,6 +13,7 @@ export function DetailCard({
   onChangeText,
   onEditPress,
   isEditing,
+  type,
 }) {
   const isSymptoms = title === "Symptoms";
   const isEditableSymptoms =
@@ -35,6 +35,7 @@ export function DetailCard({
           progress={progress}
           average={average}
           showProgress={!isSymptoms}
+          type={type}
         />
       )}
     </ThemedView>
