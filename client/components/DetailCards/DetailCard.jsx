@@ -1,21 +1,42 @@
 import { StyleSheet } from "react-native";
 import { ThemedView, ThemedText } from "../ThemedComponents";
-import { ProgressBar } from "../ProgressBar";
+import SymptomsEditableText from "./SymptomsEditableText";
+import NonSymptomsContent from "./NonSymptomsContent";
 
-export function DetailCard({ title, bold, progress, average, style }) {
+export function DetailCard({
+  title,
+  bold,
+  progress,
+  average,
+  style,
+  editable,
+  onChangeText,
+  onEditPress,
+  isEditing,
+  type,
+}) {
+  const isSymptoms = title === "Symptoms";
+  const isEditableSymptoms =
+    isSymptoms && editable && typeof onChangeText === "function";
+
   return (
     <ThemedView style={[styles.card, style]}>
       <ThemedText style={styles.cardTitle}>{title}</ThemedText>
-      <ThemedText
-        numberOfLines={2}
-        ellipsizeMode="tail"
-        type="title"
-        style={styles.bold}
-      >
-        {bold}
-      </ThemedText>
-      {title !== "Symptoms" && (
-        <ProgressBar progress={progress} average={average} />
+      {isEditableSymptoms ? (
+        <SymptomsEditableText
+          text={bold}
+          isEditing={isEditing}
+          onChangeText={onChangeText}
+          onEditPress={onEditPress}
+        />
+      ) : (
+        <NonSymptomsContent
+          text={bold}
+          progress={progress}
+          average={average}
+          showProgress={!isSymptoms}
+          type={type}
+        />
       )}
     </ThemedView>
   );
@@ -39,9 +60,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     opacity: 0.6,
     marginBottom: 4,
-  },
-  bold: {
-    fontWeight: "bold",
-    marginBottom: 20,
   },
 });

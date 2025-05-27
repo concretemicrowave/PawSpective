@@ -1,4 +1,3 @@
-import React from "react";
 import Svg, { Defs, RadialGradient, Stop, Rect } from "react-native-svg";
 
 const RadialBlob = ({

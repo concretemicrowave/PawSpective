@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { View, Animated, Pressable, StyleSheet } from "react-native";
 import { Tabs, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";

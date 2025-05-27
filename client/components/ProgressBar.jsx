@@ -1,23 +1,37 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { ThemedText } from "./ThemedComponents";
 
-export function ProgressBar({ progress, average }) {
-  const maxValue = average ? average * 2 : 100;
-  const progressWidth = `${Math.min((progress / maxValue) * 100, 100)}%`;
-
-  const showAverage = average != null;
-  const averagePosition = showAverage ? `${(average / maxValue) * 100}%` : null;
+export function ProgressBar({ progress, average, type }) {
+  const goal = average != null ? average : 100;
+  const fillPercent =
+    progress <= goal
+      ? `${(progress / goal) * 100}%`
+      : `${(goal / progress) * 100}%`;
+  const diff = progress - goal;
+  let statusText = "";
+  if (type !== "age") {
+    if (diff > 0) {
+      statusText = `${diff} kg cut`;
+    } else if (diff < 0) {
+      statusText = `${Math.abs(diff)} kg bulk`;
+    } else {
+      statusText = "Maintain";
+    }
+  }
 
   return (
     <View style={styles.container}>
-      <View style={styles.progressBackground}>
-        <View style={[styles.progressFill, { width: progressWidth }]} />
-      </View>
-      {showAverage && (
-        <View style={[styles.averageMarker, { left: averagePosition }]}>
-          <View style={styles.markerLine} />
-          <Text style={styles.markerText}>{average}</Text>
+      {type !== "Age" && (
+        <ThemedText style={styles.statusLabel}>{statusText}</ThemedText>
+      )}
+      {type === "Age" && average != null && (
+        <View style={styles.ageLabelContainer}>
+          <ThemedText style={styles.ageLabel}>{average}</ThemedText>
         </View>
       )}
+      <View style={styles.barBackground}>
+        <View style={[styles.barFill, { width: fillPercent }]} />
+      </View>
     </View>
   );
 }
@@ -25,38 +39,36 @@ export function ProgressBar({ progress, average }) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    paddingVertical: 10,
+    paddingBottom: 4,
+    marginTop: "auto",
     alignItems: "center",
   },
-  progressBackground: {
-    height: 12,
+  statusLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+    marginBottom: 4,
+    color: "#333",
+  },
+  barBackground: {
     width: "100%",
+    height: 12,
     backgroundColor: "#ddd",
     borderRadius: 6,
-    position: "relative",
     overflow: "hidden",
+    position: "relative",
   },
-  progressFill: {
+  barFill: {
     height: "100%",
-    borderRadius: 6,
-    position: "absolute",
-    left: 0,
     backgroundColor: "#000",
+    borderRadius: 50,
   },
-  averageMarker: {
+  ageLabelContainer: {
     position: "absolute",
-    top: -20,
-    alignItems: "center",
-    transform: [{ translateX: -12 }, { translateY: 10 }],
+    overflow: "visible",
+    right: 0,
+    top: -28,
   },
-  markerLine: {
-    height: 20,
-    width: 2,
-    backgroundColor: "gray",
-  },
-  markerText: {
-    fontSize: 12,
-    color: "gray",
-    marginTop: 12,
+  ageLabel: {
+    fontSize: 14,
   },
 });

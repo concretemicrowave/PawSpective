@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   DarkTheme,
   DefaultTheme,
@@ -7,14 +8,14 @@ import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAuth } from "@/hooks/useAuth";
 import { UserProvider } from "@/context/UserContext";
 import { PhotoProvider } from "@/context/PhotoContext";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ReloadProvider } from "@/context/ReloadContext";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { WeightGoalProvider } from "../context/WeightGoalContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,56 +32,59 @@ export default function RootLayout() {
   const router = useRouter();
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    if (!loaded) return;
 
-      if (isLoggedIn) {
-        router.replace("(tabs)");
-      } else {
-        router.replace("openScreen");
-      }
-    }
+    SplashScreen.hideAsync();
+    router.replace(isLoggedIn ? "(tabs)" : "openScreen");
   }, [loaded, isLoggedIn]);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
   return (
     <PhotoProvider>
       <UserProvider>
-        <ReloadProvider>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <Stack>
-                <Stack.Screen
-                  name="openScreen/index"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="openScreen/authForms/register"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="details/index"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="update/update"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="add/index"
-                  options={{ headerShown: false }}
-                />
-              </Stack>
-            </GestureHandlerRootView>
-            <StatusBar style="auto" />
-          </ThemeProvider>
-        </ReloadProvider>
+        <WeightGoalProvider>
+          <ReloadProvider>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Stack>
+                  <Stack.Screen
+                    name="openScreen/index"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="openScreen/authForms/register"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="details/index"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="update/update"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="add/index"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="numberLine/NumberLine"
+                    options={{ headerShown: false }}
+                    initialParams={{ initialWeight: undefined }}
+                  />
+                </Stack>
+              </GestureHandlerRootView>
+              <StatusBar style="auto" />
+            </ThemeProvider>
+          </ReloadProvider>
+        </WeightGoalProvider>
       </UserProvider>
     </PhotoProvider>
   );

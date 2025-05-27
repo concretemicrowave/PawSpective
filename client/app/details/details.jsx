@@ -21,6 +21,7 @@ export default function Details({ uri }) {
     update,
     onSave,
   } = usePrediction(uri);
+  console.log(predicting);
 
   return (
     <>
@@ -41,7 +42,12 @@ export default function Details({ uri }) {
         />
       </ThemedView>
       {!predicting && (
-        <SaveButton breed={breed} update={update} onPress={onSave} />
+        <SaveButton
+          breed={breed}
+          update={update}
+          weight={weight}
+          onPress={onSave}
+        />
       )}
     </>
   );

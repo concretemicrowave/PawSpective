@@ -39,15 +39,11 @@ export default function PetForm({
           label="age"
         />
       </View>
-      <ThemedInput
-        value={symptoms}
-        onChangeText={setSymptoms}
-        placeholder="Symptoms"
-      />
       <DetailCards
         weight={weight}
         age={age}
         symptoms={symptoms || "None"}
+        setSymptoms={setSymptoms}
         avgWeight={averageHealthyWeight}
         avgLifespan={averageLifespan}
       />

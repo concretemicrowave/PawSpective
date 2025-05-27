@@ -35,21 +35,22 @@ export default function Register() {
     );
   }, [name, email, password]);
 
-  useFocusEffect(
-    useCallback(() => {
-      navigation.setOptions({ gestureEnabled: false });
-    }, [navigation]),
-  );
-
   const handleRegister = async () => {
     setLoading(true);
     const data = await register(name, email, password);
 
     if (!data.success) {
       Alert.alert("Registration Failed", data.message || "Please try again.");
+      setLoading(false);
     }
-    router.push("/(tabs)");
+    router.replace("/(tabs)");
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.setOptions({ gestureEnabled: false });
+    }, [navigation]),
+  );
 
   return (
     <>
