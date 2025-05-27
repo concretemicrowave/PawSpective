@@ -22,6 +22,7 @@ export const useHandleSave = () => {
       Alert.alert("Error", "Unable to save right now");
       return false;
     }
+    if (!postFields.name) return Alert.alert("Pet's name is required");
 
     try {
       await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
