@@ -1,9 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { ThemedText } from "./ThemedComponents";
 
 export function ProgressBar({ progress, average, type }) {
   const goal = average != null ? average : 100;
-  const fillPercent = `${Math.min((progress / goal) * 100, 100)}%`;
+  const fillPercent =
+    progress <= goal
+      ? `${(progress / goal) * 100}%`
+      : `${(goal / progress) * 100}%`;
   const diff = progress - goal;
   let statusText = "";
   if (type !== "age") {
