@@ -75,6 +75,10 @@ export default function RootLayout() {
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
+                    name="live/index"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
                     name="numberLine/NumberLine"
                     options={{ headerShown: false }}
                     initialParams={{ initialWeight: undefined }}
