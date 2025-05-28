@@ -15,6 +15,7 @@ export function ThemedButton({
   borderRadius = 12,
   hollow = false,
   color = "primary",
+  text = "white",
   disabled = false,
   loading = false,
   padding = true,
@@ -57,7 +58,7 @@ export function ThemedButton({
           <ThemedText
             type="subtitle"
             style={styles.text}
-            color={hollow ? color : "white"}
+            color={hollow && text === "white" ? color : text}
           >
             {title}
           </ThemedText>
