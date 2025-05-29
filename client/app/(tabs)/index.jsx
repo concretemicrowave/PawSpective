@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [visible, setVisible] = useState(false);
   const { shouldReload, acknowledgeReload } = useReload();
   const [loading, setLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("Stats");
 
   useFocusEffect(
     useCallback(() => {
@@ -28,9 +29,7 @@ export default function Dashboard() {
         acknowledgeReload();
       };
 
-      if (shouldReload) {
-        fetchData();
-      }
+      if (shouldReload) fetchData();
     }, [shouldReload]),
   );
 
@@ -50,58 +49,67 @@ export default function Dashboard() {
   const sortedHistory = [...history].sort(
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
   );
-  const latestEntry = Array.isArray(sortedHistory) ? sortedHistory[0] : null;
+  const latestEntry = sortedHistory[0] || null;
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#f5f5f5",
-        }}
-      >
+      <View style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
         <LoadingSkeleton />
       </View>
     );
   }
 
   return (
-    <>
-      <ThemedView scrollable style={styles.dashboard}>
-        <DashboardHeader petCount={keys.length} />
-        {petData && (
-          <TouchableOpacity
-            style={styles.switchButton}
-            onPress={() => setVisible(true)}
+    <ThemedView scrollable style={styles.dashboard}>
+      <DashboardHeader petCount={keys.length} />
+      {petData && (
+        <TouchableOpacity
+          style={styles.switchButton}
+          onPress={() => setVisible(true)}
+        >
+          <MaterialCommunityIcons name="swap-horizontal" size={24} />
+          <ThemedText
+            type="subtitle"
+            style={styles.switchButtonText}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
-            <MaterialCommunityIcons name="swap-horizontal" size={24} />
+            {petData.name}
+          </ThemedText>
+        </TouchableOpacity>
+      )}
+      <SwitchPetDrawer
+        pets={userData.posts}
+        visible={visible}
+        setVisible={setVisible}
+        selectedPostId={selectedPostId}
+        setSelectedTab={setSelectedPostId}
+      />
+      <View style={styles.tabContainer}>
+        {["Stats", "Progress"].map((tab) => (
+          <TouchableOpacity
+            key={tab}
+            style={[
+              styles.tabButton,
+              selectedTab === tab && styles.tabButtonActive,
+            ]}
+            onPress={() => setSelectedTab(tab)}
+          >
             <ThemedText
-              type="subtitle"
-              style={styles.switchButtonText}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+              style={
+                selectedTab === tab ? styles.tabTextActive : styles.tabText
+              }
+              {...(selectedTab === tab && { type: "subtitle" })}
             >
-              {petData.name}
+              {tab}
             </ThemedText>
           </TouchableOpacity>
-        )}
-        <SwitchPetDrawer
-          pets={userData.posts}
-          visible={visible}
-          setVisible={setVisible}
-          selectedPostId={selectedPostId}
-          setSelectedTab={setSelectedPostId}
-        />
-        <View style={[styles.heading, !petData && { marginTop: 110 }]}>
+        ))}
+      </View>
+      {selectedTab === "Stats" && (
+        <View style={styles.content}>
           {!petData || !latestEntry ? (
-            <ThemedText
-              style={{
-                fontSize: 16,
-                opacity: 0.8,
-              }}
-            >
-              Scan a pet!
-            </ThemedText>
+            <ThemedText style={styles.emptyText}>Scan a pet!</ThemedText>
           ) : (
             <DashboardContent
               latestEntry={latestEntry}
@@ -110,24 +118,17 @@ export default function Dashboard() {
             />
           )}
         </View>
-        {petData && <DashboardData history={sortedHistory} />}
-      </ThemedView>
-    </>
+      )}
+      {selectedTab === "Progress" && petData && (
+        <DashboardData history={sortedHistory} />
+      )}
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   dashboard: {
     height: "100%",
-  },
-  heading: {
-    backgroundColor: "#F5F5F5",
-    borderRadius: 12,
-    width: "90%",
-    padding: 12,
-    paddingBottom: 0,
-    marginHorizontal: 20,
-    minHeight: 350,
   },
   switchButton: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
@@ -147,5 +148,48 @@ const styles = StyleSheet.create({
   switchButtonText: {
     fontSize: 18,
     maxWidth: "90%",
+  },
+  tabContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 8,
+    backgroundColor: "#f0f0f0",
+    padding: 4,
+    width: "90%",
+    borderRadius: 12,
+    alignSelf: "center",
+  },
+  tabButton: {
+    paddingVertical: 4,
+    borderRadius: 8,
+    backgroundColor: "transparent",
+    flex: 1,
+  },
+  tabButtonActive: {
+    backgroundColor: "#ddd",
+  },
+  tabText: {
+    fontSize: 16,
+    opacity: 0.6,
+    textAlign: "center",
+  },
+  tabTextActive: {
+    fontSize: 16,
+    opacity: 1,
+    textAlign: "center",
+    marginTop: 2,
+  },
+  content: {
+    backgroundColor: "#F5F5F5",
+    borderRadius: 12,
+    width: "90%",
+    padding: 12,
+    paddingBottom: 0,
+    marginHorizontal: 20,
+    minHeight: 350,
+  },
+  emptyText: {
+    fontSize: 16,
+    opacity: 0.8,
   },
 });

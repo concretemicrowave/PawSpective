@@ -3,7 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_KEY = "userToken";
-const API_URL = "http://192.168.226.129:3000/api";
+const API_URL = "http://10.173.6.106:3000/api";
 
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
