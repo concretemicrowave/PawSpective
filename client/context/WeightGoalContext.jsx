@@ -14,7 +14,6 @@ export const WeightGoalProvider = ({ children }) => {
       userData.posts[latestPostId]?.weightGoal != null
     ) {
       setWeightGoal(userData.posts[latestPostId].weightGoal);
-      console.log("userData");
     }
   }, [userData.posts, latestPostId]);
 

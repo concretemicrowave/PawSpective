@@ -7,7 +7,6 @@ import HealthStatus from "../HealthStatus";
 export default function DashboardContent({ latestEntry }) {
   const breedInfo = latestEntry?.breed ? dogBreedData[latestEntry.breed] : {};
   const { weightGoal } = useWeightGoal();
-  console.log(latestEntry);
 
   return latestEntry ? (
     <View>
