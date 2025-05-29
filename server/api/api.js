@@ -438,7 +438,6 @@ api.post("/predict-breed", upload.single("image"), async (req, res) => {
     });
 
     const result = JSON.parse(response.choices[0].message.content);
-    const breed = result.breed;
 
     const enhancedResult = {
       ...result,

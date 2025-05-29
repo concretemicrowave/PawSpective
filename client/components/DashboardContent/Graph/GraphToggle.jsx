@@ -47,8 +47,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingTop: 8,
     transform: [{ translateY: -16 }],
+    marginHorizontal: 16,
     gap: 8,
   },
   toggleButtonInactive: {

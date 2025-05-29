@@ -14,6 +14,11 @@ export default function SymptomsEditableText({
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
+      setTimeout(() => {
+        inputRef.current.setNativeProps({
+          selection: { start: 0, end: text.length },
+        });
+      }, 0);
     }
   }, [isEditing]);
 

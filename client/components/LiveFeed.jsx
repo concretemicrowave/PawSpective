@@ -5,39 +5,47 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 
 export default function LiveFeed() {
-  const SERVER_IP = "192.168.232.63";
-  const SERVER_PORT = 8000;
+  const SERVER_IP = "192.168.226.129";
+  const SERVER_PORT = 3000;
   const REFRESH_INTERVAL = 1000;
 
   const [uri, setUri] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setUri(getUri());
-    const id = setInterval(() => {
-      setUri(getUri());
-    }, REFRESH_INTERVAL);
+    updateUri();
+    const id = setInterval(updateUri, REFRESH_INTERVAL);
     return () => clearInterval(id);
   }, []);
 
-  function getUri() {
-    return `http://${SERVER_IP}:${SERVER_PORT}/latest.jpg?ts=${Date.now()}`;
+  function updateUri() {
+    setUri(`http://${SERVER_IP}:${SERVER_PORT}/latest.jpg?ts=${Date.now()}`);
   }
-
-  const handleCapture = () => {
-    console.log("Capture button pressed – implement snapshot logic if needed");
-    // Add functionality here if you want to save the frame or trigger something else.
-  };
 
   return (
     <View style={styles.container}>
-      {uri ? (
-        <Image source={{ uri }} style={styles.image} resizeMode="contain" />
-      ) : null}
-
-      <TouchableOpacity style={styles.captureButton} onPress={handleCapture}>
+      {uri && (
+        <Image
+          source={{ uri }}
+          style={styles.image}
+          resizeMode="contain"
+          onLoadStart={() => setLoading(true)}
+          onLoadEnd={() => setLoading(false)}
+        />
+      )}
+      {loading && (
+        <ActivityIndicator size="large" style={StyleSheet.absoluteFill} />
+      )}
+      <TouchableOpacity
+        style={styles.captureButton}
+        onPress={() => {
+          /*…*/
+        }}
+      >
         <View style={styles.inner} />
       </TouchableOpacity>
     </View>

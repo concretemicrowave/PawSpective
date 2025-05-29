@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 export default function CameraScreen() {
   const isFocused = useIsFocused();
   const router = useRouter();
-  console.log(router);
+
   const { setUpdate } = usePhoto();
 
   useEffect(() => {

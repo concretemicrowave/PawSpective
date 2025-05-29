@@ -37,8 +37,8 @@ export function Graph({ history }) {
 
   return (
     <>
-      <GraphToggle isWeight={showWeight} setIsWeight={setShowWeight} />
       <View style={styles.wrapper}>
+        <GraphToggle isWeight={showWeight} setIsWeight={setShowWeight} />
         <View style={styles.chart}>
           {currentPageData.map((entry, index) => (
             <GraphBar
@@ -67,11 +67,11 @@ export function Graph({ history }) {
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 16,
+    backgroundColor: "#F5F5F5",
+    borderRadius: 12,
     paddingTop: 22,
     paddingBottom: 18,
-    transform: [{ translateY: -16 }],
+    transform: [{ translateY: -20 }],
     overflow: "hidden",
   },
   chart: {

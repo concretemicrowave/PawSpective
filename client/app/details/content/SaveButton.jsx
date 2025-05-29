@@ -11,7 +11,7 @@ export default function SaveButton({ breed, update, weight, onPress }) {
   return (
     <View style={styles.buttonContainer}>
       <ThemedButton
-        title="Add Goal"
+        title="Set Goal"
         hollow
         borderRadius={50}
         onPress={() =>

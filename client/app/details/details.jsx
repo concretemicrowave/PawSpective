@@ -21,7 +21,6 @@ export default function Details({ uri }) {
     update,
     onSave,
   } = usePrediction(uri);
-  console.log(predicting);
 
   return (
     <>
