@@ -8,7 +8,9 @@ const fs = require("fs");
 const path = require("path");
 
 const { initializeDatabase } = require("./db");
-const api = require("./api/api");
+// ← now point at your new `routes/index.js`
+const apiRouter = require("./routes");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -17,7 +19,8 @@ app.use(cors());
 
 // ─── Middleware for your JSON API ─────────────────────
 app.use(bodyParser.json());
-app.use("/api", api);
+// mount all your modular routes under /api
+app.use("/api", apiRouter);
 
 // ─── In‑memory frame buffer + placeholder.jpg ──────────
 let latestFrame = null;
