@@ -17,7 +17,7 @@ console.log("API loaded.");
 
 router.use("/accounts", accounts);
 router.use("/authenticate", auth);
-router.use("/auth-check", auth); // you could merge check into same auth module
+router.use("/auth-check", auth);
 router.use("/posts", posts);
 router.use("/user", user);
 router.use("/save", save);

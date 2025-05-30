@@ -45,28 +45,31 @@ export default function usePrediction(uri) {
 
     const doFetch = async () => {
       setPredicting(true);
-      const result = await predictData(uri);
-      if (!isMounted) return;
-      setPredicting(false);
-      if (!result) return;
-
       try {
-        const data = typeof result === "string" ? JSON.parse(result) : result;
-        const breedName = data.breed || "";
+        const result = await predictData(uri);
+        if (!isMounted) return;
+        if (!result || !result.success) return;
+
+        const pet = result.data?.pet;
+        if (!pet) return;
+
+        const breedName = pet.breed || "";
         const info = dogBreedData[breedName] || {};
 
         if (!update) setBreed(breedName);
-        setWeight(data.weight || 0);
-        setAge(data.age || 0);
-        setSymptoms(data.symptoms || "No Symptoms");
+        setWeight(pet.weight || 0);
+        setAge(pet.age || 0);
+        setSymptoms(pet.symptoms || "No Symptoms");
         setTime(new Date().toISOString().slice(0, 10));
         setAverageHealthyWeight(info.avgWeightKg || null);
         setAverageLifespan(info.avgLifespanYears || null);
-        setWeightGoal(data.weight || 0);
+        setWeightGoal(pet.weight || 0);
 
         fetchedRef.current = true;
       } catch (err) {
-        console.error("Failed to parse prediction:", err);
+        console.error("Prediction or parsing failed:", err);
+      } finally {
+        if (isMounted) setPredicting(false);
       }
     };
 
