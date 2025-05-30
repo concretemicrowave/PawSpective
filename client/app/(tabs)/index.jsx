@@ -28,7 +28,6 @@ export default function Dashboard() {
         setLoading(false);
         acknowledgeReload();
       };
-
       if (shouldReload) fetchData();
     }, [shouldReload]),
   );
@@ -62,22 +61,24 @@ export default function Dashboard() {
   return (
     <ThemedView scrollable style={styles.dashboard}>
       <DashboardHeader petCount={keys.length} />
-      {petData && (
-        <TouchableOpacity
-          style={styles.switchButton}
-          onPress={() => setVisible(true)}
-        >
-          <MaterialCommunityIcons name="swap-horizontal" size={24} />
-          <ThemedText
-            type="subtitle"
-            style={styles.switchButtonText}
-            numberOfLines={1}
-            ellipsizeMode="tail"
+      <View style={styles.switchWrapper}>
+        {petData && (
+          <TouchableOpacity
+            style={styles.switchButton}
+            onPress={() => setVisible(true)}
           >
-            {petData.name}
-          </ThemedText>
-        </TouchableOpacity>
-      )}
+            <MaterialCommunityIcons name="swap-horizontal" size={24} />
+            <ThemedText
+              type="subtitle"
+              style={styles.switchButtonText}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {petData.name}
+            </ThemedText>
+          </TouchableOpacity>
+        )}
+      </View>
       <SwitchPetDrawer
         pets={userData.posts}
         visible={visible}
@@ -130,6 +131,11 @@ const styles = StyleSheet.create({
   dashboard: {
     height: "100%",
   },
+  switchWrapper: {
+    marginHorizontal: 20,
+    marginTop: 105,
+    marginBottom: 10,
+  },
   switchButton: {
     backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderColor: "rgba(0, 0, 0, 0.1)",
@@ -138,12 +144,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     elevation: 2,
-    marginHorizontal: 20,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    marginTop: 105,
-    marginBottom: 10,
   },
   switchButtonText: {
     fontSize: 18,

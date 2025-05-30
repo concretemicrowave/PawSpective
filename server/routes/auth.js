@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/check", async (req, res) => {
+router.get("/auth-check", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token)
     return res.json(util.error({ message: "Authorization token required" }));

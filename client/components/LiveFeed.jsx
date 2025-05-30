@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 export default function LiveFeed() {
-  const SERVER_IP = "192.168.226.129";
+  const SERVER_IP = "192.168.212.129";
   const SERVER_PORT = 3000;
   const REFRESH_INTERVAL = 1000;
 
