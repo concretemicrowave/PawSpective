@@ -3,7 +3,13 @@ import { useRouter } from "expo-router";
 import { View, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function SaveButton({ breed, update, weight, onPress }) {
+export default function SaveButton({
+  breed,
+  update,
+  weight,
+  onPress,
+  loading,
+}) {
   const router = useRouter();
 
   if (!breed) return null;
@@ -28,6 +34,7 @@ export default function SaveButton({ breed, update, weight, onPress }) {
         borderRadius={50}
         onPress={onPress}
         style={styles.sideButton}
+        loading={loading}
       />
     </View>
   );

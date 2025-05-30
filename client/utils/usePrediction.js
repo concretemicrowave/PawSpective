@@ -26,6 +26,7 @@ export default function usePrediction(uri) {
   const [averageHealthyWeight, setAverageHealthyWeight] = useState(null);
   const [averageLifespan, setAverageLifespan] = useState(null);
   const [predicting, setPredicting] = useState(false);
+  const [saving, setSaving] = useState(false); // new
 
   const fetchedRef = useRef(false);
 
@@ -47,8 +48,7 @@ export default function usePrediction(uri) {
       setPredicting(true);
       try {
         const result = await predictData(uri);
-        if (!isMounted) return;
-        if (!result || !result.success) return;
+        if (!isMounted || !result?.success) return;
 
         const pet = result.data?.pet;
         if (!pet) return;
@@ -79,24 +79,31 @@ export default function usePrediction(uri) {
     };
   }, [uri, predictData, update, setWeightGoal]);
 
-  const onSave = useCallback(() => {
-    handleSave({
-      update,
-      postId,
-      userData,
-      setUserData,
-      setPostId,
-      postFields: {
-        name,
-        weight,
-        age,
-        symptoms,
-        breed,
-        time,
-        uri,
-        weightGoal,
-      },
-    });
+  const onSave = useCallback(async () => {
+    setSaving(true);
+    try {
+      await handleSave({
+        update,
+        postId,
+        userData,
+        setUserData,
+        setPostId,
+        postFields: {
+          name,
+          weight,
+          age,
+          symptoms,
+          breed,
+          time,
+          uri,
+          weightGoal,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to save:", e);
+    } finally {
+      setSaving(false);
+    }
   }, [
     update,
     postId,
@@ -116,6 +123,7 @@ export default function usePrediction(uri) {
 
   return {
     predicting,
+    saving,
     breed,
     name,
     setName,

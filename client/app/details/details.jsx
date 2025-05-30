@@ -20,6 +20,7 @@ export default function Details({ uri }) {
     averageLifespan,
     update,
     onSave,
+    saving, // assume this is returned by usePrediction
   } = usePrediction(uri);
 
   return (
@@ -46,6 +47,7 @@ export default function Details({ uri }) {
           update={update}
           weight={weight}
           onPress={onSave}
+          loading={saving} // this is the important line
         />
       )}
     </>
