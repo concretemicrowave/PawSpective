@@ -10,6 +10,7 @@ const router = express.Router();
 const createToken = (userId) =>
   jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "1h" });
 
+// POST /authenticate
 router.post("/", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -39,6 +40,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+// GET /authenticate/auth-check
 router.get("/auth-check", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token)
@@ -53,7 +55,7 @@ router.get("/auth-check", async (req, res) => {
     );
   } catch (err) {
     console.error(err);
-    res.json(util.error({ message: "Internal server error" }));
+    res.json(util.error({ message: "Invalid or expired token" }));
   }
 });
 
