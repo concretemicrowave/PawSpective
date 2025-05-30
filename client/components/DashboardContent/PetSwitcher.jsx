@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     marginHorizontal: 20,
-    marginTop: 105,
     marginBottom: 10,
   },
   switchButtonText: {

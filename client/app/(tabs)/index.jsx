@@ -79,36 +79,38 @@ export default function Dashboard() {
   return (
     <ThemedView scrollable style={styles.dashboard}>
       <DashboardHeader petCount={keys.length} />
-      <PetSwitcher
-        petData={petData}
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          setVisible(true);
-        }}
-      />
-      <SwitchPetDrawer
-        pets={userData.posts}
-        visible={visible}
-        setVisible={setVisible}
-        selectedPostId={selectedPostId}
-        setSelectedTab={setSelectedPostId}
-      />
-      <TabSwitcher
-        selectedTab={selectedTab}
-        onTabSwitch={handleTabSwitch}
-        tabIndicatorAnim={tabIndicatorAnim}
-        tabWidth={tabWidth}
-      />
-      {selectedTab === "Stats" ? (
-        <DashboardMainContent
+      <View style={styles.marginTop}>
+        <PetSwitcher
           petData={petData}
-          latestEntry={latestEntry}
-          id={selectedPostId}
-          setUpdate={setUpdate}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            setVisible(true);
+          }}
         />
-      ) : (
-        <DashboardProgressContent history={sortedHistory} />
-      )}
+        <SwitchPetDrawer
+          pets={userData.posts}
+          visible={visible}
+          setVisible={setVisible}
+          selectedPostId={selectedPostId}
+          setSelectedTab={setSelectedPostId}
+        />
+        <TabSwitcher
+          selectedTab={selectedTab}
+          onTabSwitch={handleTabSwitch}
+          tabIndicatorAnim={tabIndicatorAnim}
+          tabWidth={tabWidth}
+        />
+        {selectedTab === "Stats" ? (
+          <DashboardMainContent
+            petData={petData}
+            latestEntry={latestEntry}
+            id={selectedPostId}
+            setUpdate={setUpdate}
+          />
+        ) : (
+          <DashboardProgressContent history={sortedHistory} />
+        )}
+      </View>
     </ThemedView>
   );
 }
@@ -116,5 +118,8 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
   dashboard: {
     height: "100%",
+  },
+  marginTop: {
+    marginTop: 105,
   },
 });

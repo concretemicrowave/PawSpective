@@ -26,7 +26,7 @@ export default function usePrediction(uri) {
   const [averageHealthyWeight, setAverageHealthyWeight] = useState(null);
   const [averageLifespan, setAverageLifespan] = useState(null);
   const [predicting, setPredicting] = useState(false);
-  const [saving, setSaving] = useState(false); // new
+  const [saving, setSaving] = useState(false);
 
   const fetchedRef = useRef(false);
 
