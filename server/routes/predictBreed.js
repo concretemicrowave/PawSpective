@@ -35,7 +35,7 @@ router.post("/", upload.single("image"), async (req, res) => {
         {
           role: "system",
           content:
-            "You are a veterinary expert trained to identify pet (mainly dogs and cats) breeds, weight, age (in years), and symptoms based on an image. Respond only in strict JSON format. If you cannot determine a value, use null explicitly instead of guessing. Your response must match the schema exactly.",
+            "You are a veterinary expert trained to identify pet (mainly dogs and cats) breeds, weight, age (in years), and symptoms based on an image. Respond only in strict JSON format. If you cannot determine the breed, use null explicitly instead of guessing. However, if you know the breed, you must give the weight and age. The symptoms can be null if there is none. Your response must match the schema exactly.",
         },
         {
           role: "user",
@@ -55,10 +55,10 @@ router.post("/", upload.single("image"), async (req, res) => {
             strict: true,
             type: "object",
             properties: {
-              breed: { type: ["string", "null"] },
-              weight: { type: ["number", "null"] },
-              age: { type: ["number", "null"] },
-              symptoms: { type: ["string", "null"] },
+              breed: { type: ["string"] },
+              weight: { type: ["number"] },
+              age: { type: ["number"] },
+              symptoms: { type: ["string"] },
             },
             required: ["breed", "weight", "age", "symptoms"],
             additionalProperties: false,

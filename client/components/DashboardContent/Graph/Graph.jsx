@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     width: CHART_WIDTH,
     height: MAX_BAR_HEIGHT + 40,
+    transform: [{ translateX: 2 }],
     paddingHorizontal: 0,
   },
 });
