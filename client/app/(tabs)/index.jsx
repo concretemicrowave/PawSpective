@@ -1,5 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+  Dimensions,
+} from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { ThemedView, ThemedText } from "../../components/ThemedComponents";
 import DashboardContent from "../../components/DashboardContent/DashboardContent";
@@ -11,6 +17,9 @@ import DashboardData from "@/components/DashboardContent/DashboardData";
 import LoadingSkeleton from "../../components/DashboardContent/LoadingSkeleton";
 import { usePhoto } from "../../context/PhotoContext";
 import { useReload } from "@/context/ReloadContext";
+import * as Haptics from "expo-haptics";
+
+const screenWidth = Dimensions.get("window").width;
 
 export default function Dashboard() {
   const { userData, refetchUser } = useUser();
@@ -19,6 +28,8 @@ export default function Dashboard() {
   const { shouldReload, acknowledgeReload } = useReload();
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Stats");
+  const [tabIndicatorAnim] = useState(new Animated.Value(0));
+  const tabWidth = screenWidth * 0.9 * 0.5;
 
   useFocusEffect(
     useCallback(() => {
@@ -50,6 +61,17 @@ export default function Dashboard() {
   );
   const latestEntry = sortedHistory[0] || null;
 
+  const handleTabSwitch = (tab) => {
+    const toValue = tab === "Stats" ? 0 : tabWidth;
+    Haptics.selectionAsync();
+    Animated.timing(tabIndicatorAnim, {
+      toValue,
+      duration: 250,
+      useNativeDriver: false,
+    }).start();
+    setSelectedTab(tab);
+  };
+
   if (loading) {
     return (
       <View style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
@@ -65,7 +87,10 @@ export default function Dashboard() {
         {petData && (
           <TouchableOpacity
             style={styles.switchButton}
-            onPress={() => setVisible(true)}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              setVisible(true);
+            }}
           >
             <MaterialCommunityIcons name="swap-horizontal" size={24} />
             <ThemedText
@@ -86,26 +111,33 @@ export default function Dashboard() {
         selectedPostId={selectedPostId}
         setSelectedTab={setSelectedPostId}
       />
-      <View style={styles.tabContainer}>
-        {["Stats", "Progress"].map((tab) => (
-          <TouchableOpacity
-            key={tab}
+      <View style={styles.tabWrapper}>
+        <View style={styles.tabContainer}>
+          <Animated.View
             style={[
-              styles.tabButton,
-              selectedTab === tab && styles.tabButtonActive,
+              styles.highlight,
+              {
+                width: tabWidth,
+                transform: [{ translateX: tabIndicatorAnim }],
+              },
             ]}
-            onPress={() => setSelectedTab(tab)}
-          >
-            <ThemedText
-              style={
-                selectedTab === tab ? styles.tabTextActive : styles.tabText
-              }
-              {...(selectedTab === tab && { type: "subtitle" })}
+          />
+          {["Stats", "Progress"].map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              style={styles.tabButton}
+              onPress={() => handleTabSwitch(tab)}
             >
-              {tab}
-            </ThemedText>
-          </TouchableOpacity>
-        ))}
+              <ThemedText
+                style={
+                  selectedTab === tab ? styles.tabTextActive : styles.tabText
+                }
+              >
+                {tab}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
       {selectedTab === "Stats" && (
         <View style={styles.content}>
@@ -152,35 +184,43 @@ const styles = StyleSheet.create({
     fontSize: 18,
     maxWidth: "90%",
   },
+  tabWrapper: {
+    alignItems: "center",
+    marginBottom: 8,
+  },
   tabContainer: {
     flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 8,
     backgroundColor: "#f0f0f0",
-    padding: 4,
-    width: "90%",
     borderRadius: 12,
-    alignSelf: "center",
+    width: "90%",
+    position: "relative",
+    overflow: "hidden",
+    borderWidth: 4,
+    borderColor: "#f0f0f0",
   },
   tabButton: {
-    paddingVertical: 4,
-    borderRadius: 8,
-    backgroundColor: "transparent",
     flex: 1,
-  },
-  tabButtonActive: {
-    backgroundColor: "#ddd",
+    paddingVertical: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
   },
   tabText: {
     fontSize: 16,
     opacity: 0.6,
-    textAlign: "center",
   },
   tabTextActive: {
     fontSize: 16,
     opacity: 1,
-    textAlign: "center",
-    marginTop: 2,
+  },
+  highlight: {
+    position: "absolute",
+    height: "100%",
+    backgroundColor: "#ddd",
+    borderRadius: 8,
+    top: 0,
+    left: 0,
+    zIndex: 0,
   },
   content: {
     backgroundColor: "#F5F5F5",

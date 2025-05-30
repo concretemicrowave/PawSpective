@@ -1,26 +1,20 @@
 require("dotenv").config();
 
 const express = require("express");
-const cors = require("cors");
 const bodyParser = require("body-parser");
 const os = require("os");
 const fs = require("fs");
 const path = require("path");
 
 const { initializeDatabase } = require("./db");
-// ← now point at your new `routes/index.js`
-const apiRouter = require("./routes");
+const api = require("./api/api");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ─── Enable CORS for all routes ───────────────────────
-app.use(cors());
-
 // ─── Middleware for your JSON API ─────────────────────
 app.use(bodyParser.json());
-// mount all your modular routes under /api
-app.use("/api", apiRouter);
+app.use("/api", api);
 
 // ─── In‑memory frame buffer + placeholder.jpg ──────────
 let latestFrame = null;

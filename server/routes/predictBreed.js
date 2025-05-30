@@ -11,7 +11,6 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const router = express.Router();
 
 router.post("/", upload.single("image"), async (req, res) => {
-  console.log("safaefa");
   try {
     if (!req.file) {
       return res.status(400).json(util.error({ message: "No file uploaded" }));
@@ -31,11 +30,12 @@ router.post("/", upload.single("image"), async (req, res) => {
 
     const aiResponse = await openai.chat.completions.create({
       model: "gpt-4o",
+      temperature: 0.3,
       messages: [
         {
           role: "system",
           content:
-            "You are a veterinary expert trained to identify pet (mainly dogs and cats) breeds, weight, age (in years), and symptoms based on an image. Provide a strict JSON response with properties: breed, weight, age, symptoms.",
+            "You are a veterinary expert trained to identify pet (mainly dogs and cats) breeds, weight, age (in years), and symptoms based on an image. Respond only in strict JSON format. If you cannot determine a value, use null explicitly instead of guessing. Your response must match the schema exactly.",
         },
         {
           role: "user",
@@ -55,10 +55,10 @@ router.post("/", upload.single("image"), async (req, res) => {
             strict: true,
             type: "object",
             properties: {
-              breed: { type: "string" },
-              weight: { type: "number" },
-              age: { type: "number" },
-              symptoms: { type: "string" },
+              breed: { type: ["string", "null"] },
+              weight: { type: ["number", "null"] },
+              age: { type: ["number", "null"] },
+              symptoms: { type: ["string", "null"] },
             },
             required: ["breed", "weight", "age", "symptoms"],
             additionalProperties: false,
@@ -68,7 +68,7 @@ router.post("/", upload.single("image"), async (req, res) => {
     });
 
     const result = JSON.parse(aiResponse.choices[0].message.content);
-    console.log(result);
+
     res.json(util.success({ pet: result }));
   } catch (err) {
     console.error("Error processing image:", err);

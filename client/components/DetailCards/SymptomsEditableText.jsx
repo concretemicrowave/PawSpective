@@ -23,7 +23,9 @@ export default function SymptomsEditableText({
   }, [isEditing]);
 
   const handleBlur = () => {
-    onChangeText(text.trim());
+    if (text !== text.trim()) {
+      onChangeText(text.trim());
+    }
     onEditPress?.();
   };
 
