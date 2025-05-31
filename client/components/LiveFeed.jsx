@@ -9,8 +9,8 @@ import {
 } from "react-native";
 
 export default function LiveFeed() {
-  const SERVER_IP = "192.168.212.129";
-  const SERVER_PORT = 3000;
+  const SERVER_IP = "192.168.212.129"; // your server IP
+  const SERVER_PORT = 8000;
   const REFRESH_INTERVAL = 1000;
 
   const [uri, setUri] = useState("");
@@ -23,7 +23,7 @@ export default function LiveFeed() {
   }, []);
 
   function updateUri() {
-    setUri(`http://${SERVER_IP}:${SERVER_PORT}/latest.jpg?ts=${Date.now()}`);
+    setUri(`http://${SERVER_IP}:${SERVER_PORT}/snapshot.jpg?ts=${Date.now()}`);
   }
 
   return (
@@ -43,7 +43,7 @@ export default function LiveFeed() {
       <TouchableOpacity
         style={styles.captureButton}
         onPress={() => {
-          /*…*/
+          // optional: you could manually trigger updateUri() here or log
         }}
       >
         <View style={styles.inner} />
