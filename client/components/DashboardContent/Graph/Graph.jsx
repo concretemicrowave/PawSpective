@@ -69,9 +69,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F5F5F5",
     borderRadius: 12,
-    paddingTop: 22,
+    paddingTop: 8,
     paddingBottom: 18,
-    transform: [{ translateY: -20 }],
     overflow: "hidden",
   },
   chart: {
