@@ -1,22 +1,17 @@
-import {
-  StyleSheet,
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
-import { useAuth } from "../../../hooks/useAuth";
+import { StyleSheet, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Colors } from "../../../constants/Colors";
 import * as Updates from "expo-updates";
+import { SafeAreaView } from "react-native-safe-area-context";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
+import { useAuth } from "../../../hooks/useAuth";
 import { useUser } from "../../../context/UserContext";
+import Section from "../../../components/AccountContent/Section";
+import { ThemedView, ThemedText } from "../../../components/ThemedComponents";
 
 export default function Account() {
-  const { userData } = useUser();
   const navigation = useNavigation();
+  const { userData } = useUser();
   const { logout, deleteAccount, verifyEmail, changeName, changePassword } =
     useAuth();
 
@@ -76,7 +71,6 @@ export default function Account() {
       "Enter your current password:",
       (currentPassword) => {
         if (!currentPassword) return;
-
         Alert.prompt(
           "New Password",
           "Enter your new password:",
@@ -94,63 +88,32 @@ export default function Account() {
     );
   };
 
-  const backgroundColor = Colors["light"].background;
-  const backgroundGrey = Colors["light"].grey;
-
   return (
     <ThemedView scrollable secondary style={styles.container}>
-      <View style={styles.header}>
-        <LinearGradient
-          colors={[backgroundColor, backgroundGrey]}
-          locations={[0.999, 0]}
-          style={StyleSheet.absoluteFill}
+      <SafeAreaView style={styles.titleContainer}>
+        <MaterialCommunityIcons name="account" size={36} color="black" />
+        <ThemedText type="subtitle" style={styles.title}>
+          Welcome, {userData.name}
+        </ThemedText>
+      </SafeAreaView>
+      <ThemedView style={styles.content}>
+        <Section
+          title="PROFILE"
+          items={[
+            { label: "Change Name", onPress: handleChangeName },
+            { label: "Change Password", onPress: handleChangePassword },
+            { label: "Verify Email", onPress: handleVerify },
+          ]}
         />
-        <SafeAreaView style={styles.titleContainer}>
-          <MaterialCommunityIcons name="account" size={36} color="black" />
-          <ThemedText type="subtitle" style={styles.title}>
-            Welcome, {userData.name}
-          </ThemedText>
-        </SafeAreaView>
-      </View>
-      <View style={styles.content}>
-        <ThemedText style={styles.sectionLabel}>PROFILE</ThemedText>
-        <View style={styles.optionsContainer}>
-          <TouchableOpacity style={styles.option} onPress={handleChangeName}>
-            <ThemedText style={styles.optionText}>Change Name</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.option}
-            onPress={handleChangePassword}
-          >
-            <ThemedText style={styles.optionText}>Change Password</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.option, { borderBottomWidth: 0 }]}
-            onPress={handleVerify}
-          >
-            <ThemedText style={styles.optionText}>Verify Email</ThemedText>
-          </TouchableOpacity>
-        </View>
-        <ThemedText style={styles.sectionLabel}>DANGEROUS</ThemedText>
-        <View style={[styles.optionsContainer, styles.danger]}>
-          <TouchableOpacity
-            style={[styles.option, { borderColor: "#e06d6d" }]}
-            onPress={handleLogout}
-          >
-            <ThemedText style={styles.optionText} color="attention">
-              Logout
-            </ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.option, { borderBottomWidth: 0 }]}
-            onPress={handleDelete}
-          >
-            <ThemedText style={styles.optionText} color="attention">
-              Delete Account
-            </ThemedText>
-          </TouchableOpacity>
-        </View>
-      </View>
+        <Section
+          title="DANGEROUS"
+          variant="danger"
+          items={[
+            { label: "Logout", onPress: handleLogout, attention: true },
+            { label: "Delete Account", onPress: handleDelete, attention: true },
+          ]}
+        />
+      </ThemedView>
     </ThemedView>
   );
 }
@@ -159,56 +122,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    width: "100%",
-    height: 200,
-    padding: 20,
-    position: "relative",
-    overflow: "hidden",
-  },
   titleContainer: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 16,
     gap: 8,
-    transform: [{ translateY: 36 }],
+    marginBottom: -39,
   },
   title: {
     fontSize: 28,
   },
   content: {
     padding: 20,
-    transform: [{ translateY: -108 }],
     flexDirection: "column",
-  },
-  optionsContainer: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.2)",
-    overflow: "hidden",
-    marginBottom: 12,
-  },
-  option: {
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderColor: "rgba(0,0,0,0.1)",
-  },
-  optionText: {
-    fontSize: 16,
-  },
-  danger: {
-    backgroundColor: "#ffebeb",
-    borderWidth: 1,
-    borderColor: "#d32f2f",
-  },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: "bold",
-    opacity: 0.8,
-    marginBottom: 4,
-    marginTop: 8,
-    marginLeft: 4,
-    letterSpacing: 0.5,
   },
 });
