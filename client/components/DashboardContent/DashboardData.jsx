@@ -11,7 +11,9 @@ export default function DashboardData({ history, avgWeight }) {
 
   return (
     <View style={styles.container}>
-      <ProgressCircle progress={progressPercent} target={targetWeight} />
+      {weight && (
+        <ProgressCircle progress={progressPercent} target={targetWeight} />
+      )}
       <Graph history={history} />
     </View>
   );

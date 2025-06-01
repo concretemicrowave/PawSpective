@@ -25,12 +25,14 @@ export default function Login() {
 
   const handleLogin = async () => {
     setLoading(true);
-    const data = await login(email, password);
-    if (!data.success) {
-      Alert.alert("Login Failed", data.message || "Please try again.");
+    try {
+      const data = await login(email, password);
+      console.log("Login success", data);
+      router.replace("(tabs)");
+    } catch (e) {
+      Alert.alert("Login Failed", e.message || "Please try again.");
       setLoading(false);
     }
-    router.replace("(tabs)");
   };
 
   useFocusEffect(

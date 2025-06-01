@@ -119,12 +119,71 @@ export function useAuth() {
       });
 
       const data = await response.json();
-
       return data;
     } catch (error) {
       console.error("Prediction error:", error);
       return null;
     }
+  };
+
+  const deleteAccount = async () => {
+    const token = await SecureStore.getItemAsync(TOKEN_KEY);
+    const response = await fetch(`${API_URL}/accounts`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok)
+      throw new Error(data.message || "Failed to delete account");
+    await SecureStore.deleteItemAsync(TOKEN_KEY);
+    setIsLoggedIn(false);
+    return data;
+  };
+
+  const verifyEmail = async () => {
+    const token = await SecureStore.getItemAsync(TOKEN_KEY);
+    const response = await fetch(`${API_URL}/accounts/verify-email`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Verification failed");
+    return data;
+  };
+
+  const changeName = async (newName) => {
+    const token = await SecureStore.getItemAsync(TOKEN_KEY);
+    const response = await fetch(`${API_URL}/accounts/change-name`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name: newName }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Failed to update name");
+    return data;
+  };
+
+  const changePassword = async (currentPassword, newPassword) => {
+    const token = await SecureStore.getItemAsync(TOKEN_KEY);
+    const response = await fetch(`${API_URL}/accounts/change-password`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    const data = await response.json();
+    if (!response.ok)
+      throw new Error(data.message || "Failed to update password");
+    return data;
   };
 
   return {
@@ -136,5 +195,9 @@ export function useAuth() {
     predictData,
     getUser,
     deletePost,
+    deleteAccount,
+    verifyEmail,
+    changeName,
+    changePassword,
   };
 }

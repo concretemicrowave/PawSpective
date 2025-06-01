@@ -18,6 +18,7 @@ export default function Register() {
   const { register } = useAuth();
   const navigation = useNavigation();
   const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,13 +38,18 @@ export default function Register() {
 
   const handleRegister = async () => {
     setLoading(true);
-    const data = await register(name, email, password);
-
-    if (!data.success) {
-      Alert.alert("Registration Failed", data.message || "Please try again.");
+    try {
+      const data = await register(name, email, password);
+      if (!data.success) {
+        Alert.alert("Registration Failed", data.message || "Please try again.");
+        setLoading(false);
+        return;
+      }
+      router.replace("/(tabs)");
+    } catch (e) {
+      Alert.alert("Error", e.message || "Something went wrong.");
       setLoading(false);
     }
-    router.replace("/(tabs)");
   };
 
   useFocusEffect(

@@ -43,4 +43,109 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.delete("/", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader)
+    return res.json(util.error({ message: "No token provided" }));
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    await pool.query("DELETE FROM users WHERE id = $1", [userId]);
+
+    res.json(util.success({ message: "Account deleted" }));
+  } catch (err) {
+    console.error(err);
+    res.json(util.error({ message: "Invalid token or internal error" }));
+  }
+});
+
+router.post("/verify-email", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader)
+    return res.json(util.error({ message: "No token provided" }));
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    const result = await pool.query("SELECT email FROM users WHERE id = $1", [
+      userId,
+    ]);
+    const email = result.rows[0]?.email;
+
+    if (!email) return res.json(util.error({ message: "Email not found" }));
+
+    // TODO: send email using a mail service
+    console.log(`Simulate sending verification to ${email}`);
+
+    res.json(util.success({ message: "Verification email sent" }));
+  } catch (err) {
+    console.error(err);
+    res.json(util.error({ message: "Invalid token or internal error" }));
+  }
+});
+
+router.patch("/change-name", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const { name } = req.body;
+
+  if (!authHeader || !name)
+    return res.json(util.error({ message: "Authorization and name required" }));
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    await pool.query("UPDATE users SET name = $1 WHERE id = $2", [
+      name,
+      userId,
+    ]);
+
+    res.json(util.success({ message: "Name updated" }));
+  } catch (err) {
+    console.error(err);
+    res.json(util.error({ message: "Failed to update name" }));
+  }
+});
+
+router.patch("/change-password", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const { currentPassword, newPassword } = req.body;
+
+  if (!authHeader || !currentPassword || !newPassword)
+    return res.json(util.error({ message: "All fields required" }));
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+
+    const result = await pool.query(
+      "SELECT password FROM users WHERE id = $1",
+      [userId],
+    );
+    const hashed = result.rows[0]?.password;
+
+    const match = await bcrypt.compare(currentPassword, hashed);
+    if (!match)
+      return res.json(util.error({ message: "Current password incorrect" }));
+
+    const newHashed = await bcrypt.hash(newPassword, SALT_ROUNDS);
+    await pool.query("UPDATE users SET password = $1 WHERE id = $2", [
+      newHashed,
+      userId,
+    ]);
+
+    res.json(util.success({ message: "Password updated" }));
+  } catch (err) {
+    console.error(err);
+    res.json(util.error({ message: "Failed to update password" }));
+  }
+});
+
 module.exports = router;
